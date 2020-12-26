@@ -4,20 +4,13 @@
         <settingConfig type="list">
         	<listEntry value="0">@Strings.theme_dark</listEntry>
         	<listEntry value="1">@Strings.theme_light</listEntry>
-        	<listEntry value="2">@Strings.theme_ocean</listEntry>
-        	<listEntry value="3">@Strings.theme_orange</listEntry>
-        	<listEntry value="4">@Strings.theme_radioactive</listEntry>
-        	<listEntry value="7">@Strings.theme_dark_blue</listEntry>
-        	<listEntry value="8">@Strings.theme_light_blue</listEntry>
-        	<listEntry value="9">@Strings.theme_gray</listEntry>
-        	<listEntry value="10">@Strings.theme_lgray</listEntry>
-        	<listEntry value="11">@Strings.theme_pink</listEntry>
-        	<listEntry value="12">@Strings.theme_deep_ocean</listEntry>
-        	<listEntry value="13">@Strings.theme_dcontrast</listEntry>
-        	<listEntry value="14">@Strings.theme_lcontrast</listEntry>
-        	<listEntry value="15">@Strings.theme_camo</listEntry>
-        	<listEntry value="16">@Strings.theme_solar</listEntry>
-        	<listEntry value="17">@Strings.theme_lime</listEntry>
+        	<listEntry value="2">@Strings.theme_radioactive</listEntry>
+        	<listEntry value="3">@Strings.theme_dark_blue</listEntry>
+        	<listEntry value="4">@Strings.theme_light_blue</listEntry>
+        	<listEntry value="5">@Strings.theme_dcontrast</listEntry>
+        	<listEntry value="6">@Strings.theme_lcontrast</listEntry>
+        	<listEntry value="7">@Strings.theme_solar</listEntry>
+        	<listEntry value="8">@Strings.theme_lime</listEntry>
         </settingConfig>
     </setting>
     
