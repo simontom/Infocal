@@ -6,6 +6,7 @@ using Toybox.WatchUi as Ui;
 using Toybox.Time;
 using Toybox.Math;
 using Toybox.Time.Gregorian as Date;
+using Toybox.Lang as Ex;
 
 // In-memory current location.
 // Previously persisted in App.Storage, but now persisted in Object Store due to #86 workaround for App.Storage firmware bug.
@@ -268,7 +269,7 @@ class ErrorsAndTrialsApp extends Application.AppBase {
 			}
 		}
 
-		throw Lang.InvalidValueException("Invalid value of date_formater in :getFormatedDate");
+		throw new Ex.InvalidValueException("Invalid value of 'date_formater' in ':getFormatedDate'");
 	}
 	
 	function toKValue(value) {

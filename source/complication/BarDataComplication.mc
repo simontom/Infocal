@@ -4,6 +4,7 @@ using Toybox.System;
 using Toybox.Activity;
 using Toybox.ActivityMonitor;
 using Toybox.Application;
+using Toybox.Lang as Ex;
 
 class BarDataComplication extends BarComplication {
 
@@ -57,6 +58,8 @@ class BarDataComplication extends BarComplication {
         	// lower
         	return Application.getApp().getProperty("compbarb");
         }
+
+		throw new Ex.InvalidValueException("Invalid value of 'position' in ':getSettingDataKey'");
 	}
 
 	function draw(dc) {

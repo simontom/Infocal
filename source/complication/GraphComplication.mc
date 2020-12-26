@@ -3,6 +3,7 @@ using Toybox.Math;
 using Toybox.Graphics;
 using Toybox.System;
 using Toybox.Application;
+using Toybox.Lang as Ex;
 
 using Toybox.Activity as Activity;
 using Toybox.ActivityMonitor as ActivityMonitor;
@@ -86,6 +87,8 @@ class GraphComplication extends Ui.Drawable {
 				return value;
 			}
 	    }
+
+		throw new Ex.InvalidValueException("Invalid value of 'type' in ':parse_data_value'");
     }
     
     function draw(dc) {
