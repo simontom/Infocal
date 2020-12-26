@@ -35,7 +35,7 @@ function convertCoorY(radians, radius) {
 }
 
 (:background)
-class HuwaiiApp extends Application.AppBase {
+class ErrorsAndTrialsApp extends Application.AppBase {
 
 	var mView;
 	var days;
@@ -78,7 +78,7 @@ class HuwaiiApp extends Application.AppBase {
 
     // Return the initial view of your application here
     function getInitialView() {
-    	mView = new HuwaiiView();
+    	mView = new ErrorsAndTrialsView();
         return [mView];
     }
 
@@ -87,7 +87,7 @@ class HuwaiiApp extends Application.AppBase {
 	}
 
 	function onSettingsChanged() { // triggered by settings change in GCM
-		if (HuwaiiApp has :checkPendingWebRequests) { // checkPendingWebRequests() can be excluded to save memory.
+		if (ErrorsAndTrialsApp has :checkPendingWebRequests) { // checkPendingWebRequests() can be excluded to save memory.
 			checkPendingWebRequests();
 		}
     	mView.last_draw_minute = -1;

@@ -34,7 +34,7 @@ var force_render_component = false;
 var last_battery_percent = -1;
 var last_hour_consumtion = -1;
 
-class HuwaiiView extends WatchUi.WatchFace {
+class ErrorsAndTrialsView extends WatchUi.WatchFace {
 
 	var last_draw_minute = -1;
 	var restore_from_resume = false;
@@ -424,7 +424,7 @@ class HuwaiiView extends WatchUi.WatchFace {
 	}
 	
 	function checkBackgroundRequest() {
-		if (HuwaiiApp has :checkPendingWebRequests) { // checkPendingWebRequests() can be excluded to save memory.
+		if (ErrorsAndTrialsApp has :checkPendingWebRequests) { // checkPendingWebRequests() can be excluded to save memory.
 			App.getApp().checkPendingWebRequests(); // Depends on mDataFields.hasField().
 		}
 	}
