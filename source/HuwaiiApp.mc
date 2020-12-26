@@ -267,6 +267,8 @@ class HuwaiiApp extends Application.AppBase {
 				return Lang.format("$1$ $2$",[month, day.format("%d")]);
 			}
 		}
+
+		throw Lang.InvalidValueException("Invalid value of date_formater in :getFormatedDate");
 	}
 	
 	function toKValue(value) {
