@@ -18,19 +18,19 @@ var gLocationLng = null;
 var centerX;
 var centerY;
 
-hidden function degreesToRadians(degrees) {
+function degreesToRadians(degrees) {
 	return degrees * Math.PI / 180;
 }  
 
-hidden function radiansToDegrees(radians) {
+function radiansToDegrees(radians) {
 	return radians * 180 / Math.PI;
 }  
 
-hidden function convertCoorX(radians, radius) {
+function convertCoorX(radians, radius) {
 	return centerX + radius*Math.cos(radians);
 }
 
-hidden function convertCoorY(radians, radius) {
+function convertCoorY(radians, radius) {
 	return centerY + radius*Math.sin(radians);
 }
 
