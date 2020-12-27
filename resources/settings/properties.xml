@@ -1,8 +1,6 @@
 <properties>
     <property id="theme_code" type="number">0</property>
-	<property id="power_save_mode" type="boolean">true</property>
-    <property id="sleep_time_behaviour" type="number">0</property>
-	
+
     <property id="white_background" type="boolean">false</property>
     <property id="always_on_second" type="boolean">false</property>
     <property id="always_on_heart" type="boolean">false</property>

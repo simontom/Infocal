@@ -1,6 +1,6 @@
 <strings>
     <string id="AppName">ErrorsAndTrials</string>
-    <string id="power_save_mode">Reduce refresh rate to 1 per minute to save power</string>
+    
     <string id="white_background">Use white background</string>
     <string id="comp12h">12h angle complication</string>
     <string id="comp2h">2h angle complication</string>
@@ -17,11 +17,6 @@
     
     <string id="always_on_second">Always-on second (for digital)</string>
     <string id="always_on_heart">Always-on heart rate (for digital)</string>
-    
-    <string id="sleep_time_behaviour">Sleep time behaviour (Currently disabled)</string>
-    <string id="default_render">Default (still render screen)</string>
-    <string id="no_render">Off screen to save power</string>
-    
     
     <string id="minimal_data">Full number instead of reduced (K)</string>
     <string id="big_num_stripes">Render stripes on big number</string>

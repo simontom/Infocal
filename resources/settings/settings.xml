@@ -14,16 +14,6 @@
         </settingConfig>
     </setting>
     
-	<setting propertyKey="@Properties.power_save_mode" title="@Strings.power_save_mode">
-        <settingConfig type="boolean" />
-    </setting>
-    <setting propertyKey="@Properties.sleep_time_behaviour" title="@Strings.sleep_time_behaviour">
-        <settingConfig type="list">
-        	<listEntry value="0">@Strings.default_render</listEntry>
-        	<listEntry value="1">@Strings.no_render</listEntry>
-        </settingConfig>
-    </setting>
-    
     <setting propertyKey="@Properties.always_on_second" title="@Strings.always_on_second">
         <settingConfig type="boolean" />
     </setting>

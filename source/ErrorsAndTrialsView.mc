@@ -103,48 +103,6 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
     	
     	var clockTime = System.getClockTime();
     	var current_tick = System.getTimer();
-
-//		System.println("" + current_time_duration + ", " + sleep_time + ", " + wake_time);
-		
-////		System.println("" + is_in_sleep + ", " + Application.getApp().getProperty("sleep_time_behaviour") + ", " + did_clear);
-//		var sleep_time_behaviour = Application.getApp().getProperty("sleep_time_behaviour");
-//		if (sleep_time_behaviour == 1) {
-//			var profile = UserProfile.getProfile();
-//			var current_time_duration = clockTime.hour*3600 + clockTime.min*60 + clockTime.sec;
-//	    	var sleep_time = profile.sleepTime.value();
-//	    	var wake_time = profile.wakeTime.value();
-//		
-//			var is_in_sleep = false;
-//			if (wake_time < sleep_time) {
-//				// sleep before 24h wake after 24
-//				if (current_time_duration >= sleep_time) {
-//					is_in_sleep = true;
-//				} else if (current_time_duration <= wake_time) {
-//					is_in_sleep = true;
-//				}
-//			} else {
-//				// sleep & wake after 24
-//				if ((current_time_duration >= sleep_time) && (current_time_duration <= wake_time)) {
-//					is_in_sleep = true;
-//				}
-//			}
-//			
-//			if (is_in_sleep) {
-//				if (!did_clear) {
-//					dc.setColor(0x000000, 0x000000);
-//					dc.clear();
-//					did_clear = true;
-//				}
-//				return;
-//			} else {
-//				did_clear = false;
-//			}
-//		}
-    	
-//    	System.println("1");
-    	
-//    	System.println("update");
-//    	System.println("" + clockTime.min + ":" + clockTime.sec);
     	
     	// Calculate battery consumtion in days
     	var time_now = Time.now();
@@ -182,24 +140,6 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
     	} else {
     		//System.println(time_now.compare(last_battery_hour));
     	}
-        
-        // if this device has the clear dc bug
-        // use a screen buffer to save having to redraw
-        // everything on every update
-        if (Application.getApp().getProperty("power_save_mode")
-                && screenbuffer != null) {
-            var current_minute = clockTime.min;
-            // if minute has changed, draw to the buffer
-            if (current_minute!=last_draw_minute) {
-                last_draw_minute = current_minute;
-                force_render_component = true;
-                mainDrawComponents(screenbuffer.getDc());
-                force_render_component = false;
-            }
-            // copy buffer to screen
-            dc.drawBitmap(0,0,screenbuffer);
-            return;
-        } 
     	
         var always_on_style = Application.getApp().getProperty("always_on_style");
         if (centerX == 195) {
@@ -225,57 +165,28 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
     	}
     	
     	force_render_component = true;
-    	if (Application.getApp().getProperty("power_save_mode")) {
-    		if (restore_from_resume) {
-				var current_mili = current_tick;
-				force_render_component = true;
-				// will allow watch face to refresh in 5s when resumed (`onShow()` called)
-				if ((current_mili-last_resume_mili) > 5000) {
-					restore_from_resume = false;
-				}
-				// in resume time
-				checkBackgroundRequest();
-				mainDrawComponents(dc);
-				force_render_component = false;
-    		} else {
-	    		var current_minute = clockTime.min;
-	    		if (current_minute!=last_draw_minute) {
-	    			// continue
-	    			last_draw_minute = current_minute;
-	    			// minute turn
-	    			checkBackgroundRequest();
-	    			mainDrawComponents(dc);
-	    		} else {
-	    			// only draw spatial
-//	    			return;
-	    		}
-    		}
-    	} else {
-    		// normal power mode
-    		if (restore_from_resume) {
-    			var current_mili = current_tick;
-				force_render_component = true;
-				// will allow watch face to refresh in 5s when resumed (`onShow()` called)
-				if ((current_mili-last_resume_mili) > 5000) {
-					restore_from_resume = false;
-				}
-			}
+		// normal power mode
+		if (restore_from_resume) {
+			var current_mili = current_tick;
 			force_render_component = true;
-			if (clockTime.min != last_draw_minute) {
-				// Only check background web request every 1 minute
-				checkBackgroundRequest();
+			// will allow watch face to refresh in 5s when resumed (`onShow()` called)
+			if ((current_mili-last_resume_mili) > 5000) {
+				restore_from_resume = false;
 			}
-    		mainDrawComponents(dc);
-    		last_draw_minute = clockTime.min;
-    		force_render_component = false;
-    	}
+		}
+		force_render_component = true;
+		if (clockTime.min != last_draw_minute) {
+			// Only check background web request every 1 minute
+			checkBackgroundRequest();
+		}
+		mainDrawComponents(dc);
+		last_draw_minute = clockTime.min;
     	force_render_component = false;
     	
     	onPartialUpdate(dc);
     }
 
 	function mainDrawComponents(dc) {
-	
 		checkTheme();
 		
 		if (force_render_component) {

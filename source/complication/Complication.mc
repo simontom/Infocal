@@ -32,6 +32,7 @@ class Complication extends ArcTextComplication {
 			// small digital
 			return dt_field.need_draw();
 		}
+		
 		if (Application.getApp().getProperty("left_digital_info")) {
 			var can_draw = !(angle==10 && !(Application.getApp().getProperty("use_analog")));
 			return dt_field.need_draw() && can_draw;
