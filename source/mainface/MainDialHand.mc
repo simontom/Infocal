@@ -48,12 +48,6 @@ class MainDialHand extends Ui.Drawable {
     }
     
     function checkCurrentFont() {
-    
-    	if (Application.getApp().getProperty("use_analog") == true) {
-    		removeFont();
-    		return;
-    	}
-    
     	var digital_style = Application.getApp().getProperty("digital_style");
     	if (digital_style == 0) {
     		// big
@@ -100,17 +94,12 @@ class MainDialHand extends Ui.Drawable {
 				xmidSemiFont = Ui.loadResource(Rez.Fonts.xmidsemi);
     		}
     	}
-    	
     }
     
     function draw(dc) {
     	// possibly remove all font to save memory
     	checkCurrentFont();
-    
-    	if (Application.getApp().getProperty("use_analog") == true) {
-    		return;
-    	}
-    	
+
     	var currentSettings = System.getDeviceSettings();
     	var clockTime = System.getClockTime();   
     	var hour = clockTime.hour;	

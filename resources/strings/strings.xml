@@ -33,7 +33,6 @@
     <string id="countdown_date">Date for countdown</string>
     <string id="countdown">Countdown to event</string>
     
-    <string id="use_analog">Analog watch face</string>
     <string id="digital_style">Digital number style</string>
     <string id="always_on_style">Always-on number style</string>
     <string id="digital_style_big">Big center style</string>

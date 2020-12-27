@@ -55,6 +55,5 @@
     </drawable>
     
     <drawable id="digital" class="MainDialHand"></drawable>
-    <drawable id="analog" class="AnalogDial"></drawable>
     
 </layout>

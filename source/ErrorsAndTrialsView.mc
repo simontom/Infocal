@@ -46,7 +46,6 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
 	var font_height_half = 7;
 	
 	var face_radius;
-	var current_is_analogue = false;
 	
 	var did_clear = false;
 	
@@ -65,8 +64,6 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
     	centerY = dc.getHeight()/2;
     	
     	face_radius = centerX - (18*centerX/120).toNumber();
-
-    	current_is_analogue = Application.getApp().getProperty("use_analog");
     	
         setLayout(Rez.Layouts.WatchFace(dc));
 
@@ -196,19 +193,7 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
     		dc.fillRectangle(0,0,centerX*2,centerY*2);
 		}
 		
-		var analogDisplay = View.findDrawableById("analog");
 		var digitalDisplay = View.findDrawableById("digital");
-		
-		if (current_is_analogue != Application.getApp().getProperty("use_analog")){
-			// switch style
-			if (current_is_analogue) {
-				// turned to digital
-				analogDisplay.removeFont();
-			} else {
-				// turned to analogue
-				digitalDisplay.removeFont();
-			}
-		}
 		
 		var backgroundView = View.findDrawableById("background");
 		var bar1 = View.findDrawableById("aBarDisplay");
@@ -240,55 +225,48 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
 		bgraph2.draw(dc);
 		
         // Call the parent onUpdate function to redraw the layout
-        if (Application.getApp().getProperty("use_analog")) {
-        	analogDisplay.draw(dc);
-        } else {
-        	digitalDisplay.draw(dc);
-        }
-        
+		digitalDisplay.draw(dc);
 	}
 
 	function onPartialUpdate(dc) {
-		if (!((Application.getApp().getProperty("use_analog")))) {
-			if (Application.getApp().getProperty("always_on_second")) {
-				var clockTime = System.getClockTime(); 
-				var second_text = clockTime.sec.format("%02d");
-				var ss = dc.getTextDimensions(second_text, second_digi_font);
-				
-				dc.setClip(second_x, second_y, second_clip_size[0], second_clip_size[1]);
-				dc.setColor(Graphics.COLOR_TRANSPARENT, gbackground_color);
-//				dc.setColor(Graphics.COLOR_TRANSPARENT, 0xffff00);
-				dc.clear();
-				dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
-				dc.drawText(second_x, second_y-font_padding, 
-							second_digi_font, 
-							second_text, 
-							Graphics.TEXT_JUSTIFY_LEFT);
-				dc.clearClip();
-			}
+		if (Application.getApp().getProperty("always_on_second")) {
+			var clockTime = System.getClockTime(); 
+			var second_text = clockTime.sec.format("%02d");
+			var ss = dc.getTextDimensions(second_text, second_digi_font);
 			
-			if (Application.getApp().getProperty("always_on_heart")) {
-				
-				var h = _retrieveHeartrate();
-				var heart_text = "--";
-				if (h != null) {
-					heart_text = h.format("%d");
-				}
-				var ss = dc.getTextDimensions(heart_text, second_digi_font);
-				var s = (ss[0]*1.2).toNumber();
-				var s2 = (second_clip_size[0]*1.25).toNumber();
-				dc.setClip(heart_x-s2-1, second_y, s2+2, second_clip_size[1]);
-				dc.setColor(Graphics.COLOR_TRANSPARENT, gbackground_color);
+			dc.setClip(second_x, second_y, second_clip_size[0], second_clip_size[1]);
+			dc.setColor(Graphics.COLOR_TRANSPARENT, gbackground_color);
 //				dc.setColor(Graphics.COLOR_TRANSPARENT, 0xffff00);
-				dc.clear();
-				
-				dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
-				dc.drawText(heart_x-1, second_y-font_padding, 
-							second_digi_font, 
-							heart_text, 
-							Graphics.TEXT_JUSTIFY_RIGHT);
-				dc.clearClip();
+			dc.clear();
+			dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
+			dc.drawText(second_x, second_y-font_padding, 
+						second_digi_font, 
+						second_text, 
+						Graphics.TEXT_JUSTIFY_LEFT);
+			dc.clearClip();
+		}
+		
+		if (Application.getApp().getProperty("always_on_heart")) {
+			
+			var h = _retrieveHeartrate();
+			var heart_text = "--";
+			if (h != null) {
+				heart_text = h.format("%d");
 			}
+			var ss = dc.getTextDimensions(heart_text, second_digi_font);
+			var s = (ss[0]*1.2).toNumber();
+			var s2 = (second_clip_size[0]*1.25).toNumber();
+			dc.setClip(heart_x-s2-1, second_y, s2+2, second_clip_size[1]);
+			dc.setColor(Graphics.COLOR_TRANSPARENT, gbackground_color);
+//				dc.setColor(Graphics.COLOR_TRANSPARENT, 0xffff00);
+			dc.clear();
+			
+			dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
+			dc.drawText(heart_x-1, second_y-font_padding, 
+						second_digi_font, 
+						heart_text, 
+						Graphics.TEXT_JUSTIFY_RIGHT);
+			dc.clearClip();
 		}
 	}
 
@@ -301,21 +279,16 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
     	// System.println("" + clockTime.min + ":" + clockTime.sec);
     }
     
-    // The user has just looked at their watch. Timers and animations may be started here.
+    // The user has just looked at their watch. Timers and animations may be started here
     function onExitSleep() {
-		var dialDisplay = View.findDrawableById("analog");
-		if (dialDisplay != null) {
-			dialDisplay.enableSecondHand();
-		}
     	checkBackgroundRequest();
+
+		// If in low energy mode, onUpdate gets called once per second I think
     }
 
-    // Terminate any active timers and prepare for slow updates.
+    // Terminate any active timers and prepare for slow updates
     function onEnterSleep() {
-   		var dialDisplay = View.findDrawableById("analog");
-   		if (dialDisplay != null) {
-			dialDisplay.disableSecondHand();
-		}
+		// If in low energy mode, onUpdate gets called once per minute
     }
 
 	function checkTheme() {
