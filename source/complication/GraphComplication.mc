@@ -9,6 +9,14 @@ using Toybox.Activity as Activity;
 using Toybox.ActivityMonitor as ActivityMonitor;
 using Toybox.SensorHistory as SensorHistory;
 
+enum /* GRAPH_TYPES */ {
+    GRAPH_TYPE_EMPTY = 0,
+    GRAPH_TYPE_HEARTRATE = 1,
+    GRAPH_TYPE_ALTITUDE = 2,
+    GRAPH_TYPE_BAROMETR = 3,
+    GRAPH_TYPE_TEMPERATURE = 4
+}
+
 class GraphComplication extends Ui.Drawable {
 
     hidden var position;
@@ -42,25 +50,24 @@ class GraphComplication extends Ui.Drawable {
     	}
 	}
 	
-	function get_data_interator(type) {
-		if (type==1) {
-			if ((Toybox has :SensorHistory) && (Toybox.SensorHistory has :getHeartRateHistory)) {
-		        return Toybox.SensorHistory.getHeartRateHistory({});
-		    }
-	    } else if (type==2) {
-	    	if ((Toybox has :SensorHistory) && (Toybox.SensorHistory has :getElevationHistory)) {
-		        return Toybox.SensorHistory.getElevationHistory({});
-		    }
-	    } else if (type==3) {
-	    	if ((Toybox has :SensorHistory) && (Toybox.SensorHistory has :getPressureHistory)) {
-		        return Toybox.SensorHistory.getPressureHistory({});
-		    }
-	    } else if (type==4) {
-	    	if ((Toybox has :SensorHistory) && (Toybox.SensorHistory has :getTemperatureHistory)) {
-		        return Toybox.SensorHistory.getTemperatureHistory({});
-		    }
-	    }
-	    return null;
+	function get_data_interator(graphType) {
+        switch (graphType) {
+            case GRAPH_TYPE_HEARTRATE
+                return Toybox.SensorHistory.getHeartRateHistory({});
+
+            case GRAPH_TYPE_ALTITUDE
+                return Toybox.SensorHistory.getElevationHistory({});
+
+            case GRAPH_TYPE_BAROMETR
+                return Toybox.SensorHistory.getPressureHistory({});
+
+            case GRAPH_TYPE_TEMPERATURE
+                return Toybox.SensorHistory.getTemperatureHistory({});
+                
+            case GRAPH_TYPE_EMPTY
+            default:
+                return null;
+        }
 	}
 
 	function need_draw() {
