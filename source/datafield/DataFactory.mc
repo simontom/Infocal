@@ -12,40 +12,40 @@ using Toybox.Time.Gregorian as Date;
 
 enum /* FIELD_TYPES */ {
 	FIELD_TYPE_HEART_RATE = 0,
-	FIELD_TYPE_BATTERY,
-	FIELD_TYPE_CALORIES,
-	FIELD_TYPE_DISTANCE,
-	FIELD_TYPE_MOVE,
-	FIELD_TYPE_STEP,
-	FIELD_TYPE_ACTIVE,
+	FIELD_TYPE_BATTERY = 1,
+	FIELD_TYPE_CALORIES = 2,
+	FIELD_TYPE_DISTANCE = 3,
+	FIELD_TYPE_MOVE = 4,
+	FIELD_TYPE_STEP = 5,
+	FIELD_TYPE_ACTIVE = 6,
 	
-	FIELD_TYPE_DATE,
-	FIELD_TYPE_TIME,
-	FIELD_TYPE_EMPTY,
+	FIELD_TYPE_DATE = 7,
+	FIELD_TYPE_TIME = 8,
+	FIELD_TYPE_EMPTY = 9,
 	
 	FIELD_TYPE_NOTIFICATIONS = 10,
-	FIELD_TYPE_ALARMS,
-	FIELD_TYPE_ALTITUDE,
-	FIELD_TYPE_TEMPERATURE,
-	FIELD_TYPE_SUNRISE_SUNSET,
-	FIELD_TYPE_FLOOR,
-	FIELD_TYPE_GROUP_NOTI,
-	FIELD_TYPE_DISTANCE_WEEK,
-	FIELD_TYPE_BAROMETER,
-	FIELD_TYPE_TIME_SECONDARY,
-	FIELD_TYPE_PHONE_STATUS,
-	FIELD_TYPE_COUNTDOWN,
-	FIELD_TYPE_WEEKCOUNT,
+	FIELD_TYPE_ALARMS = 11,
+	FIELD_TYPE_ALTITUDE = 12,
+	FIELD_TYPE_TEMPERATURE = 13,
+	FIELD_TYPE_SUNRISE_SUNSET = 14,
+	FIELD_TYPE_FLOOR = 15,
+	FIELD_TYPE_GROUP_NOTI = 16,
+	FIELD_TYPE_DISTANCE_WEEK = 17,
+	FIELD_TYPE_BAROMETER = 18,
+	FIELD_TYPE_TIME_SECONDARY = 19,
+	FIELD_TYPE_PHONE_STATUS = 20,
+	FIELD_TYPE_COUNTDOWN = 21,
+	FIELD_TYPE_WEEKCOUNT = 22,
 	
 	FIELD_TYPE_TEMPERATURE_OUT = 23,
-	FIELD_TYPE_TEMPERATURE_HL,
-	FIELD_TYPE_WEATHER,
+	FIELD_TYPE_TEMPERATURE_HL = 24,
+	FIELD_TYPE_WEATHER = 25,
 	
-	FIELD_TYPE_AMPM_INDICATOR = 26,
-	FIELD_TYPE_CTEXT_INDICATOR,
-	FIELD_TYPE_WIND
+	FIELD_TYPE_CTEXT_INDICATOR = 27,
+	FIELD_TYPE_WIND = 28
 }
 
+// TODO: Rewrite to SWITCH / CASE
 function buildFieldObject(type) {
 	if (type==FIELD_TYPE_HEART_RATE) {
 		return new HRField(FIELD_TYPE_HEART_RATE);
@@ -99,8 +99,6 @@ function buildFieldObject(type) {
 		return new TemparatureHLField(FIELD_TYPE_TEMPERATURE_HL);
 	} else if (type==FIELD_TYPE_WEATHER) {
 		return new WeatherField(FIELD_TYPE_WEATHER);
-	} else if (type==FIELD_TYPE_AMPM_INDICATOR) {
-		return new AMPMField(FIELD_TYPE_AMPM_INDICATOR);
 	} else if (type==FIELD_TYPE_CTEXT_INDICATOR) {
 		return new CTextField(FIELD_TYPE_CTEXT_INDICATOR);
 	} else if (type==FIELD_TYPE_WIND) {
@@ -295,27 +293,6 @@ class WeatherField extends BaseDataField {
 	        }
         }
         return "--";
-	}
-}
-
-/////////////////
-// AM/PM stage //
-/////////////////
-
-class AMPMField extends BaseDataField {
-
-	function initialize(id) {
-		BaseDataField.initialize(id);
-	}
-	
-	function cur_label(value) {
-    	var clockTime = Sys.getClockTime();        		
-    	var hour = clockTime.hour;
-		if (hour>=12) {
-			return "pm";
-		} else {
-			return "am";
-		}
 	}
 }
 
@@ -521,15 +498,15 @@ class TimeSecondaryField extends BaseDataField {
     	var minute = target_zone.min;      		
     	var mark = "";
 		if(!currentSettings.is24Hour) {
-			if (hour>=12) {
-				mark = "pm";
+			if (hour >= 12) {
+				mark = "p";
 			} else {
-				mark = "am";
+				mark = "a";
 			}
 			hour = hour % 12;
         	hour = (hour == 0) ? 12 : hour;  
         }    
-        return Lang.format("$1$:$2$ $3$",[hour, minute.format(Constants.ZeroLeadingFormat), mark]);
+        return Lang.format("$1$:$2$ $3$",[hour.format(Constants.ZeroLeadingFormat), minute.format(Constants.ZeroLeadingFormat), mark]);
 	}
 }
 
@@ -913,7 +890,6 @@ class SunField extends BaseDataField {
 				var hour = Math.floor(nextSunEvent).toLong() % 24;
 				var min = Math.floor((nextSunEvent - Math.floor(nextSunEvent)) * 60); // Math.floor(fractional_part * 60)
 				var ftime = getFormattedTime(hour, min);
-//				var timestr = ftime[:hour] + ":" + ftime[:min] + ftime[:amPm]; 
 				var timestr = ftime[:hour] + ":" + ftime[:min]; 
 				
 				var riseicon = isSunriseNext ? "RISE" : "SET";
