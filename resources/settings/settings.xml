@@ -29,9 +29,6 @@
         	<listEntry value="1">@Strings.digital_style_small</listEntry>
         </settingConfig>
     </setting>
-    <setting propertyKey="@Properties.zero_leading_digital" title="@Strings.zero_leading_digital">
-        <settingConfig type="boolean" />
-    </setting>
     <setting propertyKey="@Properties.always_on_style" title="@Strings.always_on_style">
         <settingConfig type="list">
         	<listEntry value="1">@Strings.digital_style_medium</listEntry>

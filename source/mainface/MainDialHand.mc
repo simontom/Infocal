@@ -109,9 +109,6 @@ class MainDialHand extends Ui.Drawable {
         }    
 		var minute = clockTime.min;
 		
-		var leading_zeros = Application.getApp().getProperty("zero_leading_digital");
-		var number_formater = leading_zeros ? Constants.ZeroLeadingFormat : "%d";
-		
 		var digital_style = Application.getApp().getProperty("digital_style");
 		var alwayon_style = Application.getApp().getProperty("always_on_style");
 		if (digital_style == 0 || digital_style == 2) { // big or extra big
@@ -121,7 +118,7 @@ class MainDialHand extends Ui.Drawable {
 			var target_center_font = digital_style == 0 ? digitalFont : xdigitalFont;
 			
 			// DRAW CENTER
-	    	var bigText = bignumber.format(number_formater);
+	    	var bigText = bignumber.format(Constants.ZeroLeadingFormat);
 	    	dc.setPenWidth(1);     
 	    	dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
 	    	var h = dc.getFontHeight(target_center_font);
@@ -186,7 +183,7 @@ class MainDialHand extends Ui.Drawable {
 	    	// draw secondary info
 	    	dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
 	    	var h2 = dc.getFontHeight(midDigitalFont);
-	    	dc.drawText(target_info_x+bonus_alignment, centerY*0.7-h2/4 + 5 + vertical_alignment, midDigitalFont, smallnumber.format(number_formater), alignment);
+	    	dc.drawText(target_info_x+bonus_alignment, centerY*0.7-h2/4 + 5 + vertical_alignment, midDigitalFont, smallnumber.format(Constants.ZeroLeadingFormat), alignment);
 	    	
 	    	if (centerX==109 && digital_style == 2) {
 	    		return;
@@ -205,7 +202,7 @@ class MainDialHand extends Ui.Drawable {
 			dc.drawLine(target_info_x-bonus_alignment-w3/2+extra_info_alignment, centerY*0.5 + 7, target_info_x-bonus_alignment+w3/2+extra_info_alignment, centerY*0.5 + 7);
 			
 		} else if (digital_style == 1 || digital_style == 3) {
-			var hourText = hour.format(number_formater);
+			var hourText = hour.format(Constants.ZeroLeadingFormat);
 			var minuText = minute.format(Constants.ZeroLeadingFormat);
 			
 			var bonus = digital_style == 3 ? -13 : 0;
