@@ -1,25 +1,11 @@
 <fonts>
 	<font id="weather" filename="weather.fntc" antialias="true"/>
 
-	<font id="hour_1" filename="hour_hand_1.fnt" antialias="true"/>
-	<font id="hour_2" filename="hour_hand_2.fnt" antialias="true"/>
-	<font id="hour_3" filename="hour_hand_3.fnt" antialias="true"/>
-	<font id="hour_4" filename="hour_hand_4.fnt" antialias="true"/>
-	<font id="hour_5" filename="hour_hand_5.fnt" antialias="true"/>
-	<font id="hour_6" filename="hour_hand_6.fnt" antialias="true"/>
-	
-	<font id="minu_1" filename="minu_hand_1.fnt" antialias="true"/>
-	<font id="minu_2" filename="minu_hand_2.fnt" antialias="true"/>
-	<font id="minu_3" filename="minu_hand_3.fnt" antialias="true"/>
-	<font id="minu_4" filename="minu_hand_4.fnt" antialias="true"/>
-	<font id="minu_5" filename="minu_hand_5.fnt" antialias="true"/>
-	<font id="minu_6" filename="minu_hand_6.fnt" antialias="true"/>
-
 	<font id="smadigi" filename="smadigi2.fntc" antialias="true" filter=" -+%,.:0123456789QWERTYUIJOPASDFGHJKLZXCVBNM°"/>
-	
+
 	<font id="secodigi" filename="secodigi.fntc" antialias="true" filter="0123456789"/>
 	<font id="xsecodigi" filename="xsecodigi.fntc" antialias="true" filter="0123456789"/>
-	
+
 	<font id="middigi" filename="middigi.fntc" antialias="true" filter="0123456789"/>
 	<font id="bigdigi" filename="bigdigigarmin.fntc" antialias="true" filter="0123456789\\"/>
 	<font id="xbigdigi" filename="xbigdigigarmin.fntc" antialias="true" filter="0123456789\\"/>
@@ -27,12 +13,12 @@
 	<font id="midsemi" filename="midsemi.fntc" antialias="true" filter="0123456789"/>
 	<font id="xmidbold" filename="xmidbold.fntc" antialias="true" filter="0123456789"/>
 	<font id="xmidsemi" filename="xmidsemi.fntc" antialias="true" filter="0123456789"/>
-	
+
 	<font id="cur_bo" filename="cur_bo.fnt" antialias="true"/>
 	<font id="cur_up" filename="cur_up.fnt" antialias="true"/>
 	<font id="arr_bo" filename="arr_bo.fnt" antialias="true"/>
 	<font id="arr_up" filename="arr_up.fnt" antialias="true"/>
-	
+
 	<font id="e0" filename="e0.fnt" antialias="true" filter=" %+-.0123456789:ABCDEFGHIJKLMNOPRSTUVWY°"/>
 	<font id="e1" filename="e1.fnt" antialias="true" filter=" %+-.0123456789:ABCDEFGHIJKLMNOPRSTUVWY°"/>
 	<font id="e2" filename="e2.fnt" antialias="true" filter=" %+-.0123456789:ABCDEFGHIJKLMNOPRSTUVWY°"/>
@@ -94,4 +80,4 @@
 	<font id="e58" filename="e58.fnt" antialias="true" filter=" %+-.0123456789:ABCDEFGHIJKLMNOPRSTUVWY°"/>
 	<font id="e59" filename="e59.fnt" antialias="true" filter=" %+-.0123456789:ABCDEFGHIJKLMNOPRSTUVWY°"/>
 	<font id="e60" filename="e60.fnt" antialias="true" filter=" %+-.0123456789:ABCDEFGHIJKLMNOPRSTUVWY°"/>
-</fonts>  
+</fonts>
