@@ -67,13 +67,13 @@ class ErrorsAndTrialsApp extends Application.AppBase {
 
     // onStart() is called on application start up
     function onStart(state) {
-//    	// var clockTime = Sys.getClockTime(); 
+//    	// var clockTime = Sys.getClockTime();
 //    	// Sys.println("" + clockTime.min + ":" + clockTime.sec);
     }
 
     // onStop() is called when your application is exiting
     function onStop(state) {
-//    	// var clockTime = Sys.getClockTime(); 
+//    	// var clockTime = Sys.getClockTime();
 //    	// Sys.println("" + clockTime.min + ":" + clockTime.sec);
     }
 
