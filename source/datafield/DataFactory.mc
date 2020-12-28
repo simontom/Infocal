@@ -529,7 +529,7 @@ class TimeSecondaryField extends BaseDataField {
 			hour = hour % 12;
         	hour = (hour == 0) ? 12 : hour;  
         }    
-        return Lang.format("$1$:$2$ $3$",[hour, minute.format("%02d"), mark]);
+        return Lang.format("$1$:$2$ $3$",[hour, minute.format(Constants.ZeroLeadingFormat), mark]);
 	}
 }
 
@@ -1042,9 +1042,9 @@ class SunField extends BaseDataField {
 		];
 	}
 	
-	// Return a formatted time dictionary that respects is24Hour and HideHoursLeadingZero settings.
-	// - hour: 0-23.
-	// - min:  0-59.
+	// Return a formatted time dictionary that respects is24Hour settings
+	// - hour: 0-23
+	// - min:  0-59
 	function getFormattedTime(hour, min) {
 		var amPm = "";
 
@@ -1069,13 +1069,9 @@ class SunField extends BaseDataField {
 			}
 		}
 
-		// #10 If in 12-hour mode with Hide Hours Leading Zero set, hide leading zero. Otherwise, show leading zero.
-		// #69 Setting now applies to both 12- and 24-hour modes.
-		hour = hour.format("%2d");
-
 		return {
-			:hour => hour,
-			:min => min.format("%02d"),
+			:hour => hour.format(Constants.ZeroLeadingFormat),
+			:min => min.format(Constants.ZeroLeadingFormat),
 			:amPm => amPm
 		};
 	}
@@ -1259,14 +1255,14 @@ class TimeField extends BaseDataField {
 		var mark = "";
 		if(!currentSettings.is24Hour) {
 			if (hour>=12) {
-				mark = "pm";
+				mark = "p";
 			} else {
-				mark = "am";
+				mark = "a";
 			}
 			hour = hour % 12;
         	hour = (hour == 0) ? 12 : hour;  
         }    
-        return Lang.format("$1$:$2$ $3$",[hour, minute.format("%02d"), mark]);
+        return Lang.format("$1$:$2$ $3$", [hour.format(Constants.ZeroLeadingFormat), minute.format(Constants.ZeroLeadingFormat), mark]);
     }
 }
 

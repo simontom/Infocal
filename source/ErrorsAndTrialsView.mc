@@ -231,7 +231,7 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
 	function onPartialUpdate(dc) {
 		if (Application.getApp().getProperty("always_on_second")) {
 			var clockTime = System.getClockTime(); 
-			var second_text = clockTime.sec.format("%02d");
+			var second_text = clockTime.sec.format(Constants.ZeroLeadingFormat);
 			var ss = dc.getTextDimensions(second_text, second_digi_font);
 			
 			dc.setClip(second_x, second_y, second_clip_size[0], second_clip_size[1]);

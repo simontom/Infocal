@@ -109,9 +109,8 @@ class MainDialHand extends Ui.Drawable {
         }    
 		var minute = clockTime.min;
 		
-		
 		var leading_zeros = Application.getApp().getProperty("zero_leading_digital");
-		var number_formater = leading_zeros ? "%02d" : "%d";
+		var number_formater = leading_zeros ? Constants.ZeroLeadingFormat : "%d";
 		
 		var digital_style = Application.getApp().getProperty("digital_style");
 		var alwayon_style = Application.getApp().getProperty("always_on_style");
@@ -207,7 +206,7 @@ class MainDialHand extends Ui.Drawable {
 			
 		} else if (digital_style == 1 || digital_style == 3) {
 			var hourText = hour.format(number_formater);
-			var minuText = minute.format("%02d");
+			var minuText = minute.format(Constants.ZeroLeadingFormat);
 			
 			var bonus = digital_style == 3 ? -13 : 0;
 			var boldF = digital_style == 3 ? xmidBoldFont : midBoldFont;
