@@ -18,11 +18,11 @@ enum /* FIELD_TYPES */ {
 	FIELD_TYPE_MOVE = 4,
 	FIELD_TYPE_STEP = 5,
 	FIELD_TYPE_ACTIVE = 6,
-	
+
 	FIELD_TYPE_DATE = 7,
 	FIELD_TYPE_TIME = 8,
 	FIELD_TYPE_EMPTY = 9,
-	
+
 	FIELD_TYPE_NOTIFICATIONS = 10,
 	FIELD_TYPE_ALARMS = 11,
 	FIELD_TYPE_ALTITUDE = 12,
@@ -36,11 +36,11 @@ enum /* FIELD_TYPES */ {
 	FIELD_TYPE_PHONE_STATUS = 20,
 	FIELD_TYPE_COUNTDOWN = 21,
 	FIELD_TYPE_WEEKCOUNT = 22,
-	
+
 	FIELD_TYPE_TEMPERATURE_OUT = 23,
 	FIELD_TYPE_TEMPERATURE_HL = 24,
 	FIELD_TYPE_WEATHER = 25,
-	
+
 	FIELD_TYPE_CTEXT_INDICATOR = 27,
 	FIELD_TYPE_WIND = 28
 }
@@ -104,12 +104,12 @@ function buildFieldObject(type) {
 	} else if (type==FIELD_TYPE_WIND) {
 		return new WindField(FIELD_TYPE_WIND);
 	}
-	
+
 	return new EmptyDataField(FIELD_TYPE_EMPTY);
 }
 
 class BaseDataField {
-	
+
 	function initialize(id) {
 		_field_id = id;
 	}
@@ -127,31 +127,31 @@ class BaseDataField {
 	function min_val() {
     	return 0.0;
 	}
-	
+
 	function max_val() {
 	    return 100.0;
 	}
-	
+
 	function cur_val() {
 		return 0.01;
 	}
-	
+
 	function min_label(value) {
 		return "0";
 	}
-	
+
 	function max_label(value) {
 		return "100";
 	}
-	
+
 	function cur_label(value) {
 		return "0";
 	}
-	
+
 	function need_draw() {
 		return true;
 	}
-	
+
 	function bar_data() {
 		return false;
 	}
@@ -168,7 +168,7 @@ class EmptyDataField {
 	function field_id() {
 		return _field_id;
 	}
-	
+
 	function need_draw() {
 		return false;
 	}
@@ -184,31 +184,34 @@ class WindField extends BaseDataField {
 
 	function initialize(id) {
 		BaseDataField.initialize(id);
-		wind_direction_mapper = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW",  "WSW", "W", "WNW", "NW", "NNW"];  
+		wind_direction_mapper = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW",  "WSW", "W", "WNW", "NW", "NNW"];
 	}
-	
+
 	function cur_label(value) {
 		// WEATHER
 		var need_minimal = App.getApp().getProperty("minimal_data");
         var weather_data = App.getApp().getProperty("OpenWeatherMapCurrent");
-        if (weather_data != null) {
-        	var settings = Sys.getDeviceSettings();
-			var speed = weather_data["wind_speed"]*3.6; // kph
-			var direct = weather_data["wind_direct"];
-			
-			var direct_corrected = direct + 11.25;                                 					// move degrees to int spaces (North from 348.75-11.25 to 360(min)-22.5(max))
-			direct_corrected = direct_corrected < 360 ? direct_corrected : direct_corrected - 360;  // move North from 360-371.25 back to 0-11.25 (final result is North 0(min)-22.5(max))
-			var direct_idx = (direct_corrected / 22.5).toNumber();                         			// now calculate direction array position: int([0-359.99]/22.5) will result in 0-15 (correct array positions)
-			
-			var directLabel = wind_direction_mapper[direct_idx];
-			var unit = "k";
-			if (settings.distanceUnits == System.UNIT_STATUTE) {	
-				speed *= 0.621371;
-				unit = "m";				
-			}
-			return directLabel + " " + speed.format("%0.1f") + unit;
+
+        if (weather_data == null) {
+            return "--";
         }
-        return "--";
+
+        var settings = Sys.getDeviceSettings();
+        var speed = weather_data["wind_speed"]*3.6; // kph
+        var direct = weather_data["wind_direct"];
+
+        var direct_corrected = direct + 11.25;                                 					// move degrees to int spaces (North from 348.75-11.25 to 360(min)-22.5(max))
+        direct_corrected = direct_corrected < 360 ? direct_corrected : direct_corrected - 360;  // move North from 360-371.25 back to 0-11.25 (final result is North 0(min)-22.5(max))
+        var direct_idx = (direct_corrected / 22.5).toNumber();                         			// now calculate direction array position: int([0-359.99]/22.5) will result in 0-15 (correct array positions)
+
+        var directLabel = wind_direction_mapper[direct_idx];
+        var unit = "k";
+        if (settings.distanceUnits == System.UNIT_STATUTE) {
+            speed *= 0.621371;
+            unit = "m";
+        }
+
+        return directLabel + " " + speed.format("%0.1f") + unit;
 	}
 }
 
@@ -221,12 +224,14 @@ class CTextField extends BaseDataField {
 	function initialize(id) {
 		BaseDataField.initialize(id);
 	}
-	
+
 	function cur_label(value) {
     	var custom_text = App.getApp().getProperty("ctext_input");
+
 		if (custom_text.length() == 0) {
 			return "--";
 		}
+
 		return custom_text;
 	}
 }
@@ -241,7 +246,7 @@ class WeatherField extends BaseDataField {
 
 	function initialize(id) {
 		BaseDataField.initialize(id);
-		
+
 		weather_icon_mapper = {
     		"01d" => "",
 			"02d" => "",
@@ -252,7 +257,7 @@ class WeatherField extends BaseDataField {
 			"11d" => "",
 			"13d" => "",
 			"50d" => "",
-			
+
 			"01n" => "",
 			"02n" => "",
 			"03n" => "",
@@ -264,7 +269,7 @@ class WeatherField extends BaseDataField {
 			"50n" => "",
 		};
 	}
-	
+
 	function cur_icon() {
 		var weather_data = App.getApp().getProperty("OpenWeatherMapCurrent");
 		if (weather_data != null) {
@@ -272,11 +277,11 @@ class WeatherField extends BaseDataField {
 		}
 		return null;
 	}
-	
+
 	function cur_label(value) {
 		// WEATHER
-		var need_minimal = App.getApp().getProperty("minimal_data");
         var weather_data = App.getApp().getProperty("OpenWeatherMapCurrent");
+
         if (weather_data != null) {
         	var settings = Sys.getDeviceSettings();
 			var temp = weather_data["temp"];
@@ -286,12 +291,13 @@ class WeatherField extends BaseDataField {
 				unit = "°F";
 			}
 			value = temp.format("%d") + unit;
-        
+
 	        var description = weather_data.get("des");
 	        if (description != null) {
 	        	return description + " " +  value;
 	        }
         }
+
         return "--";
 	}
 }
@@ -305,33 +311,35 @@ class TemparatureHLField extends BaseDataField {
 	function initialize(id) {
 		BaseDataField.initialize(id);
 	}
-	
+
 	function cur_label(value) {
 		// WEATHER
 		var need_minimal = App.getApp().getProperty("minimal_data");
         var weather_data = App.getApp().getProperty("OpenWeatherMapCurrent");
-        if (weather_data != null) {
-			var settings = Sys.getDeviceSettings();
-			var temp_min = weather_data["temp_min"];
-			var temp_max = weather_data["temp_max"];
-        	var unit = "°C";
-        	if (settings.temperatureUnits == System.UNIT_STATUTE) {
-				temp_min = (temp_min * (9.0 / 5)) + 32; // Convert to Farenheit: ensure floating point division.
-				temp_max = (temp_max * (9.0 / 5)) + 32; // Convert to Farenheit: ensure floating point division.
-				unit = "°F";
-			}
-			if (need_minimal) {
-				return Lang.format("$1$ $2$",[temp_max.format("%d"), temp_min.format("%d")]);
-			} else {
-				return Lang.format("H $1$ L $2$",[temp_max.format("%d"), temp_min.format("%d")]);
-			}
-        } else {
-        	if (need_minimal) {
+
+        if (weather_data == null) {
+            if (need_minimal) {
 				return "--";
-			} else {
-				return "H - L -";
 			}
+
+            return "H - L -";
         }
+
+        var settings = Sys.getDeviceSettings();
+        var temp_min = weather_data["temp_min"];
+        var temp_max = weather_data["temp_max"];
+        var unit = "°C";
+        if (settings.temperatureUnits == System.UNIT_STATUTE) {
+            temp_min = (temp_min * (9.0 / 5)) + 32; // Convert to Farenheit: ensure floating point division.
+            temp_max = (temp_max * (9.0 / 5)) + 32; // Convert to Farenheit: ensure floating point division.
+            unit = "°F";
+        }
+
+        if (need_minimal) {
+            return Lang.format("$1$ $2$",[temp_max.format("%d"), temp_min.format("%d")]);
+        }
+
+        return Lang.format("H $1$ L $2$",[temp_max.format("%d"), temp_min.format("%d")]);
 	}
 }
 
@@ -344,34 +352,34 @@ class TemparatureOutField extends BaseDataField {
 	function initialize(id) {
 		BaseDataField.initialize(id);
 	}
-	
+
 	function cur_label(value) {
 		// WEATHER
 		var need_minimal = App.getApp().getProperty("minimal_data");
         var weather_data = App.getApp().getProperty("OpenWeatherMapCurrent");
-        if (weather_data != null) {
-			var settings = Sys.getDeviceSettings();
-			var temp = weather_data["temp"];
-        	var unit = "°C";
-        	if (settings.temperatureUnits == System.UNIT_STATUTE) {
-				temp = (temp * (9.0 / 5)) + 32; // Convert to Farenheit: ensure floating point division.
-				unit = "°F";
-			}
-			value = temp.format("%d") + unit;
-			
-			
-			if (need_minimal) {
-				return value;
-			} else {
-				return Lang.format("TEMP $1$",[value]);
-			}
-        } else {
-        	if (need_minimal) {
+
+        if (weather_data == null) {
+            if (need_minimal) {
 				return "--";
-			} else {
-				return "TEMP --";
 			}
+
+            return "TEMP --";
         }
+
+        var settings = Sys.getDeviceSettings();
+        var temp = weather_data["temp"];
+        var unit = "°C";
+        if (settings.temperatureUnits == System.UNIT_STATUTE) {
+            temp = (temp * (9.0 / 5)) + 32; // Convert to Farenheit: ensure floating point division.
+            unit = "°F";
+        }
+        value = temp.format("%d") + unit;
+
+        if (need_minimal) {
+            return value;
+        }
+
+        return Lang.format("TEMP $1$",[value]);
 	}
 }
 
@@ -384,57 +392,59 @@ class WeekCountField extends BaseDataField {
 	function initialize(id) {
 		BaseDataField.initialize(id);
 	}
-	
-	function julian_day(year, month, day) { 
-		var a = (14 - month) / 12; 
-		var y = (year + 4800 - a); 
-		var m = (month + 12 * a - 3); 
-		return day + ((153 * m + 2) / 5) + (365 * y) + (y / 4) - (y / 100) + (y / 400) - 32045; 
-	} 
-	
-	function is_leap_year(year) { 
-		if (year % 4 != 0) { 
-			return false; 
-		} else if (year % 100 != 0) { 
-			return true; 
-		} else if (year % 400 == 0) { 
-			return true; 
-		} 
-		return false; 
-	} 
-	
-	function iso_week_number(year, month, day) { 
-		var first_day_of_year = julian_day(year, 1, 1); 
-		var given_day_of_year = julian_day(year, month, day); 
-		
-		var day_of_week = (first_day_of_year + 3) % 7; // days past thursday 
-		var week_of_year = (given_day_of_year - first_day_of_year + day_of_week + 4) / 7; 
-		
-		// week is at end of this year or the beginning of next year 
-		if (week_of_year == 53) { 
-			if (day_of_week == 6) { 
-				return week_of_year; 
-			} else if (day_of_week == 5 && is_leap_year(year)) { 
-				return week_of_year; 
-			} else { 
-			return 1; 
-			} 
-		} // week is in previous year, try again under that year 
-		else if (week_of_year == 0) { 
-			first_day_of_year = julian_day(year - 1, 1, 1); 
-			
-			day_of_week = (first_day_of_year + 3) % 7; 
-			
-			return (given_day_of_year - first_day_of_year + day_of_week + 4) / 7; 
-		} // any old week of the year 
-		else { 
-			return week_of_year; 
-		} 
-	} 
-	
+
+	function julian_day(year, month, day) {
+		var a = (14 - month) / 12;
+		var y = (year + 4800 - a);
+		var m = (month + 12 * a - 3);
+		return day + ((153 * m + 2) / 5) + (365 * y) + (y / 4) - (y / 100) + (y / 400) - 32045;
+	}
+
+	function is_leap_year(year) {
+		if (year % 4 != 0) {
+			return false;
+		} else if (year % 100 != 0) {
+			return true;
+		} else if (year % 400 == 0) {
+			return true;
+		}
+
+		return false;
+	}
+
+	function iso_week_number(year, month, day) {
+		var first_day_of_year = julian_day(year, 1, 1);
+		var given_day_of_year = julian_day(year, month, day);
+
+		var day_of_week = (first_day_of_year + 3) % 7; // days past thursday
+		var week_of_year = (given_day_of_year - first_day_of_year + day_of_week + 4) / 7;
+
+		// week is at end of this year or the beginning of next year
+		if (week_of_year == 53) {
+			if (day_of_week == 6) {
+				return week_of_year;
+			} else if (day_of_week == 5 && is_leap_year(year)) {
+				return week_of_year;
+			}
+
+            return 1;
+		} // week is in previous year, try again under that year
+		else if (week_of_year == 0) {
+			first_day_of_year = julian_day(year - 1, 1, 1);
+
+			day_of_week = (first_day_of_year + 3) % 7;
+
+			return (given_day_of_year - first_day_of_year + day_of_week + 4) / 7;
+		}
+
+        // any old week of the year
+        return week_of_year;
+	}
+
 	function cur_label(value) {
 		var date = Date.info(Time.now(), Time.FORMAT_SHORT);
 		var week_num = iso_week_number(date.year, date.month, date.day);
+
 		return Lang.format("WEEK $1$",[week_num]);
 	}
 
@@ -453,16 +463,17 @@ class CountdownField extends BaseDataField {
 	function initialize(id) {
 		BaseDataField.initialize(id);
 	}
-	
+
 	function cur_label(value) {
 		var set_end_date = new Time.Moment(App.getApp().getProperty("countdown_date"));
 	    var now_d = new Time.Moment(Time.today().value());
-	    var dif_e_n = -(now_d.compare(set_end_date))/86400;
-	    if (dif_e_n>1 || dif_e_n<-1) {
+	    var dif_e_n = -(now_d.compare(set_end_date)) / 86400;
+
+	    if (dif_e_n > 1 || dif_e_n < -1) {
 	    	return Lang.format("$1$ days",[dif_e_n.toString()]);
-	    } else {
-	    	return Lang.format("$1$ day",[dif_e_n.toString()]);
 	    }
+
+        return Lang.format("$1$ day",[dif_e_n.toString()]);
 	}
 }
 
@@ -479,33 +490,30 @@ class TimeSecondaryField extends BaseDataField {
 	function initialize(id) {
 		BaseDataField.initialize(id);
 	}
-	
+
 	function cur_label(value) {
 		var currentSettings = System.getDeviceSettings();
-		var clockTime = Sys.getClockTime();     
+		var clockTime = Sys.getClockTime();
 		var to_utc_second = clockTime.timeZoneOffset;
-		
+
 		var target = App.getApp().getProperty("utc_timezone");
 		var shift_val = App.getApp().getProperty("utc_shift") ? 0.5 : 0.0;
     	var secondary_zone_delta = (target+shift_val)*3600 - to_utc_second;
-    	
+
  		var now = Time.now();
 		var now_target_zone_delta = new Time.Duration(secondary_zone_delta);
 		var now_target_zone = now.add(now_target_zone_delta);
 		var target_zone = Date.info(now_target_zone, Time.FORMAT_SHORT);
-		  		
+
     	var hour = target_zone.hour;
-    	var minute = target_zone.min;      		
+    	var minute = target_zone.min;
     	var mark = "";
 		if(!currentSettings.is24Hour) {
-			if (hour >= 12) {
-				mark = "p";
-			} else {
-				mark = "a";
-			}
+            mark = (hour >= 12) ? "p" : "a";
 			hour = hour % 12;
-        	hour = (hour == 0) ? 12 : hour;  
-        }    
+        	hour = (hour == 0) ? 12 : hour;
+        }
+
         return Lang.format("$1$:$2$ $3$",[hour.format(Constants.ZeroLeadingFormat), minute.format(Constants.ZeroLeadingFormat), mark]);
 	}
 }
@@ -523,58 +531,54 @@ class BarometerField extends BaseDataField {
 	function initialize(id) {
 		BaseDataField.initialize(id);
 	}
-	
+
 	function cur_val() {
 		var presure_data = _retrieveBarometer();
 		return presure_data;
 	}
-	
+
 	function cur_label(value) {
-		var value1 = value[0];
+		var pascal = value[0];
 		var value2 = value[1];
-		if (value1 == null) {
+
+		if (pascal == null) {
 			return "BARO --";
-		} else {
-			var hector_pascal = value1/100.0;
-			
-			var unit = App.getApp().getProperty("barometer_unit");
-			if (unit == 1) {
-				// convert to inHg
-				hector_pascal = hector_pascal*0.0295301;
-			}
-			var signal = "";
-			if (value2==1) {
-				signal = "+";
-			} else if (value2==-1) {
-				signal = "-";
-			}
-			
-			if (unit == 1) {
-				return Lang.format("BAR $1$$2$",[hector_pascal.format("%0.2f"), signal]);
-			}
-			return Lang.format("BAR $1$$2$",[hector_pascal.format("%d"), signal]);
 		}
+
+        var pressure = null;
+        var pressureFormat = null;
+        var unit = App.getApp().getProperty("barometer_unit");
+        if (unit == 1) {
+            // Convert to inHg
+            pressure = pascal * 0.000295301d;
+            pressureFormat = "%0.2f";
+        } else {
+            // Convert to hPa
+            pressure = pascal / 100.0;
+            pressureFormat = "%d";
+        }
+
+        var signal = "";
+        if (value2 == 1) {
+            signal = "+";
+        } else if (value2 == -1) {
+            signal = "-";
+        }
+
+        return Lang.format("BAR $1$$2$", [pressure.format(pressureFormat), signal]);
 	}
-	
+
 	// Create a method to get the SensorHistoryIterator object
 	function _getIterator() {
-	    // Check device for SensorHistory compatibility
-	    if ((Toybox has :SensorHistory) && (Toybox.SensorHistory has :getPressureHistory)) {
-	        return Toybox.SensorHistory.getPressureHistory({});
-	    }
-	    return null;
+        return Toybox.SensorHistory.getPressureHistory({});
 	}
-	
+
 	// Create a method to get the SensorHistoryIterator object
 	function _getIteratorDurate(hour) {
-	    // Check device for SensorHistory compatibility
-	    if ((Toybox has :SensorHistory) && (Toybox.SensorHistory has :getPressureHistory)) {
-	    	var duration = new Time.Duration(hour*3600);
-	        return Toybox.SensorHistory.getPressureHistory({"period"=>duration, "order"=>SensorHistory.ORDER_OLDEST_FIRST});
-	    }
-	    return null;
+        var duration = new Time.Duration(hour * 3600);
+        return Toybox.SensorHistory.getPressureHistory({"period"=>duration, "order"=>SensorHistory.ORDER_OLDEST_FIRST});
 	}
-	
+
 	function _retrieveBarometer() {
 		var trend_iter = _getIteratorDurate(3); // 3 hour
 		var trending = null;
@@ -597,8 +601,8 @@ class BarometerField extends BaseDataField {
 					}
 				}
 			}
-			if (trending!=null) {
-				trending/=num;
+			if (trending != null) {
+				trending /= num;
 			}
 		}
 		var iter = _getIterator();
@@ -616,7 +620,7 @@ class BarometerField extends BaseDataField {
 		}
 		return [null, 0];
 	}
-	
+
 }
 
 ////////////////////
@@ -630,97 +634,93 @@ class BarometerField extends BaseDataField {
 class WeekDistanceField extends BaseDataField {
 
 	var days;
-	
+
 	function initialize(id) {
 		BaseDataField.initialize(id);
-		days = {Date.DAY_MONDAY => "MON", 
-				Date.DAY_TUESDAY => "TUE", 
-				Date.DAY_WEDNESDAY => "WED", 
-				Date.DAY_THURSDAY => "THU", 
-				Date.DAY_FRIDAY => "FRI", 
-				Date.DAY_SATURDAY => "SAT", 
+		days = {Date.DAY_MONDAY => "MON",
+				Date.DAY_TUESDAY => "TUE",
+				Date.DAY_WEDNESDAY => "WED",
+				Date.DAY_THURSDAY => "THU",
+				Date.DAY_FRIDAY => "FRI",
+				Date.DAY_SATURDAY => "SAT",
 				Date.DAY_SUNDAY => "SUN"};
 	}
 
 	function min_val() {
     	return 50.0;
 	}
-	
+
 	function max_val() {
 		var datas = _retriveWeekValues();
 	    return datas[1];
 	}
-	
+
 	function cur_val() {
 		var datas = _retriveWeekValues();
 		return datas[0];
 	}
-	
+
 	function cur_label(value) {
 		var datas = _retriveWeekValues();
-		var total_distance = datas[0];
-		
+		var cm = datas[0];
+
 		var need_minimal = App.getApp().getProperty("minimal_data");
 		var settings = Sys.getDeviceSettings();
-		
-		var value2 = total_distance;
-		var kilo = value2/100000;
-		
+
+		var distance = cm / 100000;
 		var unit = "Km";
-		if (settings.distanceUnits == System.UNIT_METRIC) {					
-		} else {
-			kilo *= 0.621371;
+
+		if (settings.distanceUnits != System.UNIT_METRIC) {
+            distance *= 0.621371;
 			unit = "Mi";
 		}
-		
+
 		if (need_minimal) {
-			return Lang.format("$1$ $2$",[kilo.format("%0.1f"), unit]);
-		} else {
-	    	var valKp = App.getApp().toKValue(kilo*1000);
-	    	return Lang.format("DIS $1$$2$",[valKp, unit]);
-    	}
+			return Lang.format("$1$ $2$", [distance.format("%0.1f"), unit]);
+		}
+
+        var valKp = App.getApp().toKValue(distance * 1000);
+        return Lang.format("DIS $1$$2$", [valKp, unit]);
 	}
-	
+
 	function day_of_week(activity) {
 		var moment = activity.startOfDay;
 		var date = Date.info(moment, Time.FORMAT_SHORT);
 		return date.day_of_week;
 	}
-	
+
 	function today_of_week() {
 		var now = Time.now();
 		var date = Date.info(now, Time.FORMAT_SHORT);
 		return date.day_of_week;
 	}
-	
+
 	function _retriveWeekValues() {
 		var settings = System.getDeviceSettings();
 		var firstDayOfWeek = settings.firstDayOfWeek;
-		
+
 		var activities = [];
 		var activityInfo = ActivityMonitor.getInfo();
 		activities.add(activityInfo);
-			
+
 		if (today_of_week() != firstDayOfWeek) {
-			if (ActivityMonitor has :getHistory) {
-				var his = ActivityMonitor.getHistory();
-				for (var i = 0; i < his.size(); i++ ) {
-					var activity = his[i];
-					activities.add(activity);
-					if (day_of_week(activity)==firstDayOfWeek) {
-						break;
-					}
-				}
-			}
+            var his = ActivityMonitor.getHistory();
+            for (var i = 0; i < his.size(); i++ ) {
+                var activity = his[i];
+                activities.add(activity);
+                if (day_of_week(activity) == firstDayOfWeek) {
+                    break;
+                }
+            }
 		}
-		
+
 		var total = 0.0;
-		for (var i = 0; i<activities.size();i++) {
+		for (var i = 0; i < activities.size();i++) {
 			total += activities[i].distance;
 		}
 		return [total, 10.0];
 	}
-	
+
 	function bar_data() {
 		return true;
 	}
@@ -739,14 +739,14 @@ class PhoneField extends BaseDataField {
 	function initialize(id) {
 		BaseDataField.initialize(id);
 	}
-	
+
 	function cur_label(value) {
 		var settings = Sys.getDeviceSettings();
 		if (settings.phoneConnected) {
 			return "CONN";
-		} else {
-			return "--";
 		}
+
+        return "--";
 	}
 }
 
@@ -763,19 +763,14 @@ class GroupNotiField extends BaseDataField {
 	function initialize(id) {
 		BaseDataField.initialize(id);
 	}
-	
+
 	function cur_label(value) {
 		var settings = Sys.getDeviceSettings();
-		var value = settings.alarmCount;
-		var alarm_str = Lang.format("A$1$",[value.format("%d")]);
-		value = settings.notificationCount;
-		var noti_str = Lang.format("N$1$",[value.format("%d")]);
-		
-		if (settings.phoneConnected) {
-			return Lang.format("$1$-$2$-C",[noti_str, alarm_str]);
-		} else {
-			return Lang.format("$1$-$2$-D",[noti_str, alarm_str]);
-		}
+        var notificationCount = settings.notificationCount.format("%d");
+		var alarmCount = settings.alarmCount.format("%d");
+        var phoneConnected = settings.phoneConnected ? "C" : "D";
+
+        return Lang.format("N$1$-D$2$-$3$", [notificationCount, alarmCount, phoneConnected]);
 	}
 }
 
@@ -792,36 +787,29 @@ class FloorField extends BaseDataField {
 	function initialize(id) {
 		BaseDataField.initialize(id);
 	}
-	
+
 	function max_val() {
 		var activityInfo = ActivityMonitor.getInfo();
-		if (activityInfo has :floorsClimbedGoal) {
-			return activityInfo.floorsClimbedGoal.toFloat();
-		} else {
-			return 1.0;
-		}
+        return activityInfo.floorsClimbedGoal.toFloat();
 	}
-	
+
 	function cur_val() {
 		var activityInfo = ActivityMonitor.getInfo();
-		if (activityInfo has :floorsClimbed) {
-			return activityInfo.floorsClimbed.toFloat();
-		} else {
-			return 0.0;
-		}
+        return activityInfo.floorsClimbed.toFloat();
 	}
-	
+
 	function max_label(value) {
     	return value.format("%d");
 	}
-	
+
 	function cur_label(value) {
-		if (value==null) {
+		if (value == null) {
 			return "FLOOR --";
 		}
+
 	   	return Lang.format("FLOOR $1$",[value.format("%d")]);
 	}
-	
+
 	function bar_data() {
 		return true;
 	}
@@ -840,71 +828,74 @@ class SunField extends BaseDataField {
 	function initialize(id) {
 		BaseDataField.initialize(id);
 	}
-	
+
 	function cur_label(value) {
-		if (gLocationLat != null) {
-			var value = "";
-			var nextSunEvent = 0;
-			var isSunriseNext = false;
-			var now = Date.info(Time.now(), Time.FORMAT_SHORT);
-	
-			// Convert to same format as sunTimes, for easier comparison. Add a minute, so that e.g. if sun rises at
-			// 07:38:17, then 07:38 is already consided daytime (seconds not shown to user).
-			now = now.hour + ((now.min) / 60.0);
-			
-			// Get today's sunrise/sunset times in current time zone.
-			var sunTimes = getSunTimes(gLocationLat, gLocationLng, null, /* tomorrow */ false);
-			//Sys.println(sunTimes);
-	
-			// If sunrise/sunset happens today.
-			var sunriseSunsetToday = ((sunTimes[0] != null) && (sunTimes[1] != null));
-			if (sunriseSunsetToday) {
-	
-				// Before sunrise today: today's sunrise is next.
-				if (now < sunTimes[0]) {
-					nextSunEvent = sunTimes[0];
-					isSunriseNext = true;
-	
-				// After sunrise today, before sunset today: today's sunset is next.
-				} else if (now < sunTimes[1]) {
-					nextSunEvent = sunTimes[1];
-	
-				// After sunset today: tomorrow's sunrise (if any) is next.
-				} else {
-					sunTimes = getSunTimes(gLocationLat, gLocationLng, null, /* tomorrow */ true);
-					nextSunEvent = sunTimes[0];
-					isSunriseNext = true;
-				}
-			}
-	
-			// Sun never rises/sets today.
-			if (!sunriseSunsetToday) {
-				// Sun never rises: sunrise is next, but more than a day from now.
-				if (sunTimes[0] == null) {
-					isSunriseNext = true;
-				}
-				return "SUN --";
-			// We have a sunrise/sunset time.
-			} else {
-				var need_minimal = App.getApp().getProperty("minimal_data");
-				var hour = Math.floor(nextSunEvent).toLong() % 24;
-				var min = Math.floor((nextSunEvent - Math.floor(nextSunEvent)) * 60); // Math.floor(fractional_part * 60)
-				var ftime = getFormattedTime(hour, min);
-				var timestr = ftime[:hour] + ":" + ftime[:min]; 
-				
-				var riseicon = isSunriseNext ? "RISE" : "SET";
-				if (need_minimal) {
-					riseicon = isSunriseNext ? "RI" : "SE";
-				}
-				return Lang.format("$1$ $2$", [riseicon, timestr]);
-			}
-	
-		// Waiting for location.
-		} else {
+        var lat = $.gLocationLat;
+
+        // Waiting for location
+		if (lat == null) {
 			return "SUN --";
-		}
+        }
+
+        var lng = $.gLocationLng;
+        var value = "";
+        var nextSunEvent = 0;
+        var isSunriseNext = false;
+        var now = Date.info(Time.now(), Time.FORMAT_SHORT);
+
+        // Convert to same format as sunTimes, for easier comparison. Add a minute, so that e.g. if sun rises at
+        // 07:38:17, then 07:38 is already consided daytime (seconds not shown to user).
+        now = now.hour + ((now.min) / 60.0);
+
+        // Get today's sunrise/sunset times in current time zone.
+        var sunTimes = getSunTimes(lat, lng, null, /* tomorrow */ false);
+        //Sys.println(sunTimes);
+
+        // If sunrise/sunset happens today.
+        var sunriseSunsetToday = ((sunTimes[0] != null) && (sunTimes[1] != null));
+        if (sunriseSunsetToday) {
+            // Before sunrise today: today's sunrise is next.
+            if (now < sunTimes[0]) {
+                nextSunEvent = sunTimes[0];
+                isSunriseNext = true;
+
+            // After sunrise today, before sunset today: today's sunset is next.
+            } else if (now < sunTimes[1]) {
+                nextSunEvent = sunTimes[1];
+
+            // After sunset today: tomorrow's sunrise (if any) is next.
+            } else {
+                sunTimes = getSunTimes(lat, lng, null, /* tomorrow */ true);
+                nextSunEvent = sunTimes[0];
+                isSunriseNext = true;
+            }
+        }
+
+        // Sun never rises/sets today.
+        if (!sunriseSunsetToday) {
+            // Sun never rises: sunrise is next, but more than a day from now.
+            if (sunTimes[0] == null) {
+                isSunriseNext = true;
+            }
+
+            return "SUN --";
+        // We have a sunrise/sunset time.
+        } else {
+            var need_minimal = App.getApp().getProperty("minimal_data");
+            var hour = Math.floor(nextSunEvent).toLong() % 24;
+            var min = Math.floor((nextSunEvent - Math.floor(nextSunEvent)) * 60); // Math.floor(fractional_part * 60)
+            var ftime = getFormattedTime(hour, min);
+            var timestr = ftime[:hour] + ":" + ftime[:min];
+
+            var riseicon = isSunriseNext ? "RISE" : "SET";
+            if (need_minimal) {
+                riseicon = isSunriseNext ? "RI" : "SE";
+            }
+
+            return Lang.format("$1$ $2$", [riseicon, timestr]);
+        }
 	}
-	
+
 	/**
 	* With thanks to ruiokada. Adapted, then translated to Monkey C, from:
 	* https://gist.github.com/ruiokada/b28076d4911820ddcbbc
@@ -936,7 +927,7 @@ class SunField extends BaseDataField {
 		var d = Date.info(Time.now(), Time.FORMAT_SHORT);
 		var rad = Math.PI / 180.0d;
 		var deg = 180.0d / Math.PI;
-		
+
 		// Calculate Julian date from Gregorian.
 		var a = Math.floor((14 - d.month) / 12);
 		var y = d.year + 4800 - a;
@@ -998,12 +989,12 @@ class SunField extends BaseDataField {
 		if (cosOmega > 1) {
 			return [null, -1];
 		}
-		
+
 		// Sun never sets.
 		if (cosOmega < -1) {
 			return [-1, null];
 		}
-		
+
 		// Calculate times from omega.
 		var omega = Math.acos(cosOmega) * deg;
 		var jSet = jTransit + (omega / 360.0);
@@ -1017,7 +1008,7 @@ class SunField extends BaseDataField {
 			/* localSet */ (deltaJSet * 24) + tzOffset
 		];
 	}
-	
+
 	// Return a formatted time dictionary that respects is24Hour settings
 	// - hour: 0-23
 	// - min:  0-59
@@ -1029,14 +1020,13 @@ class SunField extends BaseDataField {
 			// #6 Ensure noon is shown as PM.
 			var isPm = (hour >= 12);
 			if (isPm) {
-				
 				// But ensure noon is shown as 12, not 00.
 				if (hour > 12) {
 					hour = hour - 12;
 				}
 				amPm = "p";
 			} else {
-				
+
 				// #27 Ensure midnight is shown as 12, not 00.
 				if (hour == 0) {
 					hour = 12;
@@ -1066,38 +1056,35 @@ class TemparatureField extends BaseDataField {
 	function initialize(id) {
 		BaseDataField.initialize(id);
 	}
-	
+
 	function cur_label(value) {
 		var need_minimal = App.getApp().getProperty("minimal_data");
 		var value = 0;
 		var settings = Sys.getDeviceSettings();
-		if ((Toybox has :SensorHistory) && (Toybox.SensorHistory has :getTemperatureHistory)) {
-			var sample = SensorHistory.getTemperatureHistory(null).next();
-			if ((sample != null) && (sample.data != null)) {
-				var temperature = sample.data;
-				if (settings.temperatureUnits == System.UNIT_STATUTE) {
-					temperature = (temperature * (9.0 / 5)) + 32; // Convert to Farenheit: ensure floating point division.
-				}
-				value = temperature.format("%d") + "°";
-				if (need_minimal) {
-					return value;
-				} else {
-					return Lang.format("TEMP $1$",[value]);
-				}
-			} else {
-				if (need_minimal) {
-					return "--";
-				} else {
-					return "TEMP --";
-				}
-			}
-		} else {
-			if (need_minimal) {
-					return "--";
-				} else {
-					return "TEMP --";
-				}
-		}
+        var sample = SensorHistory.getTemperatureHistory(null).next();
+
+        if ((sample == null) || (sample.data == null)) {
+            if (need_minimal) {
+                return "--";
+            }
+
+            return "TEMP --";
+        }
+
+        var unit = "°C";
+        var temperature = sample.data;
+        if (settings.temperatureUnits == System.UNIT_STATUTE) {
+            unit = "°F";
+            temperature = (temperature * (9.0 / 5)) + 32;
+        }
+
+        value = temperature.format("%d") + unit;
+
+        if (need_minimal) {
+            return value;
+        }
+
+        return Lang.format("TEMP $1$", [value]);
 	}
 }
 
@@ -1114,52 +1101,45 @@ class AltitudeField extends BaseDataField {
 	function initialize(id) {
 		BaseDataField.initialize(id);
 	}
-	
+
 	function cur_label(value) {
 		var need_minimal = App.getApp().getProperty("minimal_data");
 		var value = 0;
-		// #67 Try to retrieve altitude from current activity, before falling back on elevation history.
-		// Note that Activity::Info.altitude is supported by CIQ 1.x, but elevation history only on select CIQ 2.x
-		// devices.
+
+		// #67 Try to retrieve altitude from current activity, before falling back on elevation history
 		var settings = Sys.getDeviceSettings();
 		var activityInfo = Activity.getActivityInfo();
 		var altitude = activityInfo.altitude;
-		if ((altitude == null) && (Toybox has :SensorHistory) && (Toybox.SensorHistory has :getElevationHistory)) {
+
+		if (altitude == null) {
 			var sample = SensorHistory.getElevationHistory({ :period => 1, :order => SensorHistory.ORDER_NEWEST_FIRST })
 				.next();
 			if ((sample != null) && (sample.data != null)) {
 				altitude = sample.data;
 			}
 		}
-		if (altitude != null) {
-			var unit = "";
-			// Metres (no conversion necessary).
-			if (settings.elevationUnits == System.UNIT_METRIC) {
-				unit = "m";
-			// Feet.
-			} else {
-				altitude *= /* FT_PER_M */ 3.28084;
-				unit = "ft";
-			}
-	
-			value = altitude.format("%d");
-			value += unit;
-			if (need_minimal) {
-				return value;
-			} else {
-				var temp = Lang.format("ALTI $1$",[value]);
-				if (temp.length() > 10) {
-					return Lang.format("$1$",[value]);
-				}
-				return temp;
-			}
-		} else {
+
+        if (altitude == null) {
 			if (need_minimal) {
 				return "--";
-			} else {
-				return "ALTI --";
 			}
+
+            return "ALT --";
 		}
+
+        var unit = "m";
+        if (settings.elevationUnits != System.UNIT_METRIC) {
+            altitude *= /* FT_PER_M */ 3.28084;
+            unit = "ft";
+        }
+
+        value = altitude.format("%d") + unit;
+
+        if (need_minimal) {
+            return value;
+        }
+
+        return Lang.format("ALT $1$", [value]);
 	}
 }
 
@@ -1176,11 +1156,12 @@ class AlarmField extends BaseDataField {
 	function initialize(id) {
 		BaseDataField.initialize(id);
 	}
-	
+
 	function cur_label(value) {
 		var settings = Sys.getDeviceSettings();
 		var value = settings.alarmCount;
-		return Lang.format("ALAR $1$",[value.format("%d")]);
+
+		return Lang.format("ALAR $1$", [value.format("%d")]);
 	}
 }
 
@@ -1197,11 +1178,12 @@ class NotifyField extends BaseDataField {
 	function initialize(id) {
 		BaseDataField.initialize(id);
 	}
-	
+
 	function cur_label(value) {
 		var settings = Sys.getDeviceSettings();
 		var value = settings.notificationCount;
-		return Lang.format("NOTIF $1$",[value.format("%d")]);
+
+		return Lang.format("NOTIF $1$", [value.format("%d")]);
 	}
 }
 
@@ -1218,27 +1200,31 @@ class TimeField extends BaseDataField {
 	function initialize(id) {
 		BaseDataField.initialize(id);
 	}
-	
+
 	function cur_label(value) {
 		return getTimeString();
 	}
-	
+
 	function getTimeString() {
-		var currentSettings = System.getDeviceSettings();
-    	var clockTime = Sys.getClockTime();        		
+		var is24Hour = System.getDeviceSettings().is24Hour;
+
+    	var clockTime = Sys.getClockTime();
     	var hour = clockTime.hour;
-		var minute = clockTime.min;		
+		var minute = clockTime.min.format(Constants.ZeroLeadingFormat);
 		var mark = "";
-		if(!currentSettings.is24Hour) {
-			if (hour>=12) {
+
+		if(!is24Hour) {
+			if (hour >= 12) {
 				mark = "p";
 			} else {
 				mark = "a";
 			}
+
 			hour = hour % 12;
-        	hour = (hour == 0) ? 12 : hour;  
-        }    
-        return Lang.format("$1$:$2$ $3$", [hour.format(Constants.ZeroLeadingFormat), minute.format(Constants.ZeroLeadingFormat), mark]);
+        	hour = (hour == 0) ? 12 : hour;
+        }
+
+        return Lang.format("$1$:$2$ $3$", [hour.format(Constants.ZeroLeadingFormat), minute, mark]);
     }
 }
 
@@ -1251,11 +1237,11 @@ class TimeField extends BaseDataField {
 ////////////////
 
 class DateField extends BaseDataField {
-	
+
 	function initialize(id) {
 		BaseDataField.initialize(id);
 	}
-	
+
 	function cur_label(value) {
 		return Application.getApp().getFormatedDate();
 	}
@@ -1274,25 +1260,25 @@ class ActiveField extends BaseDataField {
 	function initialize(id) {
 		BaseDataField.initialize(id);
 	}
-	
+
 	function max_val() {
 		var activityInfo = ActivityMonitor.getInfo();
 	    return activityInfo.activeMinutesWeekGoal.toFloat();
 	}
-	
+
 	function cur_val() {
 		var activityInfo = ActivityMonitor.getInfo();
 	    return activityInfo.activeMinutesWeek.total.toFloat();
 	}
-	
+
 	function max_label(value) {
 		return value.format("%d");
 	}
-	
+
 	function cur_label(value) {
-		return Lang.format("ACT $1$",[value.format("%d")]);
+		return Lang.format("ACT $1$", [value.format("%d")]);
 	}
-	
+
 	function bar_data() {
 		return true;
 	}
@@ -1311,46 +1297,44 @@ class DistanceField extends BaseDataField {
 	function initialize(id) {
 		BaseDataField.initialize(id);
 	}
-	
+
 	function max_val() {
 	    return 300000.0;
 	}
-	
+
 	function cur_val() {
 		var activityInfo = ActivityMonitor.getInfo();
 		var value = activityInfo.distance.toFloat();
 		return value;
 	}
-	
+
 	function max_label(value) {
 		var value = value/1000.0;
 		value = value/100.0; // convert cm to km
     	var valKp = App.getApp().toKValue(value);
     	return Lang.format("$1$K",[valKp]);
 	}
-	
-	function cur_label(value) {
+
+	function cur_label(cm) {
 		var need_minimal = App.getApp().getProperty("minimal_data");
 		var settings = Sys.getDeviceSettings();
-		
-		var value2 = value;
-		var kilo = value2/100000;
-		
+
 		var unit = "Km";
-		if (settings.distanceUnits == System.UNIT_METRIC) {					
-		} else {
-			kilo *= 0.621371;
+		var distance = cm / 100000;
+
+		if (settings.distanceUnits != System.UNIT_METRIC) {
 			unit = "Mi";
+			distance *= 0.621371;
 		}
-		
+
 		if (need_minimal) {
-			return Lang.format("$1$ $2$",[kilo.format("%0.1f"), unit]);
-		} else {
-	    	var valKp = App.getApp().toKValue(kilo*1000);
-	    	return Lang.format("DIS $1$$2$",[valKp, unit]);
-    	}
+			return Lang.format("$1$ $2$",[distance.format("%0.1f"), unit]);
+		}
+
+        var valKp = App.getApp().toKValue(distance * 1000);
+        return Lang.format("DIS $1$$2$", [valKp, unit]);
 	}
-	
+
 	function bar_data() {
 		return true;
 	}
@@ -1369,48 +1353,52 @@ class CaloField extends BaseDataField {
 	function initialize(id) {
 		BaseDataField.initialize(id);
 	}
-	
+
 	function max_val() {
 	    return 3000.0;
 	}
-	
+
 	function cur_val() {
 		var activityInfo = ActivityMonitor.getInfo();
 		return activityInfo.calories.toFloat();
 	}
-	
+
 	function max_label(value) {
     	var valKp = App.getApp().toKValue(value);
     	return Lang.format("$1$K",[valKp]);
 	}
-	
+
 	function cur_label(value) {
 		var activeCalories = active_calories(value);
 		var need_minimal = App.getApp().getProperty("minimal_data");
+
 		if (need_minimal) {
 			return Lang.format("$1$-$2$",[value.format("%d"), activeCalories.format("%d")]);
-		} else {
-    		var valKp = App.getApp().toKValue(value);
-	    	return Lang.format("$1$K-$2$",[valKp, activeCalories.format("%d")]);
-    	}
+		}
+
+        var valKp = App.getApp().toKValue(value);
+        return Lang.format("$1$K-$2$",[valKp, activeCalories.format("%d")]);
 	}
-	
+
 	function active_calories(value) {
 		var now = Time.now();
 		var date = Date.info(now, Time.FORMAT_SHORT);
-		
+
 		var profile = UserProfile.getProfile();
-		var bonus = profile.gender == UserProfile.GENDER_MALE ? 5.0 : -161.0;
+		// var bonus = profile.gender == UserProfile.GENDER_MALE ? 5.0 : -161.0;
 		var age = (date.year-profile.birthYear).toFloat();
 		var weight = profile.weight.toFloat()/1000.0;
 		var height = profile.height.toFloat();
-//		var bmr = 0.01*weight + 6.25*height + 5.0*age + bonus; // method 1
-		var bmr = -6.1*age + 7.6*height + 12.1*weight + 9.0; // method 2
-		var current_segment = (date.hour*60.0+date.min).toFloat()/1440.0;
-//		var nonActiveCalories = 1.604*bmr*current_segment; // method 1
-		var nonActiveCalories = 1.003*bmr*current_segment; // method 2
+
+		// var bmr = 0.01*weight + 6.25*height + 5.0*age + bonus; // method 1
+		var bmr = -6.1 * age + 7.6 * height + 12.1 * weight + 9.0; // method 2
+		var current_segment = (date.hour * 60.0 + date.min).toFloat() / 1440.0;
+		// var nonActiveCalories = 1.604*bmr*current_segment; // method 1
+		var nonActiveCalories = 1.003 * bmr * current_segment; // method 2
 		var activeCalories = value - nonActiveCalories;
-		activeCalories = (activeCalories>0 ? activeCalories : 0).toNumber();
+
+		activeCalories = ((activeCalories > 0) ? activeCalories : 0).toNumber();
+
 		return activeCalories;
 	}
 
@@ -1436,29 +1424,29 @@ class MoveField extends BaseDataField {
 	function min_val() {
     	return ActivityMonitor.MOVE_BAR_LEVEL_MIN;
 	}
-	
+
 	function max_val() {
 	    return ActivityMonitor.MOVE_BAR_LEVEL_MAX;
 	}
-	
+
 	function cur_val() {
 		var info = ActivityMonitor.getInfo();
 		var currentBar = info.moveBarLevel.toFloat();
 		return currentBar.toFloat();
 	}
-	
+
 	function min_label(value) {
 		return value.format("%d");
 	}
-	
+
 	function max_label(value) {
-		return Lang.format("$1$",[(value).format("%d")]);
+		return Lang.format("$1$", [(value).format("%d")]);
 	}
-	
+
 	function cur_label(value) {
-    	return Lang.format("MOVE $1$",[value.format("%d")]);
+    	return Lang.format("MOVE $1$", [value.format("%d")]);
 	}
-	
+
 	function bar_data() {
 		return true;
 	}
@@ -1477,34 +1465,35 @@ class StepField extends BaseDataField {
 	function initialize(id) {
 		BaseDataField.initialize(id);
 	}
-	
+
 	function max_val() {
 	    return ActivityMonitor.getInfo().stepGoal.toFloat();
 	}
-	
+
 	function cur_val() {
 		var currentStep = ActivityMonitor.getInfo().steps;
 		return currentStep.toFloat();
 	}
-	
+
 	function max_label(value) {
     	var valKp = App.getApp().toKValue(value);
     	return Lang.format("$1$K",[valKp]);
 	}
-	
+
 	function cur_label(value) {
 		var need_minimal = App.getApp().getProperty("minimal_data");
 		var currentStep = value;
+
 		if (need_minimal) {
 			if (currentStep > 999) {
 				return currentStep.format("%d");
-			} else {
-				return Lang.format("STEP $1$",[currentStep.format("%d")]);
 			}
-		} else {
-	    	var valKp = App.getApp().toKValue(currentStep);
-	    	return Lang.format("STEP $1$K",[valKp]);
-    	}
+
+            return Lang.format("STEP $1$",[currentStep.format("%d")]);
+		}
+
+        var valKp = App.getApp().toKValue(currentStep);
+        return Lang.format("STEP $1$K",[valKp]);
 	}
 
 	function bar_data() {
@@ -1529,37 +1518,36 @@ class BatteryField extends BaseDataField {
 	function min_val() {
     	return 0.0;
 	}
-	
+
 	function max_val() {
 	    return 100.0;
 	}
-	
+
 	function cur_val() {
 		return Sys.getSystemStats().battery;
 	}
-	
+
 	function min_label(value) {
 		return "b";
 	}
-	
+
 	function max_label(value) {
 		return "P";
 	}
-	
+
 	function cur_label(value) {
 		var battery_format = App.getApp().getProperty("battery_format");
-		var hour_consumtion = last_hour_consumtion;
+		var hour_consumtion = $.last_hour_consumtion;
+
 		if (hour_consumtion <= 0) {
 			var consumtion_history = App.getApp().getProperty("consumtion_history");
 			if (consumtion_history != null) {
 				var total = 0.0;
-				for( var i = 0; i < consumtion_history.size(); i++ ) {
+				for(var i = 0; i < consumtion_history.size(); i++) {
 				    // Code to do in a loop
 				    total += consumtion_history[i];
 				}
-				hour_consumtion = total/consumtion_history.size();
-//				System.println("hour_consumtion");
-//				System.println(hour_consumtion);
+				hour_consumtion = total / consumtion_history.size();
 			} else {
 				var hour_consumtion_saved = App.getApp().getProperty("last_hour_consumtion");
 				if (hour_consumtion_saved != null) {
@@ -1567,24 +1555,22 @@ class BatteryField extends BaseDataField {
 				}
 			}
 		}
+
 		hour_consumtion = hour_consumtion.toFloat();
-		
-//		System.println(hour_consumtion);
-		
+
 		if (battery_format == 0 || hour_consumtion == -1) {
-			// show percent
-			return Lang.format("BAT $1$%",[Math.round(value).format("%d")]);
-		} else {
-			// System.println("" + value + " " + last_hour_consumtion);
-			if (hour_consumtion == 0) {
-				return Lang.format("$1$ DAYS",[99]);
-			}
-			var hour_left = value/(hour_consumtion*1.0);
-			var day_left = hour_left/(24.0); 
-			return Lang.format("$1$ DAYS",[day_left.format("%0.1f")]);
+			return Lang.format("BAT $1$%", [Math.round(value).format("%d")]);
 		}
+
+        if (hour_consumtion == 0) {
+            return "99 DAYS";
+        }
+
+        var hoursLeft = value / (hour_consumtion * 1.0);
+        var daysLeft = hoursLeft / 24.0;
+        return Lang.format("$1$ DAYS", [daysLeft.format("%0.1f")]);
 	}
-	
+
 	function bar_data() {
 		return true;
 	}
@@ -1607,58 +1593,55 @@ class HRField extends BaseDataField {
 	function min_val() {
     	return 50.0;
 	}
-	
+
 	function max_val() {
 	    return 120.0;
 	}
-	
+
 	function cur_val() {
 		var heartRate = _retrieveHeartrate();
 		return heartRate.toFloat();
 	}
-	
+
 	function min_label(value) {
 		return value.format("%d");
 	}
-	
+
 	function max_label(value) {
 		return value.format("%d");
 	}
-	
-	function cur_label(value) {
-		var heartRate = value;
-		if (heartRate<=1) {
+
+	function cur_label(heartRate) {
+		if (heartRate <= 1) {
 			return "HR --";
 		}
-		return Lang.format("HR $1$",[heartRate.format("%d")]);
+
+		return Lang.format("HR $1$", [heartRate.format("%d")]);
 	}
-	
+
 	function bar_data() {
 		return true;
 	}
-}
-
-function doesDeviceSupportHeartrate() {
-	return ActivityMonitor has :INVALID_HR_SAMPLE;
 }
 
 function _retrieveHeartrate() {
 	var currentHeartrate = 0.0;
 	var activityInfo = Activity.getActivityInfo();
 	var sample = activityInfo.currentHeartRate;
+
 	if (sample != null) {
 		currentHeartrate = sample;
-	} else if (ActivityMonitor has :getHeartRateHistory) {
+	} else {
 		sample = ActivityMonitor.getHeartRateHistory(1, /* newestFirst */ true)
 			.next();
 		if ((sample != null) && (sample.heartRate != ActivityMonitor.INVALID_HR_SAMPLE)) {
 			currentHeartrate = sample.heartRate;
 		}
 	}
+
 	return currentHeartrate.toFloat();
 }
 
 //////////////////
 // end HR stage //
 //////////////////
-
