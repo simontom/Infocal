@@ -10,5 +10,7 @@ module RuntimeData {
     var centerX;
     var centerY;
 
+    var forceRenderComponent = false;
+
     var formattedDateProvider;
 }

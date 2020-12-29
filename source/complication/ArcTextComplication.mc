@@ -3,49 +3,7 @@ using Toybox.Math;
 using Toybox.Graphics;
 using Toybox.System;
 using Toybox.Application;
-
-var kerning_ratios = {
-    	' ' => 0.40,
-    	'%' => 0.92,
-		'+' => 0.70,
-		'-' => 0.38,
-		'.' => 0.25,
-		'0' => 0.66,
-		'1' => 0.41,
-		'2' => 0.60,
-		'3' => 0.63,
-		'4' => 0.67,
-		'5' => 0.63,
-		'6' => 0.64,
-		'7' => 0.53,
-		'8' => 0.67,
-		'9' => 0.64,
-		':' => 0.25,
-		'A' => 0.68,
-		'B' => 0.68,
-		'C' => 0.66,
-		'D' => 0.68,
-		'E' => 0.59,
-		'F' => 0.56,
-		'G' => 0.67,
-		'H' => 0.71,
-		'I' => 0.33,
-		'J' => 0.64,
-		'K' => 0.68,
-		'L' => 0.55,
-		'M' => 0.89,
-		'N' => 0.73,
-		'O' => 0.68,
-		'P' => 0.66,
-		'R' => 0.67,
-		'S' => 0.67,
-		'T' => 0.55,
-		'U' => 0.68,
-		'V' => 0.64,
-		'W' => 1.00,
-		'Y' => 0.64,
-		'°' => 0.47,
-    };
+using RuntimeData as RD;
 
 class ArcTextComplication extends Ui.Drawable {
 
@@ -106,7 +64,7 @@ class ArcTextComplication extends Ui.Drawable {
     	var text = get_text();
 
 
-    	if (last_draw_text.equals(text) && !force_render_component) {
+    	if (last_draw_text.equals(text) && !RD.forceRenderComponent) {
     		// do not draw
     	} else {
     		dc.setColor(gbackground_color, Graphics.COLOR_TRANSPARENT);
@@ -129,13 +87,13 @@ class ArcTextComplication extends Ui.Drawable {
 
     	var totalRad = 0.0;
     	for (var i=0; i<totalChar; i++) {
-    		var ra = perCharRadius*kerning_ratios[charArray[i]];
+    		var ra = perCharRadius * Complications.kerningRatios[charArray[i]];
     		totalRad += ra;
     	}
     	var lastRad = -totalRad/2.0;
 
     	for (var i=0; i < totalChar; i++) {
-    		var ra = perCharRadius*kerning_ratios[charArray[i]];
+    		var ra = perCharRadius * Complications.kerningRatios[charArray[i]];
 
 			lastRad += ra;
 			if (charArray[i] == ' ') {

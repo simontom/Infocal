@@ -2,7 +2,7 @@ using Toybox.WatchUi;
 using Toybox.Graphics;
 using Toybox.System;
 using Toybox.Lang as Ex;
-
+using RuntimeData as RD;
 using Toybox.Time.Gregorian as Date;
 using Toybox.Application as App;
 using Toybox.ActivityMonitor as Mon;
@@ -29,8 +29,6 @@ var gbar_color_back = 0x550000;
 var gbar_color_0 = 0xFFFF00;
 var gbar_color_1 = 0x0000FF;
 
-var force_render_component = false;
-
 var last_battery_percent = -1;
 var last_hour_consumtion = -1;
 
@@ -39,20 +37,20 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
 	var last_draw_minute = -1;
 	var restore_from_resume = false;
 	var last_resume_mili = 0;
-	
+
 	var last_battery_hour = null;
-	
+
 	var font_padding = 12;
 	var font_height_half = 7;
-	
+
 	var face_radius;
-	
+
 	var did_clear = false;
-	
+
 	var last_theme_code = -1;
 
     var screenbuffer = null;
-	
+
     function initialize() {
         WatchFace.initialize();
     }
@@ -62,14 +60,14 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
     	smallDigitalFont = WatchUi.loadResource(Rez.Fonts.smadigi);
     	centerX = dc.getWidth()/2;
     	centerY = dc.getHeight()/2;
-    	
+
     	face_radius = centerX - (18*centerX/120).toNumber();
-    	
+
         setLayout(Rez.Layouts.WatchFace(dc));
 
         // vivoactive4(s) sometimes clears the watch dc before onupdate
         if(Application.getApp().getProperty("enable_buffering")) {
-            // create a buffer to draw to 
+            // create a buffer to draw to
             // so it can be pasted straight to
             // the screen instead of redrawing
             System.println("device has clearbufferbug");
@@ -86,21 +84,21 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
     // the state of this View and prepare it to be shown. This includes
     // loading resources into memory.
     function onShow() {
-    	 var clockTime = System.getClockTime(); 
+    	 var clockTime = System.getClockTime();
 
     	last_draw_minute = -1;
     	restore_from_resume = true;
     	last_resume_mili = System.getTimer();
-    	
+
 		checkBackgroundRequest();
     }
 
     // Update the view
     function onUpdate(dc) {
-    	
+
     	var clockTime = System.getClockTime();
     	var current_tick = System.getTimer();
-    	
+
     	// Calculate battery consumtion in days
     	var time_now = Time.now();
     	if (last_battery_hour == null) {
@@ -116,7 +114,7 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
     		}
 			if (last_hour_consumtion>0) {
     			App.getApp().setProperty("last_hour_consumtion", last_hour_consumtion);
-    			
+
 				var consumtion_history = App.getApp().getProperty("consumtion_history");
 				if (consumtion_history == null) {
 					App.getApp().setProperty("consumtion_history", [last_hour_consumtion]);
@@ -137,7 +135,7 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
     	} else {
     		//System.println(time_now.compare(last_battery_hour));
     	}
-    	
+
         var always_on_style = Application.getApp().getProperty("always_on_style");
         if (centerX == 195) {
         	if (always_on_style == 0) {
@@ -160,41 +158,43 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
 	    		second_clip_size = [26, 22];
 	    	}
     	}
-    	
-    	force_render_component = true;
+
+    	RD.forceRenderComponent = true;
 		// normal power mode
 		if (restore_from_resume) {
 			var current_mili = current_tick;
-			force_render_component = true;
+			RD.forceRenderComponent = true;
 			// will allow watch face to refresh in 5s when resumed (`onShow()` called)
 			if ((current_mili-last_resume_mili) > 5000) {
 				restore_from_resume = false;
 			}
 		}
-		force_render_component = true;
+
+		RD.forceRenderComponent = true;
 		if (clockTime.min != last_draw_minute) {
 			// Only check background web request every 1 minute
 			checkBackgroundRequest();
 		}
+
 		mainDrawComponents(dc);
 		last_draw_minute = clockTime.min;
-    	force_render_component = false;
-    	
+    	RD.forceRenderComponent = false;
+
     	onPartialUpdate(dc);
     }
 
 	function mainDrawComponents(dc) {
 		checkTheme();
-		
-		if (force_render_component) {
+
+		if (RD.forceRenderComponent) {
 			dc.setColor(Graphics.COLOR_TRANSPARENT, gbackground_color);
 			dc.clear();
 			dc.setColor(gbackground_color, Graphics.COLOR_TRANSPARENT);
     		dc.fillRectangle(0,0,centerX*2,centerY*2);
 		}
-		
+
 		var digitalDisplay = View.findDrawableById("digital");
-		
+
 		var backgroundView = View.findDrawableById("background");
 		var bar1 = View.findDrawableById("aBarDisplay");
 		var bar2 = View.findDrawableById("bBarDisplay");
@@ -204,17 +204,17 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
 		var bar6 = View.findDrawableById("fBarDisplay");
 		var bbar1 = View.findDrawableById("bUBarDisplay");
 		var bbar2 = View.findDrawableById("tUBarDisplay");
-		
+
 		bar1.draw(dc);
 		bar2.draw(dc);
 		bar3.draw(dc);
 		bar4.draw(dc);
 		bar5.draw(dc);
 		bar6.draw(dc);
-		
+
         dc.setColor(gbackground_color, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(centerX, centerY, face_radius);
-		
+
 		backgroundView.draw(dc);
 		bbar1.draw(dc);
 		bbar2.draw(dc);
@@ -223,31 +223,31 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
 		var bgraph2 = View.findDrawableById("bGraphDisplay");
 		bgraph1.draw(dc);
 		bgraph2.draw(dc);
-		
+
         // Call the parent onUpdate function to redraw the layout
 		digitalDisplay.draw(dc);
 	}
 
 	function onPartialUpdate(dc) {
 		if (Application.getApp().getProperty("always_on_second")) {
-			var clockTime = System.getClockTime(); 
+			var clockTime = System.getClockTime();
 			var second_text = clockTime.sec.format(Constants.ZeroLeadingFormat);
 			var ss = dc.getTextDimensions(second_text, second_digi_font);
-			
+
 			dc.setClip(second_x, second_y, second_clip_size[0], second_clip_size[1]);
 			dc.setColor(Graphics.COLOR_TRANSPARENT, gbackground_color);
 //				dc.setColor(Graphics.COLOR_TRANSPARENT, 0xffff00);
 			dc.clear();
 			dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
-			dc.drawText(second_x, second_y-font_padding, 
-						second_digi_font, 
-						second_text, 
+			dc.drawText(second_x, second_y-font_padding,
+						second_digi_font,
+						second_text,
 						Graphics.TEXT_JUSTIFY_LEFT);
 			dc.clearClip();
 		}
-		
+
 		if (Application.getApp().getProperty("always_on_heart")) {
-			
+
 			var h = _retrieveHeartrate();
 			var heart_text = "--";
 			if (h != null) {
@@ -260,11 +260,11 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
 			dc.setColor(Graphics.COLOR_TRANSPARENT, gbackground_color);
 //				dc.setColor(Graphics.COLOR_TRANSPARENT, 0xffff00);
 			dc.clear();
-			
+
 			dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
-			dc.drawText(heart_x-1, second_y-font_padding, 
-						second_digi_font, 
-						heart_text, 
+			dc.drawText(heart_x-1, second_y-font_padding,
+						second_digi_font,
+						heart_text,
 						Graphics.TEXT_JUSTIFY_RIGHT);
 			dc.clearClip();
 		}
@@ -274,11 +274,11 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
     // state of this View here. This includes freeing resources from
     // memory.
     function onHide() {
-    	// var clockTime = System.getClockTime(); 
+    	// var clockTime = System.getClockTime();
     	// System.println("hide");
     	// System.println("" + clockTime.min + ":" + clockTime.sec);
     }
-    
+
     // The user has just looked at their watch. Timers and animations may be started here
     function onExitSleep() {
     	checkBackgroundRequest();
@@ -306,7 +306,7 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
 			gbar_color_1 = theme[7];
 		}
 	}
-	
+
 	function checkBackgroundRequest() {
 		if (ErrorsAndTrialsApp has :checkPendingWebRequests) { // checkPendingWebRequests() can be excluded to save memory.
 			App.getApp().checkPendingWebRequests(); // Depends on mDataFields.hasField().
