@@ -22,15 +22,6 @@ using RuntimeData as RD;
 // TODO: Rewrite:
 //              - Weather
 
-// TODO: Move these vars to RuntimeData
-// In-memory current location.
-// Previously persisted in App.Storage, but now persisted in Object Store due to #86 workaround for App.Storage firmware bug.
-// Current location retrieved/saved in checkPendingWebRequests().
-// Persistence allows weather and sunrise/sunset features to be used after watch face restart, even if watch no longer has current
-// location available.
-var gLocationLat = null;
-var gLocationLng = null;
-
 var centerX;
 var centerY;
 
@@ -109,24 +100,23 @@ class ErrorsAndTrialsApp extends Application.AppBase {
         // If current location available from current activity, save it in case it goes "stale" and can not longer be retrieved.
         var location = Activity.getActivityInfo().currentLocation;
         if (location) {
-            // Sys.println("Saving location");
             location = location.toDegrees(); // Array of Doubles.
-            gLocationLat = location[0].toFloat();
-            gLocationLng = location[1].toFloat();
+            RD.gLocationLat = location[0].toFloat();
+            RD.gLocationLng = location[1].toFloat();
 
-            Application.getApp().setProperty("LastLocationLat", gLocationLat);
-            Application.getApp().setProperty("LastLocationLng", gLocationLng);
+            Application.getApp().setProperty("LastLocationLat", RD.gLocationLat);
+            Application.getApp().setProperty("LastLocationLng", RD.gLocationLng);
         // If current location is not available, read stored value from Object Store, being careful not to overwrite a valid
         // in-memory value with an invalid stored one.
         } else {
             var lat = Application.getApp().getProperty("LastLocationLat");
             if (lat != null) {
-                gLocationLat = lat;
+                RD.gLocationLat = lat;
             }
 
             var lng = Application.getApp().getProperty("LastLocationLng");
             if (lng != null) {
-                gLocationLng = lng;
+                RD.gLocationLng = lng;
             }
         }
 
@@ -141,7 +131,7 @@ class ErrorsAndTrialsApp extends Application.AppBase {
 
         // 2. Weather:
         // Location must be available, weather or humidity (#113) data field must be shown.
-        if (gLocationLat != null) {
+        if (RD.gLocationLat != null) {
 
             var owmCurrent = getProperty("OpenWeatherMapCurrent");
 
@@ -158,7 +148,7 @@ class ErrorsAndTrialsApp extends Application.AppBase {
                 // Existing data not for this location.
                 // Not a great test, as a degree of longitude varies betwee 69 (equator) and 0 (pole) miles, but simpler than
                 // true distance calculation. 0.02 degree of latitude is just over a mile.
-                (((gLocationLat - owmCurrent["lat"]).abs() > 0.02) || ((gLocationLng - owmCurrent["lon"]).abs() > 0.02))) {
+                (((RD.gLocationLat - owmCurrent["lat"]).abs() > 0.02) || ((RD.gLocationLng - owmCurrent["lon"]).abs() > 0.02))) {
                     pendingWebRequests["OpenWeatherMapCurrent"] = true;
                 }
             }
@@ -188,8 +178,6 @@ class ErrorsAndTrialsApp extends Application.AppBase {
     // pendingWebRequests keys.
     (:background_method)
     function onBackgroundData(data) {
-        Sys.println("onBackgroundData() called");
-
         var pendingWebRequests = getProperty("PendingWebRequests");
         if (pendingWebRequests == null) {
             pendingWebRequests = {};

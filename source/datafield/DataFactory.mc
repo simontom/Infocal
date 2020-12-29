@@ -795,14 +795,14 @@ class SunField extends BaseDataField {
 	}
 
 	function cur_label(value) {
-        var lat = $.gLocationLat;
+        var lat = RD.gLocationLat;
 
         // Waiting for location
 		if (lat == null) {
 			return "SUN --";
         }
 
-        var lng = $.gLocationLng;
+        var lng = RD.gLocationLng;
         var value = "";
         var nextSunEvent = 0;
         var isSunriseNext = false;
