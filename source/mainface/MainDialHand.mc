@@ -4,6 +4,7 @@ using Toybox.Graphics;
 using Toybox.System;
 using Toybox.Application;
 using Toybox.Time.Gregorian as Date;
+using RuntimeData as RD;
 
 class MainDialHand extends Ui.Drawable {
 
@@ -190,7 +191,7 @@ class MainDialHand extends Ui.Drawable {
 	    	}
 
 			// draw date str
-			var dateText = Application.getApp().getFormatedDate();
+			var dateText = RD.formattedDateProvider.getFormattedDate();
 			dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
 			var h3 = dc.getFontHeight(smallDigitalFont);
 			dc.drawText(target_info_x-bonus_alignment+extra_info_alignment, centerY*0.4-h3/4 + 7, smallDigitalFont, dateText, alignment);

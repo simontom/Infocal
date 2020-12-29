@@ -5,6 +5,7 @@ using Toybox.Application as App;
 using Toybox.Activity as Activity;
 using Toybox.ActivityMonitor as ActivityMonitor;
 using Toybox.SensorHistory as SensorHistory;
+using RuntimeData as RD;
 
 using Toybox.UserProfile;
 using Toybox.Time;
@@ -1234,7 +1235,7 @@ class DateField extends BaseDataField {
 	}
 
 	function cur_label(value) {
-		return Application.getApp().getFormatedDate();
+		return RD.formattedDateProvider.getFormattedDate();
 	}
 }
 

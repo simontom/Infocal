@@ -5,9 +5,24 @@ using Toybox.Background as Bg;
 using Toybox.WatchUi as Ui;
 using Toybox.Time;
 using Toybox.Math;
-using Toybox.Time.Gregorian as Date;
-using Toybox.Lang as Ex;
+using DateUtils as DU;
+using RuntimeData as RD;
 
+
+// TODO: Add:
+//				- Moon Phase
+//				- Mobile Connection
+//				- Alarm count
+
+// TODO: Remove:
+//				- Calories
+//				- BackgroundService
+//              - Distance?
+
+// TODO: Rewrite:
+//              - Weather
+
+// TODO: Move these vars to RuntimeData
 // In-memory current location.
 // Previously persisted in App.Storage, but now persisted in Object Store due to #86 workaround for App.Storage firmware bug.
 // Current location retrieved/saved in checkPendingWebRequests().
@@ -19,6 +34,7 @@ var gLocationLng = null;
 var centerX;
 var centerY;
 
+// TODO: Move these funs to
 function degreesToRadians(degrees) {
     return degrees * Math.PI / 180;
 }
@@ -39,30 +55,11 @@ function convertCoorY(radians, radius) {
 class ErrorsAndTrialsApp extends Application.AppBase {
 
     var mView;
-    var days;
-    var months;
 
     function initialize() {
         AppBase.initialize();
-        days = {Date.DAY_MONDAY => "MON",
-                Date.DAY_TUESDAY => "TUE",
-                Date.DAY_WEDNESDAY => "WED",
-                Date.DAY_THURSDAY => "THU",
-                Date.DAY_FRIDAY => "FRI",
-                Date.DAY_SATURDAY => "SAT",
-                Date.DAY_SUNDAY => "SUN"};
-        months = {Date.MONTH_JANUARY => "JAN",
-                Date.MONTH_FEBRUARY => "FEB",
-                Date.MONTH_MARCH => "MAR",
-                Date.MONTH_APRIL => "APR",
-                Date.MONTH_MAY => "MAY",
-                Date.MONTH_JUNE => "JUN",
-                Date.MONTH_JULY => "JUL",
-                Date.MONTH_AUGUST => "AUG",
-                Date.MONTH_SEPTEMBER => "SEP",
-                Date.MONTH_OCTOBER => "OCT",
-                Date.MONTH_NOVEMBER => "NOV",
-                Date.MONTH_DECEMBER => "DEC"};
+
+        RD.formattedDateProvider = new DU.FormattedDateProvider();
     }
 
     // onStart() is called on application start up
@@ -91,6 +88,8 @@ class ErrorsAndTrialsApp extends Application.AppBase {
         if (ErrorsAndTrialsApp has :checkPendingWebRequests) { // checkPendingWebRequests() can be excluded to save memory.
             checkPendingWebRequests();
         }
+
+        RD.formattedDateProvider.reloadSettings();
         mView.last_draw_minute = -1;
         WatchUi.requestUpdate();   // update the view to reflect changes
     }
@@ -215,59 +214,6 @@ class ErrorsAndTrialsApp extends Application.AppBase {
         setProperty(type, storedData);
 
         Ui.requestUpdate();
-    }
-
-    function getFormatedDate() {
-        var now = Time.now();
-        var date = Date.info(now, Time.FORMAT_SHORT);
-        var date_formater = Application.getApp().getProperty("date_format");
-        if (date_formater == 0) {
-            if (Application.getApp().getProperty("force_date_english")) {
-                var day_of_weak = date.day_of_week;
-                return Lang.format("$1$ $2$",[days[day_of_weak], date.day.format("%d")]);
-            } else {
-                var date = Date.info(now, Time.FORMAT_LONG);
-                var day_of_weak = date.day_of_week;
-                return Lang.format("$1$ $2$",[day_of_weak.toUpper(), date.day.format("%d")]);
-            }
-        } else if (date_formater == 1) {
-            // dd/mm
-            return Lang.format("$1$.$2$",[date.day.format("%d"), date.month.format("%d")]);
-        } else if (date_formater == 2) {
-            // mm/dd
-            return Lang.format("$1$.$2$",[date.month.format("%d"), date.day.format("%d")]);
-        } else if (date_formater == 3) {
-            // dd/mm/yyyy
-            var year = date.year;
-            var yy = year/100.0;
-            yy = Math.round((yy-yy.toNumber())*100.0);
-            return Lang.format("$1$.$2$.$3$",[date.day.format("%d"), date.month.format("%d"), yy.format("%d")]);
-        } else if (date_formater == 4) {
-            // mm/dd/yyyy
-            var year = date.year;
-            var yy = year/100.0;
-            yy = Math.round((yy-yy.toNumber())*100.0);
-            return Lang.format("$1$.$2$.$3$",[date.month.format("%d"), date.day.format("%d"), yy.format("%d")]);
-        } else if (date_formater == 5 || date_formater == 6) {
-            // dd mmm
-            var day = null;
-            var month = null;
-            if (Application.getApp().getProperty("force_date_english")) {
-                day = date.day;
-                month = months[date.month];
-            } else {
-                var date = Date.info(now, Time.FORMAT_MEDIUM);
-                day = date.day;
-                month = months[date.month];
-            }
-            if (date_formater == 5) {
-                return Lang.format("$1$ $2$",[day.format("%d"), month]);
-            } else {
-                return Lang.format("$1$ $2$",[month, day.format("%d")]);
-            }
-        }
-
-        throw new Ex.InvalidValueException("Invalid value of 'date_formater' in ':getFormatedDate'");
     }
 
     function toKValue(value) {
