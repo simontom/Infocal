@@ -157,7 +157,7 @@ class MainDialHand extends Ui.Drawable {
 	    			bonus_alignment = 4;
 	    			vertical_alignment = -23;
 	    		}
-	    	} else if (centerX==120 && digital_style == 2) {
+	    	} else if (centerX == 120 && digital_style == 2) {
 	    		bonus_alignment = 6;
 	    		extra_info_alignment = 4;
 	    	}
@@ -174,9 +174,9 @@ class MainDialHand extends Ui.Drawable {
 	    	dc.setColor(gbackground_color, Graphics.COLOR_TRANSPARENT);
     		dc.setPenWidth(20);
 	    	if (Application.getApp().getProperty("left_digital_info")) {
-				dc.drawArc(centerX, centerY, barRadius, Graphics.ARC_CLOCKWISE, 180-10, 120+10);
+				dc.drawArc(centerX, centerY, barRadius, Graphics.ARC_CLOCKWISE, 180 - 10, 120 + 10);
 	    	} else {
-	    		dc.drawArc(centerX, centerY, barRadius, Graphics.ARC_CLOCKWISE, 60-10, 0+10);
+	    		dc.drawArc(centerX, centerY, barRadius, Graphics.ARC_CLOCKWISE, 60 - 10, 0 + 10);
 	    	}
 	    	dc.setPenWidth(1);
 

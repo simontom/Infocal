@@ -633,17 +633,8 @@ class BarometerField extends BaseDataField {
 
 class WeekDistanceField extends BaseDataField {
 
-	var days;
-
 	function initialize(id) {
 		BaseDataField.initialize(id);
-		days = {Date.DAY_MONDAY => "MON",
-				Date.DAY_TUESDAY => "TUE",
-				Date.DAY_WEDNESDAY => "WED",
-				Date.DAY_THURSDAY => "THU",
-				Date.DAY_FRIDAY => "FRI",
-				Date.DAY_SATURDAY => "SAT",
-				Date.DAY_SUNDAY => "SUN"};
 	}
 
 	function min_val() {

@@ -23,10 +23,10 @@ class GraphComplication extends Ui.Drawable {
     hidden var position_x, position_y;
     hidden var graph_width, graph_height;
     var settings;
-    
+
     function initialize(params) {
     	Drawable.initialize(params);
-    	
+
     	position = params.get(:position);
     	if (position==0) {
     		// top
@@ -37,11 +37,11 @@ class GraphComplication extends Ui.Drawable {
     		position_x = centerX;
     		position_y = 1.45*centerY;
     	}
-    	
+
     	graph_width = 90;
     	graph_height = Math.round(0.25*centerX);
     }
-	
+
 	function get_data_type() {
 		if (position==0) {
     		return Application.getApp().getProperty("compgrapht");
@@ -49,31 +49,33 @@ class GraphComplication extends Ui.Drawable {
     		return Application.getApp().getProperty("compgraphb");
     	}
 	}
-	
+
 	function get_data_interator(graphType) {
         switch (graphType) {
-            case GRAPH_TYPE_HEARTRATE
+            case GRAPH_TYPE_HEARTRATE:
                 return Toybox.SensorHistory.getHeartRateHistory({});
 
-            case GRAPH_TYPE_ALTITUDE
+            case GRAPH_TYPE_ALTITUDE:
                 return Toybox.SensorHistory.getElevationHistory({});
 
-            case GRAPH_TYPE_BAROMETR
+            case GRAPH_TYPE_BAROMETR:
                 return Toybox.SensorHistory.getPressureHistory({});
 
-            case GRAPH_TYPE_TEMPERATURE
+            case GRAPH_TYPE_TEMPERATURE:
                 return Toybox.SensorHistory.getTemperatureHistory({});
-                
-            case GRAPH_TYPE_EMPTY
+
+            case GRAPH_TYPE_EMPTY:
             default:
                 return null;
         }
+
+        throw new Ex.InvalidValueException("Totally nonsense throw!");
 	}
 
 	function need_draw() {
 		return get_data_type() > 0;
 	}
-    
+
     function parse_data_value(type, value) {
     	if (type==1) {
 			return value;
@@ -97,30 +99,30 @@ class GraphComplication extends Ui.Drawable {
 
 		throw new Ex.InvalidValueException("Invalid value of 'type' in ':parse_data_value'");
     }
-    
+
     function draw(dc) {
     	if (!need_draw()) {
     		return;
     	}
-    	
+
     	try {
 	    	settings = System.getDeviceSettings();
-	    	
+
 			var primaryColor = position == 1 ? gbar_color_1 : gbar_color_0;
-	    	
+
 	    	//Calculation
 	    	var targetdatatype = get_data_type();
 	        var HistoryIter = get_data_interator(targetdatatype);
-	        
+
 	        if (HistoryIter == null) {
 	        	dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
 	        	dc.drawText(position_x, position_y, smallDigitalFont, "--", Graphics.TEXT_JUSTIFY_CENTER|Graphics.TEXT_JUSTIFY_VCENTER);
 	        	return;
 	        }
-	        
+
 	        var HistoryMin = HistoryIter.getMin();
 	        var HistoryMax = HistoryIter.getMax();
-	        
+
 	        if (HistoryMin == null || HistoryMax == null) {
 	        	dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
 	        	dc.drawText(position_x, position_y, smallDigitalFont, "--", Graphics.TEXT_JUSTIFY_CENTER|Graphics.TEXT_JUSTIFY_VCENTER);
@@ -131,18 +133,18 @@ class GraphComplication extends Ui.Drawable {
 	//        	dc.drawText(position_x, position_y, smallDigitalFont, "--", Graphics.TEXT_JUSTIFY_CENTER|Graphics.TEXT_JUSTIFY_VCENTER);
 	//        	return;
 	//        }
-	        
+
 	        var minMaxDiff = (HistoryMax - HistoryMin).toFloat();
-	        
+
 	        var xStep = graph_width;
 	        var height = graph_height;
 	        var HistoryPresent = 0;
-	
+
 			var HistoryNew = 0;
 			var lastyStep = 0;
 			var step_max = -1;
 			var step_min = -1;
-			
+
 			var latest_sample = HistoryIter.next();
 			if (latest_sample != null) {
 	    		HistoryPresent = latest_sample.data;
@@ -157,14 +159,14 @@ class GraphComplication extends Ui.Drawable {
 					lastyStep = null;
 				}
 	    	}
-	        
+
 			dc.setPenWidth(2);
 			dc.setColor(primaryColor, Graphics.COLOR_TRANSPARENT);
-			
+
 			//Build and draw Iteration
 			for(var i = 90; i > 0; i--){
 				var sample = HistoryIter.next();
-				
+
 				if (sample != null) {
 					HistoryNew = sample.data;
 					if (HistoryNew == HistoryMax) {
@@ -180,14 +182,14 @@ class GraphComplication extends Ui.Drawable {
 						var yStep = historyDifPers * height;
 						yStep = yStep>height?height:yStep;
 						yStep = yStep<0?0:yStep;
-						
+
 						if (lastyStep == null) {
 							// ignore
 						} else {
 							// draw diagram
-							dc.drawLine(position_x+(xStep-graph_width/2), 
-										position_y - (lastyStep-graph_height/2), 
-										position_x+(xStep-graph_width/2), 
+							dc.drawLine(position_x+(xStep-graph_width/2),
+										position_y - (lastyStep-graph_height/2),
+										position_x+(xStep-graph_width/2),
 										position_y - (yStep-graph_height/2));
 						}
 						lastyStep = yStep;
@@ -195,27 +197,27 @@ class GraphComplication extends Ui.Drawable {
 				}
 				xStep--;
 			}
-			
+
 			dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
-	
+
 			if (HistoryPresent == null) {
-	        	dc.drawText(position_x, 
-						position_y + (position==1?(graph_height/2 + 10):(-graph_height/2-16)), 
-						smallDigitalFont, 
-						"--", 
+	        	dc.drawText(position_x,
+						position_y + (position==1?(graph_height/2 + 10):(-graph_height/2-16)),
+						smallDigitalFont,
+						"--",
 						Graphics.TEXT_JUSTIFY_CENTER|Graphics.TEXT_JUSTIFY_VCENTER);
 	        	return;
 	        }
 	        var value_label = parse_data_value(targetdatatype, HistoryPresent);
 	        var labelll = value_label.format("%d");
-			dc.drawText(position_x, 
-						position_y + (position==1?(graph_height/2 + 10):(-graph_height/2-16)), 
-						smallDigitalFont, 
-						labelll, 
+			dc.drawText(position_x,
+						position_y + (position==1?(graph_height/2 + 10):(-graph_height/2-16)),
+						smallDigitalFont,
+						labelll,
 						Graphics.TEXT_JUSTIFY_CENTER|Graphics.TEXT_JUSTIFY_VCENTER);
-						
+
 			settings = null;
-		} catch(ex) { 
+		} catch(ex) {
 			// currently unkown, weird bug
 			System.println(ex);
 			dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);

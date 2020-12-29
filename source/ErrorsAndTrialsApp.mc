@@ -95,13 +95,17 @@ class ErrorsAndTrialsApp extends Application.AppBase {
         WatchUi.requestUpdate();   // update the view to reflect changes
     }
 
+    (:background_method)
+    function getServiceDelegate() {
+        return [new BackgroundService()];
+    }
+
     // Determine if any web requests are needed.
     // If so, set approrpiate pendingWebRequests flag for use by BackgroundService, then register for
     // temporal event.
     // Currently called on layout initialisation, when settings change, and on exiting sleep.
     (:background_method)
     function checkPendingWebRequests() {
-
         // Attempt to update current location, to be used by Sunrise/Sunset, and Weather.
         // If current location available from current activity, save it in case it goes "stale" and can not longer be retrieved.
         var location = Activity.getActivityInfo().currentLocation;
@@ -181,11 +185,6 @@ class ErrorsAndTrialsApp extends Application.AppBase {
         setProperty("PendingWebRequests", pendingWebRequests);
     }
 
-    (:background_method)
-    function getServiceDelegate() {
-        return [new BackgroundService()];
-    }
-
     // Handle data received from BackgroundService.
     // On success, clear appropriate pendingWebRequests flag.
     // data is Dictionary with single key that indicates the data type received. This corresponds with Object Store and
@@ -196,7 +195,6 @@ class ErrorsAndTrialsApp extends Application.AppBase {
 
         var pendingWebRequests = getProperty("PendingWebRequests");
         if (pendingWebRequests == null) {
-//          //Sys.println("onBackgroundData() called with no pending web requests!");
             pendingWebRequests = {};
         }
 
@@ -273,7 +271,7 @@ class ErrorsAndTrialsApp extends Application.AppBase {
     }
 
     function toKValue(value) {
-        var valK = value/1000.0;
+        var valK = value / 1000.0;
         return valK.format("%0.1f");
     }
 }
