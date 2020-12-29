@@ -4,6 +4,7 @@ using Toybox.Graphics;
 using Toybox.System;
 using Toybox.Application;
 using RuntimeData as RD;
+using DataFieldFactory as DFF;
 
 class BarComplication extends Ui.Drawable {
 
@@ -113,7 +114,7 @@ class BarComplication extends Ui.Drawable {
 			load_font();
 		}
 
-		if (field_type == FIELD_TYPE_WEATHER) {
+		if (field_type == DFF.FIELD_TYPE_WEATHER) {
     		weatherFont = Ui.loadResource(Rez.Fonts.weather);
     	} else {
     		weatherFont = null;
@@ -161,7 +162,7 @@ class BarComplication extends Ui.Drawable {
 		    	dc.setColor(gbar_color_indi, Graphics.COLOR_TRANSPARENT);
 		    	drawTiles(arrInfo[i], arrFont, dc);
 	    	}
-    	} else if (field_type == FIELD_TYPE_WEATHER) {
+    	} else if (field_type == DFF.FIELD_TYPE_WEATHER) {
     		var icon = get_weather_icon();
     		if (icon != null) {
 	    		dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);

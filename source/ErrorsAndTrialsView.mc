@@ -7,6 +7,7 @@ using Toybox.Time.Gregorian as Date;
 using Toybox.Application as App;
 using Toybox.ActivityMonitor as Mon;
 using Toybox.UserProfile;
+using DataField as DF;
 
 // TODO: Move to proper modules / classes
 var smallDigitalFont = null;
@@ -249,7 +250,7 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
 
 		if (Application.getApp().getProperty("always_on_heart")) {
 
-			var h = _retrieveHeartrate();
+			var h = DF.retrieveHeartRate();
 			var heart_text = "--";
 			if (h != null) {
 				heart_text = h.format("%d");
