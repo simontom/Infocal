@@ -7,13 +7,18 @@ using RuntimeData as RD;
 
 class BarComplication extends Ui.Drawable {
 
-    hidden var position, position_y_draw, position_y_draw_bonus;
-    hidden var font, fontInfo, arrFont, arrInfo;
+    hidden var position;
+    hidden var position_y_draw;
+    hidden var position_y_draw_bonus;
+    hidden var font;
+    hidden var fontInfo;
+    hidden var arrFont;
+    hidden var arrInfo;
     hidden var textFont;
     hidden var weatherFont;
-    
+
     hidden var factor = 1;
-    
+
     function initialize(params) {
     	Drawable.initialize(params);
     	position = params.get(:position);
@@ -57,7 +62,7 @@ class BarComplication extends Ui.Drawable {
     		}
     	}
     }
-	
+
 	function load_font() {
 		if (position == 0) {
     		// up
@@ -73,23 +78,23 @@ class BarComplication extends Ui.Drawable {
     		arrInfo = Ui.loadResource(Rez.JsonData.bar_pos_bottom);
 		}
 	}
-	
+
 	function min_val() {
     	return 0.0;
     }
-    
+
     function max_val() {
     	return 5.0;
     }
-    
+
     function cur_val() {
     	return 3.0;
     }
-    
+
     function get_title() {
     	return "Step 2577";
     }
-    
+
     function get_weather_icon() {
     	return null;
     }
@@ -97,40 +102,39 @@ class BarComplication extends Ui.Drawable {
 	function need_draw() {
 		return true;
 	}
-    
+
     function bar_data() {
 		return false;
 	}
-    
+
     function draw(dc) {
-		
 		var is_bar_data = bar_data();
 		if (is_bar_data) {
 			load_font();
 		}
-		
+
 		if (field_type == FIELD_TYPE_WEATHER) {
     		weatherFont = Ui.loadResource(Rez.Fonts.weather);
     	} else {
     		weatherFont = null;
     	}
-		
+
 		var primaryColor = position == 1 ? gbar_color_1 : gbar_color_0;
-    	
+
     	var bonus_padding = 0;
-    	
+
     	if (is_bar_data) {
 	    	var mi = min_val().toFloat(); // 0
 	    	var ma = max_val().toFloat(); // 5
 	    	var cu = cur_val().toFloat(); // 1
-	    	
+
 	    	var i = 0;
 	    	if (cu >= ma) {
 	    		i = 4;
 	    	} else if (cu <= mi) {
 	    		i = -1;
 	    	} else {
-	    		var fraction = (cu-mi)/(ma-mi);
+	    		var fraction = (cu - mi) / (ma - mi);
 	    		if (fraction > 0.81) {
 	    			i = 4;
 	    		} else if (fraction > 0.61) {
@@ -143,17 +147,17 @@ class BarComplication extends Ui.Drawable {
 	    			i = 0;
 	    		}
 	    	}
-	    	
-	    	for (var j=0;j<=4;j++) {
-	    		if (j==i) {
+
+	    	for (var j = 0; j <= 4; j++) {
+	    		if (j == i) {
 	    			dc.setColor(primaryColor, Graphics.COLOR_TRANSPARENT);
 	    		} else {
 	    			dc.setColor(gbar_color_back, Graphics.COLOR_TRANSPARENT);
 	    		}
 	    		drawTiles(fontInfo[j], font, dc);
 	    	}
-	    	
-	    	if (i>=0) {
+
+	    	if (i >= 0) {
 		    	dc.setColor(gbar_color_indi, Graphics.COLOR_TRANSPARENT);
 		    	drawTiles(arrInfo[i], arrFont, dc);
 	    	}
@@ -168,12 +172,12 @@ class BarComplication extends Ui.Drawable {
     	} else {
     		bonus_padding = position == 0 ? -7 : 5;
     	}
-    	
+
     	var title = get_title();
     	if (title == null) {
     		title = "--";
     	}
-    	
+
     	title = title.toUpper();
     	dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
     	dc.drawText(RD.centerX, position_y_draw+bonus_padding, smallDigitalFont, title, Graphics.TEXT_JUSTIFY_CENTER);
@@ -184,7 +188,7 @@ class BarComplication extends Ui.Drawable {
 		arrInfo = null;
 		weatherFont = null;
     }
-    
+
     function drawTiles(packed_array,font,dc) {
 		for(var i = 0; i < packed_array.size(); i++) {
 		  	var val = packed_array[i];
@@ -192,8 +196,8 @@ class BarComplication extends Ui.Drawable {
 			var xpos = (val >> 8) & 255;
 			var ypos = (val >> 0) & 255;
 			var flag = (val >> 24) & 255;
-			var xpos_bonus = (flag&0x01)==0x01 ? 1 : 0;
-			var ypos_bonus = (flag&0x10)==0x10 ? 1 : 0;
+			var xpos_bonus = (flag & 0x01) == 0x01 ? 1 : 0;
+			var ypos_bonus = (flag & 0x10) == 0x10 ? 1 : 0;
 		    dc.drawText((xpos * factor + xpos_bonus).toNumber(), (ypos * factor + ypos_bonus).toNumber(),
                     font, char.toNumber().toChar(), Graphics.TEXT_JUSTIFY_LEFT);
 		}

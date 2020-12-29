@@ -80,17 +80,18 @@ class BackgroundView extends Ui.Drawable {
             } else if (RD.centerX == 195) {
                 bonus = 8;
             }
-            for(var i = 0; i < 12*5; i += 1) {
+
+            for(var i = 0; i < 12 * 5; i += 1) {
                 if (digital_style == 2 || digital_style == 0) {
                     if (left_digital_info) {
-                        if (i>45 && i<55) {continue;}
+                        if (i > 45 && i < 55) { continue; }
                     } else {
-                        if (i>5 && i<15) {continue;}
+                        if (i > 5 && i < 15) { continue; }
                     }
                 }
 
-                var rad = (i.toFloat()/(5*12.0))*2*Math.PI - 0.5*Math.PI;
-                if (i%5 == 0) {
+                var rad = (i.toFloat() / (5 * 12.0)) * 2 * Math.PI - 0.5 * Math.PI;
+                if (i % 5 == 0) {
                     dc.setPenWidth(3);
                 } else {
                     dc.setPenWidth(1);

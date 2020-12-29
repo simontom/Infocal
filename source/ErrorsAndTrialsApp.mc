@@ -35,14 +35,10 @@ class ErrorsAndTrialsApp extends Application.AppBase {
 
     // onStart() is called on application start up
     function onStart(state) {
-//    	// var clockTime = Sys.getClockTime();
-//    	// Sys.println("" + clockTime.min + ":" + clockTime.sec);
     }
 
     // onStop() is called when your application is exiting
     function onStop(state) {
-//    	// var clockTime = Sys.getClockTime();
-//    	// Sys.println("" + clockTime.min + ":" + clockTime.sec);
     }
 
     // Return the initial view of your application here
@@ -55,8 +51,9 @@ class ErrorsAndTrialsApp extends Application.AppBase {
         return mView;
     }
 
-    function onSettingsChanged() { // triggered by settings change in GCM
-        if (ErrorsAndTrialsApp has :checkPendingWebRequests) { // checkPendingWebRequests() can be excluded to save memory.
+    // Triggered by settings change in GCM
+    function onSettingsChanged() {
+        if (ErrorsAndTrialsApp has :checkPendingWebRequests) { // Cuz checkPendingWebRequests() can be excluded to save memory
             checkPendingWebRequests();
         }
 
@@ -71,16 +68,15 @@ class ErrorsAndTrialsApp extends Application.AppBase {
     }
 
     // Determine if any web requests are needed.
-    // If so, set approrpiate pendingWebRequests flag for use by BackgroundService, then register for
-    // temporal event.
-    // Currently called on layout initialisation, when settings change, and on exiting sleep.
+    // If so, set approrpiate pendingWebRequests flag for use by BackgroundService, then register for temporal event.
+    // Currently called on layout initialisation / when settings change / and on exiting sleep.
     (:background_method)
     function checkPendingWebRequests() {
         // Attempt to update current location, to be used by Sunrise/Sunset, and Weather.
         // If current location available from current activity, save it in case it goes "stale" and can not longer be retrieved.
         var location = Activity.getActivityInfo().currentLocation;
         if (location) {
-            location = location.toDegrees(); // Array of Doubles.
+            location = location.toDegrees(); // Array of Doubles
             RD.gLocationLat = location[0].toFloat();
             RD.gLocationLng = location[1].toFloat();
 

@@ -50,34 +50,34 @@ enum /* FIELD_TYPES */ {
 
 function buildFieldObject(fieldType) {
     switch (fieldType) {
-        case FIELD_TYPE_HEART_RATE: return new HRField(fieldType);
-        case FIELD_TYPE_BATTERY: return new BatteryField(fieldType);
-        case FIELD_TYPE_CALORIES: return new CaloField(fieldType);
-        case FIELD_TYPE_DISTANCE: return new DistanceField(fieldType);
-        case FIELD_TYPE_MOVE: return new MoveField(fieldType);
-        case FIELD_TYPE_STEP: return new StepField(fieldType);
-        case FIELD_TYPE_ACTIVE: return new ActiveField(fieldType);
-        case FIELD_TYPE_DATE: return new DateField(fieldType);
-        case FIELD_TYPE_TIME: return new TimeField(fieldType);
-        case FIELD_TYPE_EMPTY: return new EmptyDataField(fieldType);
-        case FIELD_TYPE_NOTIFICATIONS: return new NotifyField(fieldType);
-        case FIELD_TYPE_ALARMS: return new AlarmField(fieldType);
-        case FIELD_TYPE_ALTITUDE: return new AltitudeField(fieldType);
-        case FIELD_TYPE_TEMPERATURE: return new TemparatureField(fieldType);
-        case FIELD_TYPE_SUNRISE_SUNSET: return new SunField(fieldType);
-        case FIELD_TYPE_FLOOR: return new FloorField(fieldType);
-        case FIELD_TYPE_GROUP_NOTI: return new GroupNotiField(fieldType);
-        case FIELD_TYPE_DISTANCE_WEEK: return new WeekDistanceField(fieldType);
-        case FIELD_TYPE_BAROMETER: return new BarometerField(fieldType);
-        case FIELD_TYPE_TIME_SECONDARY: return new TimeSecondaryField(fieldType);
-        case FIELD_TYPE_PHONE_STATUS: return new PhoneField(fieldType);
-        case FIELD_TYPE_COUNTDOWN: return new CountdownField(fieldType);
-        case FIELD_TYPE_WEEKCOUNT: return new WeekCountField(fieldType);
-        case FIELD_TYPE_TEMPERATURE_OUT: return new TemparatureOutField(fieldType);
-        case FIELD_TYPE_TEMPERATURE_HL: return new TemparatureHLField(fieldType);
-        case FIELD_TYPE_WEATHER: return new WeatherField(fieldType);
-        case FIELD_TYPE_CTEXT_INDICATOR: return new CTextField(fieldType);
-        case FIELD_TYPE_WIND: return new WindField(fieldType);
+        case FIELD_TYPE_HEART_RATE:         return new HRField(fieldType);
+        case FIELD_TYPE_BATTERY:            return new BatteryField(fieldType);
+        case FIELD_TYPE_CALORIES:           return new CaloField(fieldType);
+        case FIELD_TYPE_DISTANCE:           return new DistanceField(fieldType);
+        case FIELD_TYPE_MOVE:               return new MoveField(fieldType);
+        case FIELD_TYPE_STEP:               return new StepField(fieldType);
+        case FIELD_TYPE_ACTIVE:             return new ActiveField(fieldType);
+        case FIELD_TYPE_DATE:               return new DateField(fieldType);
+        case FIELD_TYPE_TIME:               return new TimeField(fieldType);
+        case FIELD_TYPE_EMPTY:              return new EmptyDataField(fieldType);
+        case FIELD_TYPE_NOTIFICATIONS:      return new NotifyField(fieldType);
+        case FIELD_TYPE_ALARMS:             return new AlarmField(fieldType);
+        case FIELD_TYPE_ALTITUDE:           return new AltitudeField(fieldType);
+        case FIELD_TYPE_TEMPERATURE:        return new TemparatureField(fieldType);
+        case FIELD_TYPE_SUNRISE_SUNSET:     return new SunField(fieldType);
+        case FIELD_TYPE_FLOOR:              return new FloorField(fieldType);
+        case FIELD_TYPE_GROUP_NOTI:         return new GroupNotiField(fieldType);
+        case FIELD_TYPE_DISTANCE_WEEK:      return new WeekDistanceField(fieldType);
+        case FIELD_TYPE_BAROMETER:          return new BarometerField(fieldType);
+        case FIELD_TYPE_TIME_SECONDARY:     return new TimeSecondaryField(fieldType);
+        case FIELD_TYPE_PHONE_STATUS:       return new PhoneField(fieldType);
+        case FIELD_TYPE_COUNTDOWN:          return new CountdownField(fieldType);
+        case FIELD_TYPE_WEEKCOUNT:          return new WeekCountField(fieldType);
+        case FIELD_TYPE_TEMPERATURE_OUT:    return new TemparatureOutField(fieldType);
+        case FIELD_TYPE_TEMPERATURE_HL:     return new TemparatureHLField(fieldType);
+        case FIELD_TYPE_WEATHER:            return new WeatherField(fieldType);
+        case FIELD_TYPE_CTEXT_INDICATOR:    return new CTextField(fieldType);
+        case FIELD_TYPE_WIND:               return new WindField(fieldType);
     }
 
 	throw new Ex.InvalidValueException("Invalid type of 'fieldType' in ':buildFieldObject'");

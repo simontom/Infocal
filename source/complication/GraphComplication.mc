@@ -21,15 +21,17 @@ enum /* GRAPH_TYPES */ {
 class GraphComplication extends Ui.Drawable {
 
     hidden var position;
-    hidden var position_x, position_y;
-    hidden var graph_width, graph_height;
+    hidden var position_x;
+    hidden var position_y;
+    hidden var graph_width;
+    hidden var graph_height;
     var settings;
 
     function initialize(params) {
     	Drawable.initialize(params);
 
     	position = params.get(:position);
-    	if (position==0) {
+    	if (position == 0) {
     		// top
     		position_x = RD.centerX;
     		position_y = 0.5 * RD.centerY;
@@ -44,7 +46,7 @@ class GraphComplication extends Ui.Drawable {
     }
 
 	function get_data_type() {
-		if (position==0) {
+		if (position == 0) {
     		return Application.getApp().getProperty("compgrapht");
     	} else {
     		return Application.getApp().getProperty("compgraphb");
@@ -80,7 +82,7 @@ class GraphComplication extends Ui.Drawable {
     function parse_data_value(type, value) {
     	if (type==1) {
 			return value;
-	    } else if (type==2) {
+	    } else if (type == 2) {
 			if (settings.elevationUnits == System.UNIT_METRIC) {
 				// Metres (no conversion necessary).
 				return value;
@@ -179,19 +181,19 @@ class GraphComplication extends Ui.Drawable {
 						// ignore
 					} else {
 						// draw diagram
-						var historyDifPers = ((HistoryNew - HistoryMin))/minMaxDiff;
+						var historyDifPers = ((HistoryNew - HistoryMin)) / minMaxDiff;
 						var yStep = historyDifPers * height;
-						yStep = yStep>height?height:yStep;
+						yStep = (yStep > height) ? height : yStep;
 						yStep = yStep<0?0:yStep;
 
 						if (lastyStep == null) {
 							// ignore
 						} else {
 							// draw diagram
-							dc.drawLine(position_x+(xStep-graph_width/2),
-										position_y - (lastyStep-graph_height/2),
-										position_x+(xStep-graph_width/2),
-										position_y - (yStep-graph_height/2));
+							dc.drawLine(position_x + (xStep - graph_width / 2),
+										position_y - (lastyStep-graph_height / 2),
+										position_x + (xStep - graph_width / 2),
+										position_y - (yStep - graph_height / 2));
 						}
 						lastyStep = yStep;
 					}

@@ -8,6 +8,7 @@ using Toybox.Application as App;
 using Toybox.ActivityMonitor as Mon;
 using Toybox.UserProfile;
 
+// TODO: Move to proper modules / classes
 var smallDigitalFont = null;
 var second_digi_font = null;
 var second_x = 160;
@@ -19,7 +20,7 @@ var second_background_color = 0x000000;
 var second_font_color = 0xFFFFFF;
 var second_clip_size = null;
 
-// theming
+// Theming
 var gbackground_color = 0x000000;
 var gmain_color = 0xFFFFFF;
 var gsecondary_color = 0xFF0000;
