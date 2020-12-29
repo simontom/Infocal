@@ -3,6 +3,7 @@ using Toybox.Math;
 using Toybox.Graphics;
 using Toybox.System;
 using Toybox.Application;
+using RuntimeData as RD;
 
 class BarComplication extends Ui.Drawable {
 
@@ -18,40 +19,40 @@ class BarComplication extends Ui.Drawable {
     	position = params.get(:position);
     	if (position == 0) {
     		// up
-    		if (centerX == 120) {
-	    		position_y_draw = 52;//centerY - 36 - 18 - 14; // font height 14
+    		if (RD.centerX == 120) {
+	    		position_y_draw = 52; // centerY - 36 - 18 - 14; // font height 14
 	    		position_y_draw_bonus = -13;
-    		} else if (centerX == 130) {
-	    		position_y_draw = 58;//centerY - 36 - 18 - 14 - 4; // font height 14
+    		} else if (RD.centerX == 130) {
+	    		position_y_draw = 58; // centerY - 36 - 18 - 14 - 4; // font height 14
 	    		position_y_draw_bonus = -18;
-    		} else if (centerX == 140) {
-	    		position_y_draw = 64;//centerY - 36 - 18 - 14 - 8; // font height 14
+    		} else if (RD.centerX == 140) {
+	    		position_y_draw = 64; // centerY - 36 - 18 - 14 - 8; // font height 14
 	    		position_y_draw_bonus = -18;
-    		} else if (centerX == 195) {
-	    		position_y_draw = 89;//centerY - 36 - 18 - 14 - 8; // font height 14
+    		} else if (RD.centerX == 195) {
+	    		position_y_draw = 89; // centerY - 36 - 18 - 14 - 8; // font height 14
 	    		position_y_draw_bonus = -36;
 	    		factor = 2;
     		} else {
-	    		position_y_draw = 44;//centerY - 36 - 18 - 14 + 5; // font height 14
+	    		position_y_draw = 44; // centerY - 36 - 18 - 14 + 5; // font height 14
 	    		position_y_draw_bonus = -13;
     		}
     	} else {
     		// down
-    		if (centerX == 120) {
-	    		position_y_draw = 156;//centerY + 36;
+    		if (RD.centerX == 120) {
+	    		position_y_draw = 156; // centerY + 36;
 	    		position_y_draw_bonus = 29;
-    		} else if (centerX == 130) {
-	    		position_y_draw = 170;//centerY + 36 + 4;
+    		} else if (RD.centerX == 130) {
+	    		position_y_draw = 170; // centerY + 36 + 4;
 	    		position_y_draw_bonus = 33;
-    		} else if (centerX == 140) {
-	    		position_y_draw = 184;//centerY + 36 + 8;
+    		} else if (RD.centerX == 140) {
+	    		position_y_draw = 184; // centerY + 36 + 8;
 	    		position_y_draw_bonus = 33;
-    		} else if (centerX == 195) {
-	    		position_y_draw = 256;//centerY - 36 - 18 - 14 - 8; // font height 14
+    		} else if (RD.centerX == 195) {
+	    		position_y_draw = 256; // centerY - 36 - 18 - 14 - 8; // font height 14
 	    		position_y_draw_bonus = 48;
 	    		factor = 2;
     		}  else {
-	    		position_y_draw = 140;//centerY + 36 - 5;
+	    		position_y_draw = 140; // centerY + 36 - 5;
 	    		position_y_draw_bonus = 29;
     		}
     	}
@@ -160,7 +161,8 @@ class BarComplication extends Ui.Drawable {
     		var icon = get_weather_icon();
     		if (icon != null) {
 	    		dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
-		    	dc.drawText(centerX, position_y_draw + position_y_draw_bonus, weatherFont, icon, Graphics.TEXT_JUSTIFY_CENTER|Graphics.TEXT_JUSTIFY_VCENTER);
+		    	dc.drawText(RD.centerX, position_y_draw + position_y_draw_bonus, weatherFont, icon,
+                        Graphics.TEXT_JUSTIFY_CENTER|Graphics.TEXT_JUSTIFY_VCENTER);
     		}
     		bonus_padding = position == 0 ? 2 : -2;
     	} else {
@@ -174,7 +176,7 @@ class BarComplication extends Ui.Drawable {
     	
     	title = title.toUpper();
     	dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
-    	dc.drawText(centerX, position_y_draw+bonus_padding, smallDigitalFont, title, Graphics.TEXT_JUSTIFY_CENTER);
+    	dc.drawText(RD.centerX, position_y_draw+bonus_padding, smallDigitalFont, title, Graphics.TEXT_JUSTIFY_CENTER);
 
 		font = null;
 		fontInfo = null;
@@ -192,7 +194,8 @@ class BarComplication extends Ui.Drawable {
 			var flag = (val >> 24) & 255;
 			var xpos_bonus = (flag&0x01)==0x01 ? 1 : 0;
 			var ypos_bonus = (flag&0x10)==0x10 ? 1 : 0;
-		    dc.drawText((xpos*factor+xpos_bonus).toNumber(),(ypos*factor+ypos_bonus).toNumber(),font,char.toNumber().toChar(),Graphics.TEXT_JUSTIFY_LEFT);
+		    dc.drawText((xpos * factor + xpos_bonus).toNumber(), (ypos * factor + ypos_bonus).toNumber(),
+                    font, char.toNumber().toChar(), Graphics.TEXT_JUSTIFY_LEFT);
 		}
     }
 }

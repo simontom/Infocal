@@ -4,7 +4,8 @@ using Toybox.Graphics;
 using Toybox.System;
 using Toybox.Application;
 using Toybox.Lang as Ex;
-
+using ConversionUtils as CU;
+using RuntimeData as RD;
 using Toybox.Activity as Activity;
 using Toybox.ActivityMonitor as ActivityMonitor;
 using Toybox.SensorHistory as SensorHistory;
@@ -30,16 +31,16 @@ class GraphComplication extends Ui.Drawable {
     	position = params.get(:position);
     	if (position==0) {
     		// top
-    		position_x = centerX;
-    		position_y = 0.5*centerY;
+    		position_x = RD.centerX;
+    		position_y = 0.5 * RD.centerY;
     	} else {
     		// bottom
-    		position_x = centerX;
-    		position_y = 1.45*centerY;
+    		position_x = RD.centerX;
+    		position_y = 1.45 * RD.centerY;
     	}
 
     	graph_width = 90;
-    	graph_height = Math.round(0.25*centerX);
+    	graph_height = Math.round(0.25 * RD.centerX);
     }
 
 	function get_data_type() {
@@ -91,7 +92,7 @@ class GraphComplication extends Ui.Drawable {
 	    	return value/100.0;
 	    } else if (type==4) {
 		    if (settings.temperatureUnits == System.UNIT_STATUTE) {
-				return (value * (9.0 / 5)) + 32; // Convert to Farenheit: ensure floating point division.
+				return CU.toFahrenheit(value);
 			} else {
 				return value;
 			}

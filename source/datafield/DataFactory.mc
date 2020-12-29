@@ -7,6 +7,7 @@ using Toybox.ActivityMonitor as ActivityMonitor;
 using Toybox.SensorHistory as SensorHistory;
 using RuntimeData as RD;
 using Toybox.Lang as Ex;
+using ConversionUtils as CU;
 
 using Toybox.UserProfile;
 using Toybox.Time;
@@ -261,7 +262,7 @@ class WeatherField extends BaseDataField {
 			var temp = weather_data["temp"];
         	var unit = "°C";
         	if (settings.temperatureUnits == System.UNIT_STATUTE) {
-				temp = (temp * (9.0 / 5)) + 32; // Convert to Farenheit: ensure floating point division.
+				temp = CU.toFahrenheit(temp);
 				unit = "°F";
 			}
 			value = temp.format("%d") + unit;
@@ -304,8 +305,8 @@ class TemparatureHLField extends BaseDataField {
         var temp_max = weather_data["temp_max"];
         var unit = "°C";
         if (settings.temperatureUnits == System.UNIT_STATUTE) {
-            temp_min = (temp_min * (9.0 / 5)) + 32; // Convert to Farenheit: ensure floating point division.
-            temp_max = (temp_max * (9.0 / 5)) + 32; // Convert to Farenheit: ensure floating point division.
+            temp_min = CU.toFahrenheit(temp_min);
+            temp_max = CU.toFahrenheit(temp_max);
             unit = "°F";
         }
 
@@ -344,7 +345,7 @@ class TemparatureOutField extends BaseDataField {
         var temp = weather_data["temp"];
         var unit = "°C";
         if (settings.temperatureUnits == System.UNIT_STATUTE) {
-            temp = (temp * (9.0 / 5)) + 32; // Convert to Farenheit: ensure floating point division.
+            temp = CU.toFahrenheit(temp);
             unit = "°F";
         }
         value = temp.format("%d") + unit;
@@ -644,7 +645,7 @@ class WeekDistanceField extends BaseDataField {
 			return Lang.format("$1$ $2$", [distance.format("%0.1f"), unit]);
 		}
 
-        var valKp = App.getApp().toKValue(distance * 1000);
+        var valKp = CU.toKValue(distance * 1000);
         return Lang.format("DIS $1$$2$", [valKp, unit]);
 	}
 
@@ -1040,7 +1041,7 @@ class TemparatureField extends BaseDataField {
         var temperature = sample.data;
         if (settings.temperatureUnits == System.UNIT_STATUTE) {
             unit = "°F";
-            temperature = (temperature * (9.0 / 5)) + 32;
+            temperature = CU.toFahrenheit(temperature);
         }
 
         value = temperature.format("%d") + unit;
@@ -1276,7 +1277,7 @@ class DistanceField extends BaseDataField {
 	function max_label(value) {
 		var value = value/1000.0;
 		value = value/100.0; // convert cm to km
-    	var valKp = App.getApp().toKValue(value);
+    	var valKp = CU.toKValue(value);
     	return Lang.format("$1$K",[valKp]);
 	}
 
@@ -1296,7 +1297,7 @@ class DistanceField extends BaseDataField {
 			return Lang.format("$1$ $2$",[distance.format("%0.1f"), unit]);
 		}
 
-        var valKp = App.getApp().toKValue(distance * 1000);
+        var valKp = CU.toKValue(distance * 1000);
         return Lang.format("DIS $1$$2$", [valKp, unit]);
 	}
 
@@ -1329,7 +1330,7 @@ class CaloField extends BaseDataField {
 	}
 
 	function max_label(value) {
-    	var valKp = App.getApp().toKValue(value);
+    	var valKp = CU.toKValue(value);
     	return Lang.format("$1$K",[valKp]);
 	}
 
@@ -1341,7 +1342,7 @@ class CaloField extends BaseDataField {
 			return Lang.format("$1$-$2$",[value.format("%d"), activeCalories.format("%d")]);
 		}
 
-        var valKp = App.getApp().toKValue(value);
+        var valKp = CU.toKValue(value);
         return Lang.format("$1$K-$2$",[valKp, activeCalories.format("%d")]);
 	}
 
@@ -1441,7 +1442,7 @@ class StepField extends BaseDataField {
 	}
 
 	function max_label(value) {
-    	var valKp = App.getApp().toKValue(value);
+    	var valKp = CU.toKValue(value);
     	return Lang.format("$1$K",[valKp]);
 	}
 
@@ -1457,7 +1458,7 @@ class StepField extends BaseDataField {
             return Lang.format("STEP $1$",[currentStep.format("%d")]);
 		}
 
-        var valKp = App.getApp().toKValue(currentStep);
+        var valKp = CU.toKValue(currentStep);
         return Lang.format("STEP $1$K",[valKp]);
 	}
 

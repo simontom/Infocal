@@ -58,10 +58,10 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
     // Load your resources here
     function onLayout(dc) {
     	smallDigitalFont = WatchUi.loadResource(Rez.Fonts.smadigi);
-    	centerX = dc.getWidth()/2;
-    	centerY = dc.getHeight()/2;
+    	RD.centerX = dc.getWidth()/2;
+    	RD.centerY = dc.getHeight()/2;
 
-    	face_radius = centerX - (18*centerX/120).toNumber();
+    	face_radius = RD.centerX - (18 * RD.centerX / 120).toNumber();
 
         setLayout(Rez.Layouts.WatchFace(dc));
 
@@ -137,7 +137,7 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
     	}
 
         var always_on_style = Application.getApp().getProperty("always_on_style");
-        if (centerX == 195) {
+        if (RD.centerX == 195) {
         	if (always_on_style == 0) {
 	    		second_digi_font = WatchUi.loadResource(Rez.Fonts.secodigi);
 	    		second_font_height_half = 16;
@@ -190,7 +190,7 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
 			dc.setColor(Graphics.COLOR_TRANSPARENT, gbackground_color);
 			dc.clear();
 			dc.setColor(gbackground_color, Graphics.COLOR_TRANSPARENT);
-    		dc.fillRectangle(0,0,centerX*2,centerY*2);
+    		dc.fillRectangle(0, 0, RD.centerX * 2, RD.centerY * 2);
 		}
 
 		var digitalDisplay = View.findDrawableById("digital");
@@ -213,7 +213,7 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
 		bar6.draw(dc);
 
         dc.setColor(gbackground_color, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(centerX, centerY, face_radius);
+        dc.fillCircle(RD.centerX, RD.centerY, face_radius);
 
 		backgroundView.draw(dc);
 		bbar1.draw(dc);

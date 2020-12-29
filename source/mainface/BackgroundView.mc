@@ -3,6 +3,8 @@ using Toybox.Graphics;
 using Toybox.System;
 using Toybox.Application;
 using Toybox.Time.Gregorian as Date;
+using ConversionUtils as CU;
+using RuntimeData as RD;
 
 class BackgroundView extends Ui.Drawable {
 
@@ -13,8 +15,8 @@ class BackgroundView extends Ui.Drawable {
 
     function initialize(params) {
         Drawable.initialize(params);
-        radius = centerX - (10*centerX/120).toNumber();
-        if (centerX==195) {
+        radius = RD.centerX - (10 * RD.centerX / 120).toNumber();
+        if (RD.centerX == 195) {
             mark_length = 20;
         }
     }
@@ -28,10 +30,10 @@ class BackgroundView extends Ui.Drawable {
         for(var i = 0; i < 6; i += 1) {
             var rad = (i.toFloat()/(6.0))*2*Math.PI;
             dc.drawLine(
-                convertCoorX(rad, radius - mark_length/2),
-                convertCoorY(rad, radius - mark_length/2),
-                convertCoorX(rad, radius + mark_length/2),
-                convertCoorY(rad, radius + mark_length/2)
+                CU.convertCoorX(rad, radius - mark_length/2),
+                CU.convertCoorY(rad, radius - mark_length/2),
+                CU.convertCoorX(rad, radius + mark_length/2),
+                CU.convertCoorY(rad, radius + mark_length/2)
             );
         }
 
@@ -58,24 +60,24 @@ class BackgroundView extends Ui.Drawable {
                 }
                 var rad = (i.toFloat()/(6.0))*360;
                 dc.drawArc(
-                    centerX,
-                    centerY,
-                    radius-15,
+                    RD.centerX,
+                    RD.centerY,
+                    radius - 15,
                     dc.ARC_COUNTER_CLOCKWISE,
-                    rad+5,
-                    rad+55
+                    rad + 5,
+                    rad + 55
                 );
             }
         } else if (ticks_style == 2) {
             dc.setColor(garc_color, Graphics.COLOR_TRANSPARENT);
             var bonus = 0;
-            if (centerX==130) {
+            if (RD.centerX == 130) {
                 bonus = 2;
-            } else if (centerX==140) {
+            } else if (RD.centerX == 140) {
                 bonus = 3;
-            } else if (centerX==109) {
+            } else if (RD.centerX == 109) {
                 bonus = -2;
-            } else if (centerX==195) {
+            } else if (RD.centerX == 195) {
                 bonus = 8;
             }
             for(var i = 0; i < 12*5; i += 1) {
@@ -95,10 +97,10 @@ class BackgroundView extends Ui.Drawable {
                 }
 
                 dc.drawLine(
-                    convertCoorX(rad, radius - 20 - bonus),
-                    convertCoorY(rad, radius - 20 - bonus),
-                    convertCoorX(rad, radius - 13),
-                    convertCoorY(rad, radius - 13)
+                    CU.convertCoorX(rad, radius - 20 - bonus),
+                    CU.convertCoorY(rad, radius - 20 - bonus),
+                    CU.convertCoorX(rad, radius - 13),
+                    CU.convertCoorY(rad, radius - 13)
                 );
             }
         }

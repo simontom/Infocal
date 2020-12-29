@@ -22,26 +22,6 @@ using RuntimeData as RD;
 // TODO: Rewrite:
 //              - Weather
 
-var centerX;
-var centerY;
-
-// TODO: Move these funs to
-function degreesToRadians(degrees) {
-    return degrees * Math.PI / 180;
-}
-
-function radiansToDegrees(radians) {
-    return radians * 180 / Math.PI;
-}
-
-function convertCoorX(radians, radius) {
-    return centerX + radius*Math.cos(radians);
-}
-
-function convertCoorY(radians, radius) {
-    return centerY + radius*Math.sin(radians);
-}
-
 (:background)
 class ErrorsAndTrialsApp extends Application.AppBase {
 
@@ -200,10 +180,5 @@ class ErrorsAndTrialsApp extends Application.AppBase {
         setProperty(type, storedData);
 
         Ui.requestUpdate();
-    }
-
-    function toKValue(value) {
-        var valK = value / 1000.0;
-        return valK.format("%0.1f");
     }
 }

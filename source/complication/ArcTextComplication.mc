@@ -4,6 +4,8 @@ using Toybox.Graphics;
 using Toybox.System;
 using Toybox.Application;
 using RuntimeData as RD;
+using ConversionUtils as CU;
+using Complications as Cs;
 
 class ArcTextComplication extends Ui.Drawable {
 
@@ -23,25 +25,25 @@ class ArcTextComplication extends Ui.Drawable {
 
     function initialize(params) {
         Drawable.initialize(params);
-    	barRadius = centerX - (13*centerX/120).toNumber();
-    	if (centerX == 109) {
+    	barRadius = RD.centerX - (13 * RD.centerX / 120).toNumber();
+    	if (RD.centerX == 109) {
     		kerning = 1.1;
-    		barRadius = centerX-11;
-    	} else if (centerX == 130) {
+    		barRadius = RD.centerX - 11;
+    	} else if (RD.centerX == 130) {
     		kerning = 0.95;
-    	} else if (centerX == 195) {
+    	} else if (RD.centerX == 195) {
     		kerning = 0.95;
     		barRadius = barRadius+4;
     	}
 
     	baseDegree = params.get(:base);
-    	baseRadian = degreesToRadians(baseDegree);
+    	baseRadian = CU.degreesToRadians(baseDegree);
     	curved_radian = 60.0;
 
     	text = params.get(:text);
     	angle = params.get(:angle);
     	perCharRadius = kerning*4.70*Math.PI/100;
-    	barRadius += ((baseDegree < 180 ? 8 : -3)*centerX/120).toNumber();
+    	barRadius += ((baseDegree < 180 ? 8 : -3) * RD.centerX / 120).toNumber();
     	accumulation_sign = (baseDegree < 180 ? -1 : 1);
 
     	alignment = Graphics.TEXT_JUSTIFY_VCENTER|Graphics.TEXT_JUSTIFY_CENTER;
@@ -70,8 +72,8 @@ class ArcTextComplication extends Ui.Drawable {
     		dc.setColor(gbackground_color, Graphics.COLOR_TRANSPARENT);
 
     		dc.setPenWidth(20);
-    		var target_r = barRadius-((baseDegree < 180 ? 6 : -3)*centerX/120).toNumber();
-			dc.drawArc(centerX, centerY, target_r, Graphics.ARC_CLOCKWISE, 360.0-(baseDegree-30.0), 360.0-(baseDegree+30.0));
+    		var target_r = barRadius-((baseDegree < 180 ? 6 : -3) * RD.centerX / 120).toNumber();
+			dc.drawArc(RD.centerX, RD.centerY, target_r, Graphics.ARC_CLOCKWISE, 360.0-(baseDegree-30.0), 360.0-(baseDegree+30.0));
 
 			dc.setPenWidth(1);
 			dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
@@ -87,13 +89,13 @@ class ArcTextComplication extends Ui.Drawable {
 
     	var totalRad = 0.0;
     	for (var i=0; i<totalChar; i++) {
-    		var ra = perCharRadius * Complications.kerningRatios[charArray[i]];
+    		var ra = perCharRadius * Cs.kerningRatios[charArray[i]];
     		totalRad += ra;
     	}
     	var lastRad = -totalRad/2.0;
 
     	for (var i=0; i < totalChar; i++) {
-    		var ra = perCharRadius * Complications.kerningRatios[charArray[i]];
+    		var ra = perCharRadius * Cs.kerningRatios[charArray[i]];
 
 			lastRad += ra;
 			if (charArray[i] == ' ') {
@@ -101,8 +103,8 @@ class ArcTextComplication extends Ui.Drawable {
 				var centering = ra/2.0;
 	    		var targetRadian = baseRadian + (lastRad-ra/2.0)*accumulation_sign;
 
-	    		var labelCurX = convertCoorX(targetRadian, barRadius);
-	    		var labelCurY = convertCoorY(targetRadian, barRadius);
+	    		var labelCurX = CU.convertCoorX(targetRadian, barRadius);
+	    		var labelCurY = CU.convertCoorY(targetRadian, barRadius);
 
 	    		set_font(targetRadian);
 
@@ -114,7 +116,7 @@ class ArcTextComplication extends Ui.Drawable {
 
     function set_font(current_rad) {
     	var converted = current_rad + Math.PI;
-    	var degree = radiansToDegrees(converted).toNumber();
+    	var degree = CU.radiansToDegrees(converted).toNumber();
     	var idx = ((degree % 180) / 3).toNumber();
     	font = get_font(idx);
     }
