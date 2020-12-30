@@ -30,7 +30,7 @@ module DataField {
             var alarmCount = settings.alarmCount.format("%d");
             var phoneConnected = settings.phoneConnected ? "C" : "D";
 
-            return Lang.format("N$1$-D$2$-$3$", [notificationCount, alarmCount, phoneConnected]);
+            return Lang.format("N$1$-A$2$-$3$", [notificationCount, alarmCount, phoneConnected]);
         }
     }
 

@@ -29,8 +29,6 @@ class ErrorsAndTrialsApp extends Application.AppBase {
 
     function initialize() {
         AppBase.initialize();
-
-        RD.formattedDateProvider = new DU.FormattedDateProvider();
     }
 
     // onStart() is called on application start up
@@ -43,6 +41,8 @@ class ErrorsAndTrialsApp extends Application.AppBase {
 
     // Return the initial view of your application here
     function getInitialView() {
+        RD.formattedDateProvider = new DU.FormattedDateProvider();
+
         mView = new ErrorsAndTrialsView();
         return [mView];
     }
@@ -53,6 +53,8 @@ class ErrorsAndTrialsApp extends Application.AppBase {
 
     // Triggered by settings change in GCM
     function onSettingsChanged() {
+        RD.formattedDateProvider.reloadSettings();
+
         if (ErrorsAndTrialsApp has :checkPendingWebRequests) { // Cuz checkPendingWebRequests() can be excluded to save memory
             checkPendingWebRequests();
         }

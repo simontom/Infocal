@@ -1,3 +1,4 @@
+using Toybox.Math;
 using RuntimeData as RD;
 
 module ConversionUtils {
@@ -11,11 +12,11 @@ module ConversionUtils {
     }
 
     function convertCoorX(radians, radius) {
-        return centerX + radius*Math.cos(radians);
+        return RD.centerX + radius * Math.cos(radians);
     }
 
     function convertCoorY(radians, radius) {
-        return centerY + radius*Math.sin(radians);
+        return RD.centerY + radius * Math.sin(radians);
     }
 
     function toKValue(value) {

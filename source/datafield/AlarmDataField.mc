@@ -24,10 +24,12 @@ module DataField {
             BaseDataField.initialize(id);
         }
 
-        function cur_label(value) {
+        function cur_val() {
             var settings = Sys.getDeviceSettings();
-            var value = settings.alarmCount;
+            return settings.alarmCount;
+        }
 
+        function cur_label(value) {
             return Lang.format("ALAR $1$", [value.format("%d")]);
         }
     }
