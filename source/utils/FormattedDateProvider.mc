@@ -4,8 +4,14 @@ using Toybox.Lang as Ex;
 module DateUtils {
 
     class FormattedDateProvider {
+        private const shortFormat = "$1$ $2$";
+        private const shortFormatWithDot = "$1$.$2$";
+        private const longFormatWithDots = "$1$.$2$.$3$";
+
+        private const integerFormat = "%d";
+
         private var dateFormat;
-        private var isForceDateEnglish;
+        private var isForceDateEnglish; // TODO: Remove this and make all date reading use the DateUtils.DAYS / DateUtils.MONTHS
 
         function initialize() {
             reloadSettings();
@@ -18,58 +24,60 @@ module DateUtils {
 
         function getFormattedDate() {
             var now = Time.now();
-            var date = Date.info(now, Time.FORMAT_SHORT);
+            var dateShort = Date.info(now, Time.FORMAT_SHORT);
 
             switch (dateFormat) {
-                case DateUtils.DATE_FORMAT_1: {
+                case DateUtils.DATE_FORMAT_1: { // dof d (TUE 2)
+                    var day = dateShort.day.format(integerFormat);
+                    var dayOfWeek = null;
+
                     if (isForceDateEnglish) {
-                        var dayOfWeek = date.day_of_week;
-                        return Lang.format("$1$ $2$", [DateUtils.DAYS[dayOfWeek], date.day.format("%d")]);
+                        dayOfWeek = DateUtils.DAYS[dateShort.day_of_week];
+                    } else {
+                        var dateLong = Date.info(now, Time.FORMAT_LONG);
+                        dayOfWeek = dateLong.day_of_week.toUpper();
                     }
 
-                    var dateLong = Date.info(now, Time.FORMAT_LONG);
-                    var dayOfWeek = date.day_of_week;
-                    return Lang.format("$1$ $2$", [dayOfWeek.toUpper(), date.day.format("%d")]);
+                    return Lang.format(shortFormat, [dayOfWeek, day]);
                 }
 
-                case DateUtils.DATE_FORMAT_2:
-                    return Lang.format("$1$.$2$", [date.day.format("%d"), date.month.format("%d")]);
+                case DateUtils.DATE_FORMAT_2: // dd.mm (2.9)
+                    return Lang.format(shortFormatWithDot, [dateShort.day.format(integerFormat), dateShort.month.format(integerFormat)]);
 
-                case DateUtils.DATE_FORMAT_21:
-                    return Lang.format("$1$.$2$", [date.month.format("%d"), date.day.format("%d")]);
+                case DateUtils.DATE_FORMAT_21: // mm.dd (9.2)
+                    return Lang.format(shortFormatWithDot, [dateShort.month.format(integerFormat), dateShort.day.format(integerFormat)]);
 
-                case DateUtils.DATE_FORMAT_3: {
-                    var year = date.year;
+                case DateUtils.DATE_FORMAT_3: { // dd.mm.yy (2.9.19)
+                    var year = dateShort.year;
                     var yy = year / 100.0;
                     yy = Math.round((yy - yy.toNumber()) * 100.0);
-                    return Lang.format("$1$.$2$.$3$", [date.day.format("%d"), date.month.format("%d"), yy.format("%d")]);
+                    return Lang.format(longFormatWithDots, [dateShort.day.format(integerFormat), dateShort.month.format(integerFormat), yy.format(integerFormat)]);
                 }
 
-                case DateUtils.DATE_FORMAT_31: {
-                    var year = date.year;
+                case DateUtils.DATE_FORMAT_31: { // mm.dd.yy (9.2.19)
+                    var year = dateShort.year;
                     var yy = year / 100.0;
                     yy = Math.round((yy - yy.toNumber()) * 100.0);
-                    return Lang.format("$1$.$2$.$3$", [date.month.format("%d"), date.day.format("%d"), yy.format("%d")]);
+                    return Lang.format(longFormatWithDots, [dateShort.month.format(integerFormat), dateShort.day.format(integerFormat), yy.format(integerFormat)]);
                 }
 
-                case DateUtils.DATE_FORMAT_4:
-                case DateUtils.DATE_FORMAT_41: {
-                    var day = null;
+                case DateUtils.DATE_FORMAT_4:    // dd mmm (2 OCT)
+                case DateUtils.DATE_FORMAT_41: { // mmm dd (OCT 2)
+                    var day = dateShort.day.format(integerFormat);
                     var month = null;
+
                     if (isForceDateEnglish) {
-                        day = date.day;
-                        month = DateUtils.MONTHS[date.month];
+                        month = DateUtils.MONTHS[dateShort.month];
                     } else {
-                        var date = Date.info(now, Time.FORMAT_MEDIUM);
-                        day = date.day;
-                        month = DateUtils.MONTHS[date.month];
+                        var dateMedium = Date.info(now, Time.FORMAT_MEDIUM);
+                        month = dateMedium.month.toUpper();
                     }
 
                     if (dateFormat == DateUtils.DATE_FORMAT_4) {
-                        return Lang.format("$1$ $2$", [day.format("%d"), month]);
+                        return Lang.format(shortFormat, [day, month]);
                     }
 
-                    return Lang.format("$1$ $2$", [month, day.format("%d")]);
+                    return Lang.format(shortFormat, [month, day]);
                 }
             }
 

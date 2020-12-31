@@ -53,19 +53,19 @@ module Complications {
 
     class ArcTextComplication extends Ui.Drawable {
 
-        hidden var barRadius;
-        hidden var baseRadian;
-        hidden var baseDegree;
-        hidden var alignment;
-        hidden var font;
-        hidden var perCharRadius;
-        hidden var text;
-        hidden var last_draw_text;
-        hidden var curved_radian;
+        private var barRadius;
+        private var baseRadian;
+        private var baseDegree;
+        private var alignment;
+        private var font;
+        private var perCharRadius;
+        private var currentText;
+        private var lastDrawText;
+        private var curved_radian;
 
-        var accumulation_sign;
-        var angle;
-        var kerning = 1.0;
+        private var accumulation_sign;
+        protected var angle;
+        private var kerning = 1.0;
 
         function initialize(params) {
             Drawable.initialize(params);
@@ -84,7 +84,7 @@ module Complications {
             baseRadian = CU.degreesToRadians(baseDegree);
             curved_radian = 60.0;
 
-            text = params.get(:text);
+            currentText = params.get(:text);
             angle = params.get(:angle);
             perCharRadius = kerning*4.70*Math.PI/100;
             barRadius += ((baseDegree < 180 ? 8 : -3) * RD.centerX / 120).toNumber();
@@ -92,11 +92,11 @@ module Complications {
 
             alignment = Graphics.TEXT_JUSTIFY_VCENTER|Graphics.TEXT_JUSTIFY_CENTER;
 
-            last_draw_text = "";
+            lastDrawText = "";
         }
 
         function get_text() {
-            return text;
+            return currentText;
         }
 
         function need_draw() {
@@ -104,15 +104,11 @@ module Complications {
         }
 
         function draw(dc) {
-
             dc.setPenWidth(1);
 
             var text = get_text();
 
-
-            if (last_draw_text.equals(text) && !RD.forceRenderComponent) {
-                // do not draw
-            } else {
+            if (!lastDrawText.equals(text) || RD.forceRenderComponent) {
                 dc.setColor(gbackground_color, Graphics.COLOR_TRANSPARENT);
 
                 dc.setPenWidth(20);
@@ -123,11 +119,11 @@ module Complications {
                 dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
 
                 drawArcText(dc, text);
-                last_draw_text = text;
+                lastDrawText = text;
             }
         }
 
-        hidden function drawArcText(dc, text) {
+        private function drawArcText(dc, text) {
             var totalChar = text.length().toFloat();
             var charArray = text.toUpper().toCharArray();
 
@@ -158,14 +154,14 @@ module Complications {
             }
         }
 
-        function set_font(current_rad) {
+        private function set_font(current_rad) {
             var converted = current_rad + Math.PI;
             var degree = CU.radiansToDegrees(converted).toNumber();
             var idx = ((degree % 180) / 3).toNumber();
             font = get_font(idx);
         }
 
-        function get_font(idx) {
+        private function get_font(idx) {
             switch (idx) {
                 case 0: return Ui.loadResource(Rez.Fonts.e0);
                 case 1: return Ui.loadResource(Rez.Fonts.e1);

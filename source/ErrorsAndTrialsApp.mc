@@ -25,7 +25,7 @@ using RuntimeData as RD;
 (:background)
 class ErrorsAndTrialsApp extends Application.AppBase {
 
-    var mView;
+    private var mView;
 
     function initialize() {
         AppBase.initialize();
