@@ -10,13 +10,11 @@ using RuntimeData as RD;
 
 
 // TODO: Add:
-//				- Moon Phase
-//				- Mobile Connection
-//				- Alarm count
+//              - Moon Phase
 
 // TODO: Remove:
-//				- Calories
-//				- BackgroundService
+//              - Calories
+//              - BackgroundService
 //              - Distance?
 
 // TODO: Rewrite:
@@ -29,14 +27,6 @@ class ErrorsAndTrialsApp extends Application.AppBase {
 
     function initialize() {
         AppBase.initialize();
-    }
-
-    // onStart() is called on application start up
-    function onStart(state) {
-    }
-
-    // onStop() is called when your application is exiting
-    function onStop(state) {
     }
 
     // Return the initial view of your application here
@@ -59,7 +49,6 @@ class ErrorsAndTrialsApp extends Application.AppBase {
             checkPendingWebRequests();
         }
 
-        RD.formattedDateProvider.reloadSettings();
         mView.last_draw_minute = -1;
         WatchUi.requestUpdate();   // update the view to reflect changes
     }
@@ -98,17 +87,13 @@ class ErrorsAndTrialsApp extends Application.AppBase {
             }
         }
 
-        if (!(Sys has :ServiceDelegate)) {
-            return;
-        }
-
         var pendingWebRequests = getProperty("PendingWebRequests");
         if (pendingWebRequests == null) {
             pendingWebRequests = {};
         }
 
         // 2. Weather:
-        // Location must be available, weather or humidity (#113) data field must be shown.
+        // Location must be available, weather or humidity (#113) data field must be shown
         if (RD.gLocationLat != null) {
 
             var owmCurrent = getProperty("OpenWeatherMapCurrent");
@@ -131,7 +116,6 @@ class ErrorsAndTrialsApp extends Application.AppBase {
                 }
             }
         }
-
 
         // If there are any pending requests:
         if (pendingWebRequests.keys().size() > 0) {
