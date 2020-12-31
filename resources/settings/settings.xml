@@ -1,5 +1,5 @@
 <settings>
-	
+
     <setting propertyKey="@Properties.theme_code" title="@Strings.theme_code">
         <settingConfig type="list">
         	<listEntry value="0">@Strings.theme_dark</listEntry>
@@ -13,14 +13,14 @@
         	<listEntry value="8">@Strings.theme_lime</listEntry>
         </settingConfig>
     </setting>
-    
+
     <setting propertyKey="@Properties.always_on_second" title="@Strings.always_on_second">
         <settingConfig type="boolean" />
     </setting>
     <setting propertyKey="@Properties.always_on_heart" title="@Strings.always_on_heart">
         <settingConfig type="boolean" />
     </setting>
-    
+
     <setting propertyKey="@Properties.digital_style" title="@Strings.digital_style">
         <settingConfig type="list">
         	<listEntry value="2">@Strings.digital_style_xbig</listEntry>
@@ -308,7 +308,7 @@
             <listEntry value="28">@Strings.wind</listEntry>
         </settingConfig>
     </setting>
-    
+
     <setting propertyKey="@Properties.compgrapht" title="@Strings.compgrapht">
         <settingConfig type="list">
         	<listEntry value="0">@Strings.empty</listEntry>
@@ -378,9 +378,6 @@
         	<listEntry value="5">@Strings.datef4</listEntry>
         	<listEntry value="6">@Strings.datef41</listEntry>
         </settingConfig>
-    </setting>
-    <setting propertyKey="@Properties.force_date_english" title="@Strings.force_date_english">
-        <settingConfig type="boolean" />
     </setting>
     <setting propertyKey="@Properties.battery_format" title="@Strings.battery_format">
         <settingConfig type="list">

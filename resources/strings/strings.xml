@@ -23,8 +23,6 @@
     <string id="left_digital_info">Move right digital info to left</string>
     <string id="render_arc_line">Render arc line with curved complication</string>
 
-    <string id="force_date_english">Force date to English (prevent rectangle on unsupported chars)</string>
-
     <string id="big_number_type">Center number</string>
     <string id="minute_major">Minute</string>
     <string id="hour_major">Hour</string>
