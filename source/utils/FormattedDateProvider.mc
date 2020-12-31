@@ -30,7 +30,7 @@ module DateUtils {
             switch (dateFormat) {
                 case DateUtils.DATE_FORMAT_1: // dof d (TUE 2)
                     var dayOfWeek = DateUtils.DAYS[dateShort.day_of_week];
-                    return Lang.format(shortFormat, [dayOfWeek, day.format(integerFormat)]);
+                    return Lang.format(shortFormat, [dayOfWeek, day]);
 
                 case DateUtils.DATE_FORMAT_2: // dd.mm (2.9)
                     return Lang.format(shortFormatWithDot, [day, month]);
