@@ -1,3 +1,4 @@
+using Toybox.Time.Gregorian as Date;
 using Toybox.Lang as Ex;
 
 module DateUtils {
