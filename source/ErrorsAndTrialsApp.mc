@@ -77,12 +77,11 @@ class ErrorsAndTrialsApp extends Application.AppBase {
         // in-memory value with an invalid stored one.
         } else {
             var lat = Application.getApp().getProperty("LastLocationLat");
-            if (lat != null) {
-                RD.gLocationLat = lat;
-            }
 
-            var lng = Application.getApp().getProperty("LastLocationLng");
-            if (lng != null) {
+            if (lat != null) {
+                var lng = Application.getApp().getProperty("LastLocationLng");
+
+                RD.gLocationLat = lat;
                 RD.gLocationLng = lng;
             }
         }
@@ -122,9 +121,9 @@ class ErrorsAndTrialsApp extends Application.AppBase {
             // Register for background temporal event as soon as possible.
             var lastTime = Bg.getLastTemporalEventTime();
 
+            // Events scheduled for a time in the past trigger immediately.
             if (lastTime) {
-                // Events scheduled for a time in the past trigger immediately.
-                var nextTime = lastTime.add(new Time.Duration(5 * 60));
+                var nextTime = lastTime.add(new Time.Duration(20 * 60));
                 Bg.registerForTemporalEvent(nextTime);
             } else {
                 Bg.registerForTemporalEvent(Time.now());
