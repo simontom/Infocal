@@ -11,21 +11,22 @@ class MainDialHand extends Ui.Drawable {
 	////////////////////////
     /// common variables ///
     ////////////////////////
-	hidden var digitalFont, xdigitalFont;
-	hidden var midDigitalFont;
-	hidden var midBoldFont;
-	hidden var midSemiFont;
-	hidden var xmidBoldFont;
-	hidden var xmidSemiFont;
-	hidden var barRadius;
+
+	private var digitalFont;
+    private var xdigitalFont;
+	private var midDigitalFont;
+	private var midBoldFont;
+	private var midSemiFont;
+	private var xmidBoldFont;
+	private var xmidSemiFont;
+	private var barRadius;
 
 	///////////////////////////////
     /// non-antialias variables ///
     ///////////////////////////////
 
-	hidden var alignment;
-
-	hidden var bonusy_smallsize;
+	private var alignment;
+	private var bonusy_smallsize;
 
 	function initialize(params) {
         Drawable.initialize(params);
@@ -36,65 +37,6 @@ class MainDialHand extends Ui.Drawable {
         if (RD.centerX == 195) {
         	bonusy_smallsize = -35;
         }
-    }
-
-    function removeFont() {
-    	midBoldFont = null;
-		midSemiFont = null;
-		xmidBoldFont = null;
-		xmidSemiFont = null;
-		xdigitalFont = null;
-		digitalFont = null;
-		midDigitalFont = null;
-    }
-
-    function checkCurrentFont() {
-    	var digital_style = Application.getApp().getProperty("digital_style");
-    	if (digital_style == 0) {
-    		// big
-    		midBoldFont = null;
-			midSemiFont = null;
-			xmidBoldFont = null;
-			xmidSemiFont = null;
-			xdigitalFont = null;
-			if (digitalFont == null) {
-				digitalFont = Ui.loadResource(Rez.Fonts.bigdigi);
-				midDigitalFont = Ui.loadResource(Rez.Fonts.middigi);
-			}
-    	} else if (digital_style == 1) {
-    		// small
-    		xdigitalFont = null;
-    		digitalFont = null;
-    		xmidBoldFont = null;
-			xmidSemiFont = null;
-    		midDigitalFont = null;
-    		if(midBoldFont == null) {
-    			midBoldFont = Ui.loadResource(Rez.Fonts.midbold);
-				midSemiFont = Ui.loadResource(Rez.Fonts.midsemi);
-    		}
-    	} else if (digital_style == 2) {
-    		// extra big
-    		midBoldFont = null;
-			midSemiFont = null;
-			digitalFont = null;
-			xmidBoldFont = null;
-			xmidSemiFont = null;
-			if (xdigitalFont == null) {
-				xdigitalFont = Ui.loadResource(Rez.Fonts.xbigdigi);
-				midDigitalFont = Ui.loadResource(Rez.Fonts.middigi);
-			}
-    	} else {
-    		// medium
-    		xdigitalFont = null;
-    		digitalFont = null;
-    		midBoldFont = null;
-			midSemiFont = null;
-    		midDigitalFont = null;
-    		if(xmidBoldFont == null) {
-    			xmidBoldFont = Ui.loadResource(Rez.Fonts.xmidbold);
-				xmidSemiFont = Ui.loadResource(Rez.Fonts.xmidsemi);
-    		}
-    	}
     }
 
     function draw(dc) {
@@ -230,5 +172,65 @@ class MainDialHand extends Ui.Drawable {
 		}
 
 		removeFont();
+    }
+
+    private function checkCurrentFont() {
+    	var digital_style = Application.getApp().getProperty("digital_style");
+
+    	if (digital_style == 0) {
+    		// big
+    		midBoldFont = null;
+			midSemiFont = null;
+			xmidBoldFont = null;
+			xmidSemiFont = null;
+			xdigitalFont = null;
+			if (digitalFont == null) {
+				digitalFont = Ui.loadResource(Rez.Fonts.bigdigi);
+				midDigitalFont = Ui.loadResource(Rez.Fonts.middigi);
+			}
+    	} else if (digital_style == 1) {
+    		// small
+    		xdigitalFont = null;
+    		digitalFont = null;
+    		xmidBoldFont = null;
+			xmidSemiFont = null;
+    		midDigitalFont = null;
+    		if(midBoldFont == null) {
+    			midBoldFont = Ui.loadResource(Rez.Fonts.midbold);
+				midSemiFont = Ui.loadResource(Rez.Fonts.midsemi);
+    		}
+    	} else if (digital_style == 2) {
+    		// extra big
+    		midBoldFont = null;
+			midSemiFont = null;
+			digitalFont = null;
+			xmidBoldFont = null;
+			xmidSemiFont = null;
+			if (xdigitalFont == null) {
+				xdigitalFont = Ui.loadResource(Rez.Fonts.xbigdigi);
+				midDigitalFont = Ui.loadResource(Rez.Fonts.middigi);
+			}
+    	} else {
+    		// medium
+    		xdigitalFont = null;
+    		digitalFont = null;
+    		midBoldFont = null;
+			midSemiFont = null;
+    		midDigitalFont = null;
+    		if(xmidBoldFont == null) {
+    			xmidBoldFont = Ui.loadResource(Rez.Fonts.xmidbold);
+				xmidSemiFont = Ui.loadResource(Rez.Fonts.xmidsemi);
+    		}
+    	}
+    }
+
+    private function removeFont() {
+    	midBoldFont = null;
+		midSemiFont = null;
+		xmidBoldFont = null;
+		xmidSemiFont = null;
+		xdigitalFont = null;
+		digitalFont = null;
+		midDigitalFont = null;
     }
 }

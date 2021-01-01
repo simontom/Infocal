@@ -51,8 +51,6 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
 
 	var last_theme_code = -1;
 
-    var screenbuffer = null;
-
     function initialize() {
         WatchFace.initialize();
     }
@@ -60,26 +58,12 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
     // Load your resources here
     function onLayout(dc) {
     	smallDigitalFont = WatchUi.loadResource(Rez.Fonts.smadigi);
-    	RD.centerX = dc.getWidth()/2;
-    	RD.centerY = dc.getHeight()/2;
+    	RD.centerX = dc.getWidth() / 2;
+    	RD.centerY = dc.getHeight() / 2;
 
     	face_radius = RD.centerX - (18 * RD.centerX / 120).toNumber();
 
         setLayout(Rez.Layouts.WatchFace(dc));
-
-        // vivoactive4(s) sometimes clears the watch dc before onupdate
-        if(Application.getApp().getProperty("enable_buffering")) {
-            // create a buffer to draw to
-            // so it can be pasted straight to
-            // the screen instead of redrawing
-            System.println("device has clearbufferbug");
-            if (Toybox.Graphics has :BufferedBitmap) {
-                screenbuffer = new Graphics.BufferedBitmap(
-                        {:width=>dc.getWidth(),
-                        :height=>dc.getHeight(),
-                        } );
-            }
-        }
     }
 
     // Called when this View is brought to the foreground. Restore
@@ -97,7 +81,6 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
 
     // Update the view
     function onUpdate(dc) {
-
     	var clockTime = System.getClockTime();
     	var current_tick = System.getTimer();
 
@@ -107,14 +90,14 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
     		last_battery_hour = time_now;
     		last_battery_percent = System.getSystemStats().battery;
     		last_hour_consumtion = -1;
-    	} else if (time_now.compare(last_battery_hour) >= 60*60) { // 60 min
+    	} else if (time_now.compare(last_battery_hour) >= 60 * 60) { // 60 min
     		last_battery_hour = time_now;
     		var current_battery = System.getSystemStats().battery;
-    		last_hour_consumtion = last_battery_percent-current_battery;
+    		last_hour_consumtion = last_battery_percent - current_battery;
     		if (last_hour_consumtion < 0) {
     			last_hour_consumtion = -1;
     		}
-			if (last_hour_consumtion>0) {
+			if (last_hour_consumtion > 0) {
     			App.getApp().setProperty("last_hour_consumtion", last_hour_consumtion);
 
 				var consumtion_history = App.getApp().getProperty("consumtion_history");
@@ -230,6 +213,7 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
 		digitalDisplay.draw(dc);
 	}
 
+    // Gets called once per second but the mustn't exceed 30ms
 	function onPartialUpdate(dc) {
 		if (Application.getApp().getProperty("always_on_second")) {
 			var clockTime = System.getClockTime();
@@ -238,7 +222,6 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
 
 			dc.setClip(second_x, second_y, second_clip_size[0], second_clip_size[1]);
 			dc.setColor(Graphics.COLOR_TRANSPARENT, gbackground_color);
-//				dc.setColor(Graphics.COLOR_TRANSPARENT, 0xffff00);
 			dc.clear();
 			dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
 			dc.drawText(second_x, second_y-font_padding,
@@ -260,7 +243,6 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
 			var s2 = (second_clip_size[0]*1.25).toNumber();
 			dc.setClip(heart_x-s2-1, second_y, s2+2, second_clip_size[1]);
 			dc.setColor(Graphics.COLOR_TRANSPARENT, gbackground_color);
-//				dc.setColor(Graphics.COLOR_TRANSPARENT, 0xffff00);
 			dc.clear();
 
 			dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
@@ -276,16 +258,12 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
     // state of this View here. This includes freeing resources from
     // memory.
     function onHide() {
-    	// var clockTime = System.getClockTime();
-    	// System.println("hide");
-    	// System.println("" + clockTime.min + ":" + clockTime.sec);
     }
 
     // The user has just looked at their watch. Timers and animations may be started here
+    // If in low energy mode, onUpdate gets called once per second I think
     function onExitSleep() {
     	checkBackgroundRequest();
-
-		// If in low energy mode, onUpdate gets called once per second I think
     }
 
     // Terminate any active timers and prepare for slow updates
@@ -295,6 +273,7 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
 
 	function checkTheme() {
 		var theme_code = Application.getApp().getProperty("theme_code");
+
 		if (last_theme_code == -1 || last_theme_code != theme_code) {
 			var theme_pallete = WatchUi.loadResource(Rez.JsonData.theme_pallete);
 			var theme = theme_pallete[""+theme_code];

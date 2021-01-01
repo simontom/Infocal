@@ -1,4 +1,5 @@
 <strings>
+
     <string id="AppName">ErrorsAndTrials</string>
 
     <string id="white_background">Use white background</string>
@@ -136,4 +137,5 @@
     <string id="barometer_unit_1">Inches of Mercury (inHg)</string>
 
     <string id="openweathermap_api">OpenWeatherMap API key, read FAQs section for more info</string>
+
 </strings>
