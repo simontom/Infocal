@@ -29,8 +29,6 @@
     <property id="compgrapht" type="number">3</property>
     <property id="compgraphb" type="number">0</property>
 
-    <property id="baro_period" type="number">3</property>
-
     <property id="utc_timezone" type="number">0</property>
     <property id="utc_shift" type="boolean">false</property>
 

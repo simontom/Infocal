@@ -327,15 +327,7 @@
             <listEntry value="4">@Strings.temperature</listEntry>
         </settingConfig>
     </setting>
-    <!-- <setting propertyKey="@Properties.baro_period" title="@Strings.baro_period">
-        <settingConfig type="list">
-        	<listEntry value="1">@Strings.h1</listEntry>
-        	<listEntry value="2">@Strings.h2</listEntry>
-        	<listEntry value="3">@Strings.h3</listEntry>
-        	<listEntry value="4">@Strings.h4</listEntry>
-        	<listEntry value="5">@Strings.h5</listEntry>
-        </settingConfig>
-    </setting> -->
+
     <setting propertyKey="@Properties.utc_timezone" title="@Strings.utc_timezone">
         <settingConfig type="list">
         	<listEntry value="0">@Strings.utc0</listEntry>
