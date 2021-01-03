@@ -251,7 +251,7 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
 
 		if (last_theme_code == -1 || last_theme_code != theme_code) {
 			var theme_pallete = WatchUi.loadResource(Rez.JsonData.theme_pallete);
-			var theme = theme_pallete[""+theme_code];
+			var theme = theme_pallete["" + theme_code];
 			gbackground_color = theme[0];
 			gmain_color = theme[1];
 			gsecondary_color = theme[2];

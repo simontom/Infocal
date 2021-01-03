@@ -5,6 +5,8 @@ using Toybox.System;
 using Toybox.Application;
 using Toybox.Time.Gregorian as Date;
 using RuntimeData as RD;
+using SettingsEnums as SE;
+using Toybox.Lang as Ex;
 
 class MainDialHand extends Ui.Drawable {
 
@@ -54,11 +56,11 @@ class MainDialHand extends Ui.Drawable {
 
 		var digital_style = Application.getApp().getProperty("digital_style");
 		var alwayon_style = Application.getApp().getProperty("always_on_style");
-		if (digital_style == 0 || digital_style == 2) { // big or extra big
-			var bignumber = Application.getApp().getProperty("big_number_type") == 0 ? minute : hour;
-			var smallnumber = Application.getApp().getProperty("big_number_type") == 0 ? hour : minute;
+		if (digital_style == SE.DIGITAL_STYLE_BIG || digital_style == SE.DIGITAL_STYLE_XBIG) { // big or extra big
+			var bignumber = Application.getApp().getProperty("big_number_type") == SE.BIG_NUMBER_TYPE_MINUTE_IN_CENTER ? minute : hour;
+			var smallnumber = Application.getApp().getProperty("big_number_type") == SE.BIG_NUMBER_TYPE_MINUTE_IN_CENTER ? hour : minute;
 
-			var target_center_font = digital_style == 0 ? digitalFont : xdigitalFont;
+			var target_center_font = digital_style == SE.DIGITAL_STYLE_BIG ? digitalFont : xdigitalFont;
 
 			// DRAW CENTER
 	    	var bigText = bignumber.format(Constants.ZeroLeadingFormat);
@@ -75,7 +77,7 @@ class MainDialHand extends Ui.Drawable {
 		    	dc.drawText(RD.centerX + w2 -w / 2, RD.centerY - h / 4, target_center_font, "\\", Graphics.TEXT_JUSTIFY_VCENTER);
 	    	}
 
-	    	var f_align = digital_style == 0 ? 62 : 71;
+	    	var f_align = digital_style == SE.DIGITAL_STYLE_BIG ? 62 : 71;
 	    	if (RD.centerX == 195) {
 	    		f_align = f_align + 40;
 	    	}
@@ -83,7 +85,7 @@ class MainDialHand extends Ui.Drawable {
 	    	second_x = RD.centerX + w / 2 + 3;
 	    	heart_x = RD.centerX - w / 2 - 3;
 
-	    	if (RD.centerX == 109 && digital_style == 2) {
+	    	if (RD.centerX == 109 && digital_style == SE.DIGITAL_STYLE_XBIG) {
 	    		second_y  = RD.centerY - second_font_height_half / 2 - (alwayon_style == 0 ? 3 : 6);
 	    	} else {
 	    		second_y  = RD.centerY + (h - f_align) / 2 - second_font_height_half * 2 + (alwayon_style == 0 ? 0 : 5);
@@ -96,11 +98,11 @@ class MainDialHand extends Ui.Drawable {
 	    	var vertical_alignment = 0;
 	    	if (RD.centerX == 109) {
 	    		bonus_alignment = 4;
-	    		if (digital_style == 2) {
+	    		if (digital_style == SE.DIGITAL_STYLE_XBIG) {
 	    			bonus_alignment = 4;
 	    			vertical_alignment = -23;
 	    		}
-	    	} else if (RD.centerX == 120 && digital_style == 2) {
+	    	} else if (RD.centerX == 120 && digital_style == SE.DIGITAL_STYLE_XBIG) {
 	    		bonus_alignment = 6;
 	    		extra_info_alignment = 4;
 	    	}
@@ -129,7 +131,7 @@ class MainDialHand extends Ui.Drawable {
 	    	dc.drawText(target_info_x + bonus_alignment, RD.centerY * 0.7 - h2 / 4 + 5 + vertical_alignment,
                     midDigitalFont, smallnumber.format(Constants.ZeroLeadingFormat), alignment);
 
-	    	if (RD.centerX == 109 && digital_style == 2) {
+	    	if (RD.centerX == 109 && digital_style == SE.DIGITAL_STYLE_XBIG) {
 	    		return;
 	    	}
 
@@ -146,13 +148,13 @@ class MainDialHand extends Ui.Drawable {
 			dc.drawLine(target_info_x - bonus_alignment - w3 / 2 + extra_info_alignment, RD.centerY * 0.5 + 7,
                     target_info_x-bonus_alignment + w3 / 2 + extra_info_alignment, RD.centerY * 0.5 + 7);
 
-		} else if (digital_style == 1 || digital_style == 3) {
+		} else if (digital_style == SE.DIGITAL_STYLE_SMALL || digital_style == SE.DIGITAL_STYLE_MEDIUM) {
 			var hourText = hour.format(Constants.ZeroLeadingFormat);
 			var minuText = minute.format(Constants.ZeroLeadingFormat);
 
-			var bonus = digital_style == 3 ? -13 : 0;
-			var boldF = digital_style == 3 ? xmidBoldFont : midBoldFont;
-			var normF = digital_style == 3 ? xmidSemiFont : midSemiFont;
+			var bonus = digital_style == SE.DIGITAL_STYLE_MEDIUM ? -13 : 0;
+			var boldF = digital_style == SE.DIGITAL_STYLE_MEDIUM ? xmidBoldFont : midBoldFont;
+			var normF = digital_style == SE.DIGITAL_STYLE_MEDIUM ? xmidSemiFont : midSemiFont;
 
 			var hourW = dc.getTextWidthInPixels(hourText, boldF).toFloat();
 			var h = dc.getFontHeight(boldF).toFloat();
@@ -177,51 +179,58 @@ class MainDialHand extends Ui.Drawable {
     private function checkCurrentFont() {
     	var digital_style = Application.getApp().getProperty("digital_style");
 
-    	if (digital_style == 0) {
-    		// big
-    		midBoldFont = null;
-			midSemiFont = null;
-			xmidBoldFont = null;
-			xmidSemiFont = null;
-			xdigitalFont = null;
-			if (digitalFont == null) {
-				digitalFont = Ui.loadResource(Rez.Fonts.bigdigi);
-				midDigitalFont = Ui.loadResource(Rez.Fonts.middigi);
-			}
-    	} else if (digital_style == 1) {
-    		// small
-    		xdigitalFont = null;
-    		digitalFont = null;
-    		xmidBoldFont = null;
-			xmidSemiFont = null;
-    		midDigitalFont = null;
-    		if(midBoldFont == null) {
-    			midBoldFont = Ui.loadResource(Rez.Fonts.midbold);
-				midSemiFont = Ui.loadResource(Rez.Fonts.midsemi);
-    		}
-    	} else if (digital_style == 2) {
-    		// extra big
-    		midBoldFont = null;
-			midSemiFont = null;
-			digitalFont = null;
-			xmidBoldFont = null;
-			xmidSemiFont = null;
-			if (xdigitalFont == null) {
-				xdigitalFont = Ui.loadResource(Rez.Fonts.xbigdigi);
-				midDigitalFont = Ui.loadResource(Rez.Fonts.middigi);
-			}
-    	} else {
-    		// medium
-    		xdigitalFont = null;
-    		digitalFont = null;
-    		midBoldFont = null;
-			midSemiFont = null;
-    		midDigitalFont = null;
-    		if(xmidBoldFont == null) {
-    			xmidBoldFont = Ui.loadResource(Rez.Fonts.xmidbold);
-				xmidSemiFont = Ui.loadResource(Rez.Fonts.xmidsemi);
-    		}
-    	}
+        switch (digital_style) {
+            case SE.DIGITAL_STYLE_BIG:
+                midBoldFont = null;
+                midSemiFont = null;
+                xmidBoldFont = null;
+                xmidSemiFont = null;
+                xdigitalFont = null;
+                if (digitalFont == null) {
+                    digitalFont = Ui.loadResource(Rez.Fonts.bigdigi);
+                    midDigitalFont = Ui.loadResource(Rez.Fonts.middigi);
+                }
+            break;
+
+            case SE.DIGITAL_STYLE_SMALL:
+                xdigitalFont = null;
+                digitalFont = null;
+                xmidBoldFont = null;
+                xmidSemiFont = null;
+                midDigitalFont = null;
+                if(midBoldFont == null) {
+                    midBoldFont = Ui.loadResource(Rez.Fonts.midbold);
+                    midSemiFont = Ui.loadResource(Rez.Fonts.midsemi);
+                }
+            break;
+
+            case SE.DIGITAL_STYLE_XBIG:
+                midBoldFont = null;
+                midSemiFont = null;
+                digitalFont = null;
+                xmidBoldFont = null;
+                xmidSemiFont = null;
+                if (xdigitalFont == null) {
+                    xdigitalFont = Ui.loadResource(Rez.Fonts.xbigdigi);
+                    midDigitalFont = Ui.loadResource(Rez.Fonts.middigi);
+                }
+            break;
+
+            case SE.DIGITAL_STYLE_MEDIUM:
+                xdigitalFont = null;
+                digitalFont = null;
+                midBoldFont = null;
+                midSemiFont = null;
+                midDigitalFont = null;
+                if(xmidBoldFont == null) {
+                    xmidBoldFont = Ui.loadResource(Rez.Fonts.xmidbold);
+                    xmidSemiFont = Ui.loadResource(Rez.Fonts.xmidsemi);
+                }
+            break;
+
+            default:
+                throw new Ex.InvalidValueException("Invalid value of 'digital_style' in ':checkCurrentFont'");
+        }
     }
 
     private function removeFont() {

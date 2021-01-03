@@ -5,6 +5,7 @@ using Toybox.Activity;
 using Toybox.ActivityMonitor;
 using Toybox.Application;
 using DataFieldFactory as DFF;
+using SettingsEnums as SE;
 
 module Complications {
 
@@ -31,7 +32,7 @@ module Complications {
 
         function need_draw() {
             var digital_style = Application.getApp().getProperty("digital_style");
-            if (digital_style == 1 || digital_style == 3) {
+            if (digital_style == SE.DIGITAL_STYLE_SMALL || digital_style == SE.DIGITAL_STYLE_MEDIUM) {
                 // small digital
                 return dt_field.need_draw();
             }

@@ -31,7 +31,7 @@ module DataField {
 
             var target = App.getApp().getProperty("utc_timezone");
             var shift_val = App.getApp().getProperty("utc_shift") ? 0.5 : 0.0;
-            var secondary_zone_delta = (target+shift_val)*3600 - to_utc_second;
+            var secondary_zone_delta = (target + shift_val) * 3600 - to_utc_second;
 
             var now = Time.now();
             var now_target_zone_delta = new Time.Duration(secondary_zone_delta);

@@ -5,6 +5,7 @@ using Toybox.Application;
 using Toybox.Time.Gregorian as Date;
 using ConversionUtils as CU;
 using RuntimeData as RD;
+using SettingsEnums as SE;
 
 class BackgroundView extends Ui.Drawable {
 
@@ -46,7 +47,7 @@ class BackgroundView extends Ui.Drawable {
         } else if (ticks_style == 1) {
             var excluded = 0;
 
-            if (digital_style == 1 || digital_style == 3) {
+            if (digital_style == SE.DIGITAL_STYLE_SMALL || digital_style == SE.DIGITAL_STYLE_MEDIUM) {
                 excluded = -1;
             } else if (left_digital_info) {
                 excluded = 2;
@@ -82,7 +83,7 @@ class BackgroundView extends Ui.Drawable {
             }
 
             for(var i = 0; i < 12 * 5; i += 1) {
-                if (digital_style == 2 || digital_style == 0) {
+                if (digital_style == SE.DIGITAL_STYLE_XBIG || digital_style == SE.DIGITAL_STYLE_BIG) {
                     if (left_digital_info) {
                         if (i > 45 && i < 55) { continue; }
                     } else {

@@ -1,17 +1,5 @@
 module SettingsEnums {
 
-    enum /* THEME_CODES */ {
-        THEME_CODE_DARK = 0,
-        THEME_CODE_LIGHT = 1,
-        THEME_CODE_RADIOACTIVE = 2,
-        THEME_CODE_DARK_BLUE = 3,
-        THEME_CODE_LIGHT_BLUE = 4,
-        THEME_CODE_DARK_CONTRAST = 5,
-        THEME_CODE_LIGHT_CONTRAST = 6,
-        THEME_CODE_SOLAR = 7,
-        THEME_CODE_LIME = 8
-    }
-
     enum /* DATE_FORMATS */ {
         DATE_FORMAT_1 = 0,      // dof d (TUE 2)
         DATE_FORMAT_2 = 1,      // dd.mm (2.9)
