@@ -11,6 +11,7 @@ using ConversionUtils as CU;
 using Toybox.UserProfile;
 using Toybox.Time;
 using Toybox.Time.Gregorian as Date;
+using SettingsEnums as SE;
 
 module DataField {
 
@@ -40,12 +41,10 @@ module DataField {
             var pressure = null;
             var pressureFormat = null;
             var unit = App.getApp().getProperty("barometer_unit");
-            if (unit == 1) {
-                // Convert to inHg
+            if (unit == SE.BAROMETER_UNIT_INHG) {
                 pressure = pascal * 0.000295301d;
                 pressureFormat = "%0.2f";
-            } else {
-                // Convert to hPa
+            } else if (unit == SE.BAROMETER_UNIT_HPA) {
                 pressure = pascal / 100.0;
                 pressureFormat = "%d";
             }

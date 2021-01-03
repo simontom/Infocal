@@ -86,9 +86,9 @@ class MainDialHand extends Ui.Drawable {
 	    	heart_x = RD.centerX - w / 2 - 3;
 
 	    	if (RD.centerX == 109 && digital_style == SE.DIGITAL_STYLE_XBIG) {
-	    		second_y  = RD.centerY - second_font_height_half / 2 - (alwayon_style == 0 ? 3 : 6);
+	    		second_y  = RD.centerY - second_font_height_half / 2 - (alwayon_style == SE.ALWAYS_ON_STYLE_SMALL ? 3 : 6);
 	    	} else {
-	    		second_y  = RD.centerY + (h - f_align) / 2 - second_font_height_half * 2 + (alwayon_style == 0 ? 0 : 5);
+	    		second_y  = RD.centerY + (h - f_align) / 2 - second_font_height_half * 2 + (alwayon_style == SE.ALWAYS_ON_STYLE_SMALL ? 0 : 5);
 	    	}
 	    	// DRAW INFOS
 

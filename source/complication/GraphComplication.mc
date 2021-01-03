@@ -9,16 +9,9 @@ using RuntimeData as RD;
 using Toybox.Activity as Activity;
 using Toybox.ActivityMonitor as ActivityMonitor;
 using Toybox.SensorHistory as SensorHistory;
+using SettingsEnums as SE;
 
 module Complications {
-
-    enum /* GRAPH_TYPES */ {
-        GRAPH_TYPE_EMPTY = 0,
-        GRAPH_TYPE_HEARTRATE = 1,
-        GRAPH_TYPE_ALTITUDE = 2,
-        GRAPH_TYPE_BAROMETR = 3,
-        GRAPH_TYPE_TEMPERATURE = 4
-    }
 
     class GraphComplication extends Ui.Drawable {
 
@@ -33,12 +26,10 @@ module Complications {
             Drawable.initialize(params);
 
             position = params.get(:position);
-            if (position == 0) {
-                // top
+            if (position == SE.COMPLICATION_GRAPH_POSITION_TOP) {
                 position_x = RD.centerX;
                 position_y = 0.5 * RD.centerY;
-            } else {
-                // bottom
+            } else if (position == SE.COMPLICATION_GRAPH_POSITION_BOTTOM) {
                 position_x = RD.centerX;
                 position_y = 1.45 * RD.centerY;
             }
@@ -47,42 +38,12 @@ module Complications {
             graph_height = Math.round(0.25 * RD.centerX);
         }
 
-        function get_data_type() {
-            if (position == 0) {
-                return Application.getApp().getProperty("compgrapht");
-            } else {
-                return Application.getApp().getProperty("compgraphb");
-            }
-        }
-
-        function get_data_interator(graphType) {
-            switch (graphType) {
-                case GRAPH_TYPE_HEARTRATE:
-                    return Toybox.SensorHistory.getHeartRateHistory({});
-
-                case GRAPH_TYPE_ALTITUDE:
-                    return Toybox.SensorHistory.getElevationHistory({});
-
-                case GRAPH_TYPE_BAROMETR:
-                    return Toybox.SensorHistory.getPressureHistory({});
-
-                case GRAPH_TYPE_TEMPERATURE:
-                    return Toybox.SensorHistory.getTemperatureHistory({});
-
-                case GRAPH_TYPE_EMPTY:
-                default:
-                    return null;
-            }
-
-            throw new Ex.InvalidValueException("Totally nonsense throw!");
-        }
-
         function need_draw() {
             return get_data_type() > 0;
         }
 
         function parse_data_value(type, value) {
-            if (type==1) {
+            if (type == 1) {
                 return value;
             } else if (type == 2) {
                 if (settings.elevationUnits == System.UNIT_METRIC) {
@@ -90,11 +51,11 @@ module Complications {
                     return value;
                 } else {
                     // Feet.
-                    return  value*3.28084;
+                    return  value * 3.28084;
                 }
-            } else if (type==3) {
-                return value/100.0;
-            } else if (type==4) {
+            } else if (type == 3) {
+                return value / 100.0;
+            } else if (type == 4) {
                 if (settings.temperatureUnits == System.UNIT_STATUTE) {
                     return CU.toFahrenheit(value);
                 } else {
@@ -113,7 +74,7 @@ module Complications {
             try {
                 settings = System.getDeviceSettings();
 
-                var primaryColor = position == 1 ? gbar_color_1 : gbar_color_0;
+                var primaryColor = position == SE.COMPLICATION_GRAPH_POSITION_BOTTOM ? gbar_color_1 : gbar_color_0;
 
                 //Calculation
                 var targetdatatype = get_data_type();
@@ -133,11 +94,6 @@ module Complications {
                     dc.drawText(position_x, position_y, smallDigitalFont, "--", Graphics.TEXT_JUSTIFY_CENTER|Graphics.TEXT_JUSTIFY_VCENTER);
                     return;
                 }
-        //         else if (HistoryMin.data == null || HistoryMax.data == null) {
-        //        	dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
-        //        	dc.drawText(position_x, position_y, smallDigitalFont, "--", Graphics.TEXT_JUSTIFY_CENTER|Graphics.TEXT_JUSTIFY_VCENTER);
-        //        	return;
-        //        }
 
                 var minMaxDiff = (HistoryMax - HistoryMin).toFloat();
 
@@ -155,7 +111,7 @@ module Complications {
                     HistoryPresent = latest_sample.data;
                     if (HistoryPresent != null) {
                         // draw diagram
-                        var historyDifPers = (HistoryPresent - HistoryMin)/minMaxDiff;
+                        var historyDifPers = (HistoryPresent - HistoryMin) / minMaxDiff;
                         var yStep = historyDifPers * height;
                         yStep = yStep>height?height:yStep;
                         yStep = yStep<0?0:yStep;
@@ -168,8 +124,8 @@ module Complications {
                 dc.setPenWidth(2);
                 dc.setColor(primaryColor, Graphics.COLOR_TRANSPARENT);
 
-                //Build and draw Iteration
-                for(var i = 90; i > 0; i--){
+                // Build and draw Iteration
+                for(var i = 90; i > 0; i--) {
                     var sample = HistoryIter.next();
 
                     if (sample != null) {
@@ -206,8 +162,9 @@ module Complications {
                 dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
 
                 if (HistoryPresent == null) {
-                    dc.drawText(position_x,
-                            position_y + (position==1?(graph_height/2 + 10):(-graph_height/2-16)),
+                    dc.drawText(
+                            position_x,
+                            position_y + (position == SE.COMPLICATION_GRAPH_POSITION_BOTTOM ? (graph_height / 2 + 10) : (-graph_height / 2 - 16)),
                             smallDigitalFont,
                             "--",
                             Graphics.TEXT_JUSTIFY_CENTER|Graphics.TEXT_JUSTIFY_VCENTER);
@@ -215,19 +172,50 @@ module Complications {
                 }
                 var value_label = parse_data_value(targetdatatype, HistoryPresent);
                 var labelll = value_label.format("%d");
-                dc.drawText(position_x,
-                            position_y + (position==1?(graph_height/2 + 10):(-graph_height/2-16)),
-                            smallDigitalFont,
-                            labelll,
-                            Graphics.TEXT_JUSTIFY_CENTER|Graphics.TEXT_JUSTIFY_VCENTER);
+                dc.drawText(
+                        position_x,
+                        position_y + (position == SE.COMPLICATION_GRAPH_POSITION_BOTTOM ? (graph_height / 2 + 10) : (-graph_height / 2 - 16)),
+                        smallDigitalFont,
+                        labelll,
+                        Graphics.TEXT_JUSTIFY_CENTER|Graphics.TEXT_JUSTIFY_VCENTER);
 
                 settings = null;
             } catch(ex) {
                 // currently unkown, weird bug
                 System.println(ex);
                 dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(position_x, position_y, smallDigitalFont, "--", Graphics.TEXT_JUSTIFY_CENTER|Graphics.TEXT_JUSTIFY_VCENTER);
+                dc.drawText(position_x, position_y, smallDigitalFont, "--", Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
             }
+        }
+
+        private function get_data_type() {
+            if (position == SE.COMPLICATION_GRAPH_POSITION_TOP) {
+                return Application.getApp().getProperty("compgrapht");
+            } else if (position == SE.COMPLICATION_GRAPH_POSITION_BOTTOM) {
+                return Application.getApp().getProperty("compgraphb");
+            }
+        }
+
+        private function get_data_interator(graphType) {
+            switch (graphType) {
+                case SE.GRAPH_FIELD_TYPE_HEARTRATE:
+                    return Toybox.SensorHistory.getHeartRateHistory({});
+
+                case SE.GRAPH_FIELD_TYPE_ALTITUDE:
+                    return Toybox.SensorHistory.getElevationHistory({});
+
+                case SE.GRAPH_FIELD_TYPE_BAROMETER:
+                    return Toybox.SensorHistory.getPressureHistory({});
+
+                case SE.GRAPH_FIELD_TYPE_TEMPERATURE:
+                    return Toybox.SensorHistory.getTemperatureHistory({});
+
+                case SE.GRAPH_FIELD_TYPE_EMPTY:
+                default:
+                    return null;
+            }
+
+            throw new Ex.InvalidValueException("Totally nonsense throw!");
         }
     }
 

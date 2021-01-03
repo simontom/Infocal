@@ -23,28 +23,33 @@ class BackgroundView extends Ui.Drawable {
     }
 
     function draw(dc) {
-        var isFull = false;
+        drawMarks(dc);
+        drawTicks(dc);
+    }
 
+    private function drawMarks(dc) {
         dc.setPenWidth(4);
         dc.setColor(gsecondary_color, Graphics.COLOR_TRANSPARENT);
 
         for(var i = 0; i < 6; i += 1) {
-            var rad = (i.toFloat()/(6.0))*2*Math.PI;
+            var rad = (i.toFloat() / 6.0) * 2 * Math.PI;
             dc.drawLine(
-                CU.convertCoorX(rad, radius - mark_length/2),
-                CU.convertCoorY(rad, radius - mark_length/2),
-                CU.convertCoorX(rad, radius + mark_length/2),
-                CU.convertCoorY(rad, radius + mark_length/2)
+                CU.convertCoorX(rad, radius - mark_length / 2),
+                CU.convertCoorY(rad, radius - mark_length / 2),
+                CU.convertCoorX(rad, radius + mark_length / 2),
+                CU.convertCoorY(rad, radius + mark_length / 2)
             );
         }
+    }
 
+    private function drawTicks(dc) {
         var ticks_style = Application.getApp().getProperty("ticks_style");
         var digital_style = Application.getApp().getProperty("digital_style");
         var left_digital_info = Application.getApp().getProperty("left_digital_info");
 
-        if (ticks_style == 0) {
+        if (ticks_style == SE.TICKS_STYLE_EMPTY) {
             return;
-        } else if (ticks_style == 1) {
+        } else if (ticks_style == SE.TICKS_STYLE_ARC) {
             var excluded = 0;
 
             if (digital_style == SE.DIGITAL_STYLE_SMALL || digital_style == SE.DIGITAL_STYLE_MEDIUM) {
@@ -59,7 +64,7 @@ class BackgroundView extends Ui.Drawable {
                 if (i==excluded) {
                     continue;
                 }
-                var rad = (i.toFloat()/(6.0))*360;
+                var rad = (i.toFloat() / 6.0) * 360;
                 dc.drawArc(
                     RD.centerX,
                     RD.centerY,
@@ -69,7 +74,7 @@ class BackgroundView extends Ui.Drawable {
                     rad + 55
                 );
             }
-        } else if (ticks_style == 2) {
+        } else if (ticks_style == SE.TICKS_STYLE_MARKS) {
             dc.setColor(garc_color, Graphics.COLOR_TRANSPARENT);
             var bonus = 0;
             if (RD.centerX == 130) {

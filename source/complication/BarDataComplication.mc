@@ -6,6 +6,7 @@ using Toybox.ActivityMonitor;
 using Toybox.Application;
 using Toybox.Lang as Ex;
 using DataFieldFactory as DFF;
+using SettingsEnums as SE;
 
 module Complications {
 
@@ -54,11 +55,9 @@ module Complications {
         }
 
         function getSettingDataKey() {
-            if (position == 0) {
-                // upper
+            if (position == SE.COMPLICATION_BAR_POSITION_TOP) {
                 return Application.getApp().getProperty("compbart");
-            } else if (position == 1) {
-                // lower
+            } else if (position == SE.COMPLICATION_BAR_POSITION_BOTTOM) {
                 return Application.getApp().getProperty("compbarb");
             }
 

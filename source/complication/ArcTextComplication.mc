@@ -51,7 +51,7 @@ module Complications {
 		'°' => 0.47,
     };
 
-    class ArcTextComplication extends Ui.Drawable {
+    /* abstract */ class ArcTextComplication extends Ui.Drawable {
 
         private var barRadius;
         private var baseRadian;
@@ -128,20 +128,20 @@ module Complications {
             var charArray = text.toUpper().toCharArray();
 
             var totalRad = 0.0;
-            for (var i=0; i<totalChar; i++) {
+            for (var i = 0; i < totalChar; i++) {
                 var ra = perCharRadius * kerningRatios[charArray[i]];
                 totalRad += ra;
             }
-            var lastRad = -totalRad/2.0;
+            var lastRad = -totalRad / 2.0;
 
-            for (var i=0; i < totalChar; i++) {
+            for (var i = 0; i < totalChar; i++) {
                 var ra = perCharRadius * kerningRatios[charArray[i]];
 
                 lastRad += ra;
                 if (charArray[i] == ' ') {
                 } else {
-                    var centering = ra/2.0;
-                    var targetRadian = baseRadian + (lastRad-ra/2.0)*accumulation_sign;
+                    var centering = ra / 2.0;
+                    var targetRadian = baseRadian + (lastRad - ra / 2.0) * accumulation_sign;
 
                     var labelCurX = CU.convertCoorX(targetRadian, barRadius);
                     var labelCurY = CU.convertCoorY(targetRadian, barRadius);

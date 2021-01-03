@@ -16,6 +16,7 @@ module Complications {
 
         function initialize(params) {
             ArcTextComplication.initialize(params);
+
             field_type = params.get(:field_type);
             dt_field = DFF.buildFieldObject(field_type);
         }
@@ -27,21 +28,20 @@ module Complications {
         }
 
         function getSettingDataKey() {
-            return Application.getApp().getProperty("comp"+angle+"h");
+            return Application.getApp().getProperty("comp" + angle + "h");
         }
 
         function need_draw() {
             var digital_style = Application.getApp().getProperty("digital_style");
             if (digital_style == SE.DIGITAL_STYLE_SMALL || digital_style == SE.DIGITAL_STYLE_MEDIUM) {
-                // small digital
                 return dt_field.need_draw();
             }
 
             if (Application.getApp().getProperty("left_digital_info")) {
-                var can_draw = angle != 10;
+                var can_draw = angle != SE.COMPLICATION_POSITION_10H;
                 return dt_field.need_draw() && can_draw;
             } else {
-                var can_draw = angle != 2;
+                var can_draw = angle != SE.COMPLICATION_POSITION_2H;
                 return dt_field.need_draw() && can_draw;
             }
         }

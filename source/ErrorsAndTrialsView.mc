@@ -8,6 +8,7 @@ using Toybox.Application as App;
 using Toybox.ActivityMonitor as Mon;
 using Toybox.UserProfile;
 using DataField as DF;
+using SettingsEnums as SE;
 
 // TODO: Move to proper modules / classes
 var smallDigitalFont = null;
@@ -111,7 +112,7 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
 
         var always_on_style = Application.getApp().getProperty("always_on_style");
         if (RD.centerX == 195) {
-        	if (always_on_style == 0) {
+        	if (always_on_style == SE.ALWAYS_ON_STYLE_SMALL) {
 	    		second_digi_font = WatchUi.loadResource(Rez.Fonts.secodigi);
 	    		second_font_height_half = 16;
 	    		second_clip_size = [40, 30];
@@ -121,7 +122,7 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
 	    		second_clip_size = [52, 44];
 	    	}
         } else {
-	    	if (always_on_style == 0) {
+	    	if (always_on_style == SE.ALWAYS_ON_STYLE_SMALL) {
 	    		second_digi_font = WatchUi.loadResource(Rez.Fonts.secodigi);
 	    		second_font_height_half = 7;
 	    		second_clip_size = [20, 15];

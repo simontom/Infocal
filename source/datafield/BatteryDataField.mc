@@ -11,6 +11,7 @@ using ConversionUtils as CU;
 using Toybox.UserProfile;
 using Toybox.Time;
 using Toybox.Time.Gregorian as Date;
+using SettingsEnums as SE;
 
 module DataField {
 
@@ -66,7 +67,7 @@ module DataField {
 
             hour_consumtion = hour_consumtion.toFloat();
 
-            if (battery_format == 0 || hour_consumtion == -1) {
+            if (battery_format == SE.BATTERY_FORMAT_PERCENTAGE || hour_consumtion == -1) {
                 return Lang.format("BAT $1$%", [Math.round(value).format("%d")]);
             }
 

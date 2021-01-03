@@ -5,10 +5,11 @@ using Toybox.System;
 using Toybox.Application;
 using RuntimeData as RD;
 using DataFieldFactory as DFF;
+using SettingsEnums as SE;
 
 module Complications {
 
-    class BarComplication extends Ui.Drawable {
+    /* abstract */ class BarComplication extends Ui.Drawable {
 
         hidden var position;
         hidden var position_y_draw;
@@ -20,12 +21,12 @@ module Complications {
         hidden var textFont;
         hidden var weatherFont;
 
-        hidden var factor = 1;
+        private var factor = 1;
 
         function initialize(params) {
             Drawable.initialize(params);
             position = params.get(:position);
-            if (position == 0) {
+            if (position == SE.COMPLICATION_BAR_POSITION_TOP) {
                 // up
                 if (RD.centerX == 120) {
                     position_y_draw = 52; // centerY - 36 - 18 - 14; // font height 14
@@ -63,22 +64,6 @@ module Complications {
                     position_y_draw = 140; // centerY + 36 - 5;
                     position_y_draw_bonus = 29;
                 }
-            }
-        }
-
-        function load_font() {
-            if (position == 0) {
-                // up
-                font = Ui.loadResource(Rez.Fonts.cur_up);
-                arrFont = Ui.loadResource(Rez.Fonts.arr_up);
-                fontInfo = Ui.loadResource(Rez.JsonData.bar_font_top);
-                arrInfo = Ui.loadResource(Rez.JsonData.bar_pos_top);
-            } else {
-                // down
-                font = Ui.loadResource(Rez.Fonts.cur_bo);
-                arrFont = Ui.loadResource(Rez.Fonts.arr_bo);
-                fontInfo = Ui.loadResource(Rez.JsonData.bar_font_bottom);
-                arrInfo = Ui.loadResource(Rez.JsonData.bar_pos_bottom);
             }
         }
 
@@ -122,7 +107,7 @@ module Complications {
                 weatherFont = null;
             }
 
-            var primaryColor = position == 1 ? gbar_color_1 : gbar_color_0;
+            var primaryColor = position == SE.COMPLICATION_BAR_POSITION_BOTTOM ? gbar_color_1 : gbar_color_0;
 
             var bonus_padding = 0;
 
@@ -192,7 +177,7 @@ module Complications {
             weatherFont = null;
         }
 
-        function drawTiles(packed_array,font,dc) {
+        private function drawTiles(packed_array, font, dc) {
             for(var i = 0; i < packed_array.size(); i++) {
                 var val = packed_array[i];
                 var char = (val >> 16) & 255;
@@ -201,8 +186,25 @@ module Complications {
                 var flag = (val >> 24) & 255;
                 var xpos_bonus = (flag & 0x01) == 0x01 ? 1 : 0;
                 var ypos_bonus = (flag & 0x10) == 0x10 ? 1 : 0;
-                dc.drawText((xpos * factor + xpos_bonus).toNumber(), (ypos * factor + ypos_bonus).toNumber(),
+
+                dc.drawText(
+                        (xpos * factor + xpos_bonus).toNumber(),
+                        (ypos * factor + ypos_bonus).toNumber(),
                         font, char.toNumber().toChar(), Graphics.TEXT_JUSTIFY_LEFT);
+            }
+        }
+
+        private function load_font() {
+            if (position == SE.COMPLICATION_BAR_POSITION_TOP) {
+                font = Ui.loadResource(Rez.Fonts.cur_up);
+                arrFont = Ui.loadResource(Rez.Fonts.arr_up);
+                fontInfo = Ui.loadResource(Rez.JsonData.bar_font_top);
+                arrInfo = Ui.loadResource(Rez.JsonData.bar_pos_top);
+            } else if (position == SE.COMPLICATION_BAR_POSITION_BOTTOM) {
+                font = Ui.loadResource(Rez.Fonts.cur_bo);
+                arrFont = Ui.loadResource(Rez.Fonts.arr_bo);
+                fontInfo = Ui.loadResource(Rez.JsonData.bar_font_bottom);
+                arrInfo = Ui.loadResource(Rez.JsonData.bar_pos_bottom);
             }
         }
     }
