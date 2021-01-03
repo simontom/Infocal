@@ -1,0 +1,6 @@
+module DataProvider {
+
+    class BatteryDataProvider {
+    }
+
+}

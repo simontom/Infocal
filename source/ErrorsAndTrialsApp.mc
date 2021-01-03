@@ -5,7 +5,7 @@ using Toybox.Background as Bg;
 using Toybox.WatchUi as Ui;
 using Toybox.Time;
 using Toybox.Math;
-using DateUtils as DU;
+using DataProvider as DP;
 using RuntimeData as RD;
 
 
@@ -31,7 +31,7 @@ class ErrorsAndTrialsApp extends Application.AppBase {
 
     // Return the initial view of your application here
     function getInitialView() {
-        RD.formattedDateProvider = new DU.FormattedDateProvider();
+        RD.formattedDateDataProvider = new DP.FormattedDateDataProvider();
 
         mView = new ErrorsAndTrialsView();
         return [mView];
@@ -43,7 +43,7 @@ class ErrorsAndTrialsApp extends Application.AppBase {
 
     // Triggered by settings change in GCM
     function onSettingsChanged() {
-        RD.formattedDateProvider.reloadSettings();
+        RD.formattedDateDataProvider.reloadSettings();
 
         if (ErrorsAndTrialsApp has :checkPendingWebRequests) { // Cuz checkPendingWebRequests() can be excluded to save memory
             checkPendingWebRequests();

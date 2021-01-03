@@ -22,6 +22,7 @@ var second_font_color = 0xFFFFFF;
 var second_clip_size = null;
 
 // Theming
+var last_theme_code = -1;
 var gbackground_color = 0x000000;
 var gmain_color = 0xFFFFFF;
 var gsecondary_color = 0xFF0000;
@@ -31,16 +32,11 @@ var gbar_color_back = 0x550000;
 var gbar_color_0 = 0xFFFF00;
 var gbar_color_1 = 0x0000FF;
 
-var last_battery_percent = -1;
-var last_hour_consumtion = -1;
-
 class ErrorsAndTrialsView extends WatchUi.WatchFace {
 
 	var last_draw_minute = -1;
 	var restore_from_resume = false;
 	var last_resume_mili = 0;
-
-	var last_battery_hour = null;
 
 	var font_padding = 12;
 	var font_height_half = 7;
@@ -48,8 +44,6 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
 	var face_radius;
 
 	var did_clear = false;
-
-	var last_theme_code = -1;
 
     function initialize() {
         WatchFace.initialize();
@@ -83,42 +77,36 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
     function onUpdate(dc) {
     	var clockTime = System.getClockTime();
     	var current_tick = System.getTimer();
+    	var time_now = Time.now();
 
     	// Calculate battery consumtion in days
-    	var time_now = Time.now();
-    	if (last_battery_hour == null) {
-    		last_battery_hour = time_now;
-    		last_battery_percent = System.getSystemStats().battery;
-    		last_hour_consumtion = -1;
-    	} else if (time_now.compare(last_battery_hour) >= 60 * 60) { // 60 min
-    		last_battery_hour = time_now;
+    	if (RD.last_battery_hour == null) {
+    		RD.last_battery_hour = time_now;
+    		RD.last_battery_percent = System.getSystemStats().battery;
+    		RD.last_hour_consumtion = -1;
+    	} else if (time_now.compare(RD.last_battery_hour) >= 60 * 60) { // 60 min
+    		RD.last_battery_hour = time_now;
     		var current_battery = System.getSystemStats().battery;
-    		last_hour_consumtion = last_battery_percent - current_battery;
-    		if (last_hour_consumtion < 0) {
-    			last_hour_consumtion = -1;
+    		RD.last_hour_consumtion = RD.last_battery_percent - current_battery;
+    		if (RD.last_hour_consumtion < 0) {
+    			RD.last_hour_consumtion = -1;
     		}
-			if (last_hour_consumtion > 0) {
-    			App.getApp().setProperty("last_hour_consumtion", last_hour_consumtion);
+			if (RD.last_hour_consumtion > 0) {
+    			App.getApp().setProperty("last_hour_consumtion", RD.last_hour_consumtion);
 
 				var consumtion_history = App.getApp().getProperty("consumtion_history");
 				if (consumtion_history == null) {
-					App.getApp().setProperty("consumtion_history", [last_hour_consumtion]);
+					App.getApp().setProperty("consumtion_history", [RD.last_hour_consumtion]);
 				} else {
-//					System.println(consumtion_history);
-//					System.println(last_hour_consumtion);
-					consumtion_history.add(last_hour_consumtion);
+					consumtion_history.add(RD.last_hour_consumtion);
 					if (consumtion_history.size() > 24) {
 						var object0 = consumtion_history[0];
 						consumtion_history.remove(object0);
 					}
 					App.getApp().setProperty("consumtion_history", consumtion_history);
 				}
-//				System.println("consumtion_history_set");
-//				System.println(App.getApp().getProperty("consumtion_history"));
     		}
-    		last_battery_percent = current_battery;
-    	} else {
-    		//System.println(time_now.compare(last_battery_hour));
+    		RD.last_battery_percent = current_battery;
     	}
 
         var always_on_style = Application.getApp().getProperty("always_on_style");
@@ -150,7 +138,7 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
 			var current_mili = current_tick;
 			RD.forceRenderComponent = true;
 			// will allow watch face to refresh in 5s when resumed (`onShow()` called)
-			if ((current_mili-last_resume_mili) > 5000) {
+			if ((current_mili - last_resume_mili) > 5000) {
 				restore_from_resume = false;
 			}
 		}
@@ -178,18 +166,12 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
     		dc.fillRectangle(0, 0, RD.centerX * 2, RD.centerY * 2);
 		}
 
-		var digitalDisplay = View.findDrawableById("digital");
-
-		var backgroundView = View.findDrawableById("background");
 		var bar1 = View.findDrawableById("aBarDisplay");
 		var bar2 = View.findDrawableById("bBarDisplay");
 		var bar3 = View.findDrawableById("cBarDisplay");
 		var bar4 = View.findDrawableById("dBarDisplay");
 		var bar5 = View.findDrawableById("eBarDisplay");
 		var bar6 = View.findDrawableById("fBarDisplay");
-		var bbar1 = View.findDrawableById("bUBarDisplay");
-		var bbar2 = View.findDrawableById("tUBarDisplay");
-
 		bar1.draw(dc);
 		bar2.draw(dc);
 		bar3.draw(dc);
@@ -200,7 +182,11 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
         dc.setColor(gbackground_color, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(RD.centerX, RD.centerY, face_radius);
 
+        var backgroundView = View.findDrawableById("background");
 		backgroundView.draw(dc);
+
+        var bbar1 = View.findDrawableById("bUBarDisplay");
+		var bbar2 = View.findDrawableById("tUBarDisplay");
 		bbar1.draw(dc);
 		bbar2.draw(dc);
 
@@ -210,6 +196,7 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
 		bgraph2.draw(dc);
 
         // Call the parent onUpdate function to redraw the layout
+        var digitalDisplay = View.findDrawableById("digital");
 		digitalDisplay.draw(dc);
 	}
 
@@ -232,15 +219,14 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
 		}
 
 		if (Application.getApp().getProperty("always_on_heart")) {
-
 			var h = DF.retrieveHeartRate();
 			var heart_text = "--";
 			if (h != null) {
 				heart_text = h.format("%d");
 			}
 			var ss = dc.getTextDimensions(heart_text, second_digi_font);
-			var s = (ss[0]*1.2).toNumber();
-			var s2 = (second_clip_size[0]*1.25).toNumber();
+			var s = (ss[0] * 1.2).toNumber();
+			var s2 = (second_clip_size[0] * 1.25).toNumber();
 			dc.setClip(heart_x-s2-1, second_y, s2+2, second_clip_size[1]);
 			dc.setColor(Graphics.COLOR_TRANSPARENT, gbackground_color);
 			dc.clear();
@@ -254,21 +240,10 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
 		}
 	}
 
-    // Called when this View is removed from the screen. Save the
-    // state of this View here. This includes freeing resources from
-    // memory.
-    function onHide() {
-    }
-
     // The user has just looked at their watch. Timers and animations may be started here
     // If in low energy mode, onUpdate gets called once per second I think
     function onExitSleep() {
     	checkBackgroundRequest();
-    }
-
-    // Terminate any active timers and prepare for slow updates
-    function onEnterSleep() {
-		// If in low energy mode, onUpdate gets called once per minute
     }
 
 	function checkTheme() {

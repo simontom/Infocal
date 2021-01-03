@@ -24,8 +24,12 @@ module DataField {
             BaseDataField.initialize(id);
         }
 
+        function cur_val() {
+            return RD.formattedDateDataProvider.getFormattedDate();
+        }
+
         function cur_label(value) {
-            return RD.formattedDateProvider.getFormattedDate();
+            return value;
         }
     }
 

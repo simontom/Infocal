@@ -84,9 +84,9 @@ class MainDialHand extends Ui.Drawable {
 	    	heart_x = RD.centerX - w / 2 - 3;
 
 	    	if (RD.centerX == 109 && digital_style == 2) {
-	    		second_y  = RD.centerY - second_font_height_half/2 - (alwayon_style == 0 ? 3 : 6);
+	    		second_y  = RD.centerY - second_font_height_half / 2 - (alwayon_style == 0 ? 3 : 6);
 	    	} else {
-	    		second_y  = RD.centerY + (h - f_align) / 2 - second_font_height_half *2  + (alwayon_style == 0 ? 0 : 5);
+	    		second_y  = RD.centerY + (h - f_align) / 2 - second_font_height_half * 2 + (alwayon_style == 0 ? 0 : 5);
 	    	}
 	    	// DRAW INFOS
 
@@ -134,7 +134,7 @@ class MainDialHand extends Ui.Drawable {
 	    	}
 
 			// draw date str
-			var dateText = RD.formattedDateProvider.getFormattedDate();
+			var dateText = RD.formattedDateDataProvider.getFormattedDate();
 			dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
 			var h3 = dc.getFontHeight(smallDigitalFont);
 			dc.drawText(target_info_x-bonus_alignment+extra_info_alignment, RD.centerY * 0.4 - h3 / 4 + 7, smallDigitalFont, dateText, alignment);

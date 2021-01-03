@@ -46,14 +46,13 @@ module DataField {
 
         function cur_label(value) {
             var battery_format = App.getApp().getProperty("battery_format");
-            var hour_consumtion = $.last_hour_consumtion;
+            var hour_consumtion = RD.last_hour_consumtion;
 
             if (hour_consumtion <= 0) {
                 var consumtion_history = App.getApp().getProperty("consumtion_history");
                 if (consumtion_history != null) {
                     var total = 0.0;
                     for(var i = 0; i < consumtion_history.size(); i++) {
-                        // Code to do in a loop
                         total += consumtion_history[i];
                     }
                     hour_consumtion = total / consumtion_history.size();

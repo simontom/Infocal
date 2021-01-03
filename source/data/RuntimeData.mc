@@ -12,5 +12,9 @@ module RuntimeData {
 
     var forceRenderComponent = false;
 
-    var formattedDateProvider;
+    var formattedDateDataProvider;
+
+    var last_battery_hour = null;
+    var last_battery_percent = -1;
+    var last_hour_consumtion = -1;
 }
