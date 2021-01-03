@@ -4,7 +4,6 @@ using Toybox.Graphics;
 using Toybox.System;
 using Toybox.Application;
 using RuntimeData as RD;
-using DataFieldFactory as DFF;
 using SettingsEnums as SE;
 
 module Complications {
@@ -101,7 +100,7 @@ module Complications {
                 load_font();
             }
 
-            if (field_type == DFF.FIELD_TYPE_WEATHER) {
+            if (field_type == SE.FIELD_TYPE_WEATHER) {
                 weatherFont = Ui.loadResource(Rez.Fonts.weather);
             } else {
                 weatherFont = null;
@@ -149,7 +148,7 @@ module Complications {
                     dc.setColor(gbar_color_indi, Graphics.COLOR_TRANSPARENT);
                     drawTiles(arrInfo[i], arrFont, dc);
                 }
-            } else if (field_type == DFF.FIELD_TYPE_WEATHER) {
+            } else if (field_type == SE.FIELD_TYPE_WEATHER) {
                 var icon = get_weather_icon();
                 if (icon != null) {
                     dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);

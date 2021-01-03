@@ -10,6 +10,7 @@ using Toybox.Activity as Activity;
 using Toybox.ActivityMonitor as ActivityMonitor;
 using Toybox.SensorHistory as SensorHistory;
 using SettingsEnums as SE;
+using Toybox.Lang as Ex;
 
 module Complications {
 
@@ -194,6 +195,8 @@ module Complications {
             } else if (position == SE.COMPLICATION_GRAPH_POSITION_BOTTOM) {
                 return Application.getApp().getProperty("compgraphb");
             }
+
+            throw new Ex.InvalidValueException("Invalid value of 'position' in ':get_data_type'");
         }
 
         private function get_data_interator(graphType) {
