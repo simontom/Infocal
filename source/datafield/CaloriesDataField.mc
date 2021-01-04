@@ -1,16 +1,10 @@
-using Toybox.WatchUi as Ui;
-using Toybox.Graphics as Gfx;
-using Toybox.System as Sys;
 using Toybox.Application as App;
-using Toybox.Activity as Activity;
 using Toybox.ActivityMonitor as ActivityMonitor;
-using Toybox.SensorHistory as SensorHistory;
-using RuntimeData as RD;
-using Toybox.Lang as Ex;
 using ConversionUtils as CU;
 using Toybox.UserProfile;
 using Toybox.Time;
 using Toybox.Time.Gregorian as Date;
+using Toybox.Lang;
 
 module DataField {
 
@@ -35,7 +29,7 @@ module DataField {
 
         function max_label(value) {
             var valKp = CU.toKValue(value);
-            return Lang.format("$1$K",[valKp]);
+            return Lang.format("$1$K", [valKp]);
         }
 
         function cur_label(value) {
@@ -50,14 +44,18 @@ module DataField {
             return Lang.format("$1$K-$2$",[valKp, activeCalories.format("%d")]);
         }
 
-        function active_calories(value) {
+        function bar_data() {
+            return true;
+        }
+
+        private function active_calories(value) {
             var now = Time.now();
             var date = Date.info(now, Time.FORMAT_SHORT);
 
             var profile = UserProfile.getProfile();
             // var bonus = profile.gender == UserProfile.GENDER_MALE ? 5.0 : -161.0;
-            var age = (date.year-profile.birthYear).toFloat();
-            var weight = profile.weight.toFloat()/1000.0;
+            var age = (date.year - profile.birthYear).toFloat();
+            var weight = profile.weight.toFloat() / 1000.0;
             var height = profile.height.toFloat();
 
             // var bmr = 0.01*weight + 6.25*height + 5.0*age + bonus; // method 1
@@ -70,10 +68,6 @@ module DataField {
             activeCalories = ((activeCalories > 0) ? activeCalories : 0).toNumber();
 
             return activeCalories;
-        }
-
-        function bar_data() {
-            return true;
         }
     }
 

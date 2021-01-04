@@ -1,16 +1,7 @@
-using Toybox.WatchUi as Ui;
-using Toybox.Graphics as Gfx;
 using Toybox.System as Sys;
 using Toybox.Application as App;
 using Toybox.Activity as Activity;
-using Toybox.ActivityMonitor as ActivityMonitor;
 using Toybox.SensorHistory as SensorHistory;
-using RuntimeData as RD;
-using Toybox.Lang as Ex;
-using ConversionUtils as CU;
-using Toybox.UserProfile;
-using Toybox.Time;
-using Toybox.Time.Gregorian as Date;
 
 module DataField {
 
@@ -50,7 +41,7 @@ module DataField {
             }
 
             var unit = "m";
-            if (settings.elevationUnits != System.UNIT_METRIC) {
+            if (settings.elevationUnits != Sys.UNIT_METRIC) {
                 altitude *= /* FT_PER_M */ 3.28084;
                 unit = "ft";
             }

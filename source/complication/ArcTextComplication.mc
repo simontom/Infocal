@@ -1,6 +1,8 @@
 using Toybox.WatchUi as Ui;
 using RuntimeData as RD;
 using ConversionUtils as CU;
+using Toybox.Math;
+using Toybox.Graphics;
 
 module Complications {
 
@@ -73,7 +75,7 @@ module Complications {
                 kerning = 0.95;
             } else if (RD.centerX == 195) {
                 kerning = 0.95;
-                barRadius = barRadius+4;
+                barRadius = barRadius + 4;
             }
 
             baseDegree = params.get(:base);
@@ -82,11 +84,11 @@ module Complications {
 
             currentText = params.get(:text);
             angle = params.get(:angle);
-            perCharRadius = kerning*4.70*Math.PI/100;
+            perCharRadius = kerning * 4.70 * Math.PI / 100;
             barRadius += ((baseDegree < 180 ? 8 : -3) * RD.centerX / 120).toNumber();
             accumulation_sign = (baseDegree < 180 ? -1 : 1);
 
-            alignment = Graphics.TEXT_JUSTIFY_VCENTER|Graphics.TEXT_JUSTIFY_CENTER;
+            alignment = Graphics.TEXT_JUSTIFY_VCENTER | Graphics.TEXT_JUSTIFY_CENTER;
 
             lastDrawText = "";
         }

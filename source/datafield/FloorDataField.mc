@@ -1,16 +1,5 @@
-using Toybox.WatchUi as Ui;
-using Toybox.Graphics as Gfx;
-using Toybox.System as Sys;
-using Toybox.Application as App;
-using Toybox.Activity as Activity;
-using Toybox.ActivityMonitor as ActivityMonitor;
-using Toybox.SensorHistory as SensorHistory;
-using RuntimeData as RD;
-using Toybox.Lang as Ex;
-using ConversionUtils as CU;
-using Toybox.UserProfile;
-using Toybox.Time;
-using Toybox.Time.Gregorian as Date;
+using Toybox.ActivityMonitor as AM;
+using Toybox.Lang;
 
 module DataField {
 
@@ -25,12 +14,12 @@ module DataField {
         }
 
         function max_val() {
-            var activityInfo = ActivityMonitor.getInfo();
+            var activityInfo = AM.getInfo();
             return activityInfo.floorsClimbedGoal.toFloat();
         }
 
         function cur_val() {
-            var activityInfo = ActivityMonitor.getInfo();
+            var activityInfo = AM.getInfo();
             return activityInfo.floorsClimbed.toFloat();
         }
 

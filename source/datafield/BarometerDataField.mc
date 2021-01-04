@@ -1,16 +1,6 @@
-using Toybox.WatchUi as Ui;
-using Toybox.Graphics as Gfx;
-using Toybox.System as Sys;
 using Toybox.Application as App;
-using Toybox.Activity as Activity;
-using Toybox.ActivityMonitor as ActivityMonitor;
 using Toybox.SensorHistory as SensorHistory;
-using RuntimeData as RD;
-using Toybox.Lang as Ex;
-using ConversionUtils as CU;
-using Toybox.UserProfile;
 using Toybox.Time;
-using Toybox.Time.Gregorian as Date;
 using SettingsEnums as SE;
 
 module DataField {
@@ -61,13 +51,13 @@ module DataField {
 
         // Create a method to get the SensorHistoryIterator object
         function _getIterator() {
-            return Toybox.SensorHistory.getPressureHistory({});
+            return SensorHistory.getPressureHistory({});
         }
 
         // Create a method to get the SensorHistoryIterator object
         function _getIteratorDurate(hour) {
             var duration = new Time.Duration(hour * 3600);
-            return Toybox.SensorHistory.getPressureHistory({"period"=>duration, "order"=>SensorHistory.ORDER_OLDEST_FIRST});
+            return SensorHistory.getPressureHistory({"period"=>duration, "order"=>SensorHistory.ORDER_OLDEST_FIRST});
         }
 
         function _retrieveBarometer() {

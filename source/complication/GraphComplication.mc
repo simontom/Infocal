@@ -3,6 +3,9 @@ using ConversionUtils as CU;
 using RuntimeData as RD;
 using SettingsEnums as SE;
 using Toybox.Lang as Ex;
+using Toybox.Math;
+using Toybox.System;
+using Toybox.Graphics;
 
 module Complications {
 
@@ -36,20 +39,24 @@ module Complications {
         }
 
         function parse_data_value(type, value) {
-            if (type == 1) {
-                return value;
-            } else if (type == 2) {
-                if (settings.elevationUnits == System.UNIT_METRIC) {
-                    // Metres (no conversion necessary).
+            switch (type) {
+                case SE.GRAPH_FIELD_TYPE_HEARTRATE:
                     return value;
-                } else {
-                    // Feet.
-                    return  value * 3.28084;
-                }
-            } else if (type == 3) {
-                return value / 100.0;
-            } else if (type == 4) {
-                if (settings.temperatureUnits == System.UNIT_STATUTE) {
+
+                case SE.GRAPH_FIELD_TYPE_ALTITUDE:
+                    if (settings.elevationUnits == System.UNIT_METRIC) {
+                        // Metres
+                        return value;
+                    } else {
+                        // Feet
+                        return  value * 3.28084;
+                    }
+
+                case SE.GRAPH_FIELD_TYPE_BAROMETER:
+                    return value / 100.0;
+
+                case SE.GRAPH_FIELD_TYPE_TEMPERATURE:
+                    if (settings.temperatureUnits == System.UNIT_STATUTE) {
                     return CU.toFahrenheit(value);
                 } else {
                     return value;
@@ -75,7 +82,7 @@ module Complications {
 
                 if (HistoryIter == null) {
                     dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
-                    dc.drawText(position_x, position_y, smallDigitalFont, "--", Graphics.TEXT_JUSTIFY_CENTER|Graphics.TEXT_JUSTIFY_VCENTER);
+                    dc.drawText(position_x, position_y, smallDigitalFont, "--", Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
                     return;
                 }
 
@@ -84,7 +91,7 @@ module Complications {
 
                 if (HistoryMin == null || HistoryMax == null) {
                     dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
-                    dc.drawText(position_x, position_y, smallDigitalFont, "--", Graphics.TEXT_JUSTIFY_CENTER|Graphics.TEXT_JUSTIFY_VCENTER);
+                    dc.drawText(position_x, position_y, smallDigitalFont, "--", Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
                     return;
                 }
 
@@ -106,8 +113,8 @@ module Complications {
                         // draw diagram
                         var historyDifPers = (HistoryPresent - HistoryMin) / minMaxDiff;
                         var yStep = historyDifPers * height;
-                        yStep = yStep>height?height:yStep;
-                        yStep = yStep<0?0:yStep;
+                        yStep = (yStep > height) ? height : yStep;
+                        yStep = (yStep < 0) ? 0 : yStep;
                         lastyStep = yStep;
                     } else {
                         lastyStep = null;
@@ -128,18 +135,15 @@ module Complications {
                         } else if (HistoryNew == HistoryMin) {
                             step_min = xStep;
                         }
-                        if (HistoryNew == null) {
-                            // ignore
-                        } else {
+
+                        if (HistoryNew != null) {
                             // draw diagram
                             var historyDifPers = ((HistoryNew - HistoryMin)) / minMaxDiff;
                             var yStep = historyDifPers * height;
                             yStep = (yStep > height) ? height : yStep;
                             yStep = yStep<0?0:yStep;
 
-                            if (lastyStep == null) {
-                                // ignore
-                            } else {
+                            if (lastyStep != null) {
                                 // draw diagram
                                 dc.drawLine(position_x + (xStep - graph_width / 2),
                                             position_y - (lastyStep-graph_height / 2),
@@ -160,9 +164,10 @@ module Complications {
                             position_y + (position == SE.COMPLICATION_GRAPH_POSITION_BOTTOM ? (graph_height / 2 + 10) : (-graph_height / 2 - 16)),
                             smallDigitalFont,
                             "--",
-                            Graphics.TEXT_JUSTIFY_CENTER|Graphics.TEXT_JUSTIFY_VCENTER);
+                            Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
                     return;
                 }
+
                 var value_label = parse_data_value(targetdatatype, HistoryPresent);
                 var labelll = value_label.format("%d");
                 dc.drawText(
@@ -206,7 +211,6 @@ module Complications {
                     return Toybox.SensorHistory.getTemperatureHistory({});
 
                 case SE.GRAPH_FIELD_TYPE_EMPTY:
-                default:
                     return null;
             }
 

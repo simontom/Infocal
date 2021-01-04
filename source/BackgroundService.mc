@@ -97,7 +97,7 @@ class BackgroundService extends Sys.ServiceDelegate {
     }
     */
     (:background_method)
-    private function onReceiveWeather(responseCode, data) {
+    function onReceiveWeather(responseCode, data) {
         var result;
 
         // Useful data only available if result was successful.

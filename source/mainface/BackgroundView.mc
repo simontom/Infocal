@@ -1,8 +1,6 @@
 using Toybox.WatchUi as Ui;
 using Toybox.Graphics;
-using Toybox.System;
 using Toybox.Application;
-using Toybox.Time.Gregorian as Date;
 using ConversionUtils as CU;
 using RuntimeData as RD;
 using SettingsEnums as SE;
@@ -61,9 +59,10 @@ class BackgroundView extends Ui.Drawable {
             dc.setPenWidth(2);
             dc.setColor(garc_color, Graphics.COLOR_TRANSPARENT);
             for(var i = 0; i < 6; i += 1) {
-                if (i==excluded) {
+                if (i == excluded) {
                     continue;
                 }
+
                 var rad = (i.toFloat() / 6.0) * 360;
                 dc.drawArc(
                     RD.centerX,

@@ -1,9 +1,6 @@
 using Toybox.WatchUi as Ui;
-using Toybox.Math;
 using Toybox.Graphics;
 using Toybox.System;
-using Toybox.Application;
-using Toybox.Time.Gregorian as Date;
 using RuntimeData as RD;
 using SettingsEnums as SE;
 using Toybox.Lang as Ex;

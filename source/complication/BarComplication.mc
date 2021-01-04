@@ -1,6 +1,7 @@
 using Toybox.WatchUi as Ui;
 using RuntimeData as RD;
 using SettingsEnums as SE;
+using Toybox.Graphics;
 
 module Complications {
 

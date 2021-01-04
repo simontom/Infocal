@@ -1,16 +1,8 @@
-using Toybox.WatchUi as Ui;
-using Toybox.Graphics as Gfx;
 using Toybox.System as Sys;
 using Toybox.Application as App;
-using Toybox.Activity as Activity;
 using Toybox.ActivityMonitor as ActivityMonitor;
-using Toybox.SensorHistory as SensorHistory;
-using RuntimeData as RD;
-using Toybox.Lang as Ex;
 using ConversionUtils as CU;
-using Toybox.UserProfile;
-using Toybox.Time;
-using Toybox.Time.Gregorian as Date;
+using Toybox.Lang;
 
 module DataField {
 
@@ -35,8 +27,8 @@ module DataField {
         }
 
         function max_label(value) {
-            var value = value/1000.0;
-            value = value/100.0; // convert cm to km
+            var value = value / 1000.0;
+            value = value / 100.0; // convert cm to km
             var valKp = CU.toKValue(value);
             return Lang.format("$1$K",[valKp]);
         }
@@ -48,13 +40,13 @@ module DataField {
             var unit = "Km";
             var distance = cm / 100000;
 
-            if (settings.distanceUnits != System.UNIT_METRIC) {
+            if (settings.distanceUnits != Sys.UNIT_METRIC) {
                 unit = "Mi";
                 distance *= 0.621371;
             }
 
             if (need_minimal) {
-                return Lang.format("$1$ $2$",[distance.format("%0.1f"), unit]);
+                return Lang.format("$1$ $2$", [distance.format("%0.1f"), unit]);
             }
 
             var valKp = CU.toKValue(distance * 1000);

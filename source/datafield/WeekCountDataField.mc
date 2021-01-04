@@ -1,15 +1,4 @@
-using Toybox.WatchUi as Ui;
-using Toybox.Graphics as Gfx;
-using Toybox.System as Sys;
-using Toybox.Application as App;
-using Toybox.Activity as Activity;
-using Toybox.ActivityMonitor as ActivityMonitor;
-using Toybox.SensorHistory as SensorHistory;
-using RuntimeData as RD;
-using Toybox.Lang as Ex;
-using ConversionUtils as CU;
-using Toybox.UserProfile;
-using Toybox.Time;
+using Toybox.Lang;
 using Toybox.Time.Gregorian as Date;
 
 module DataField {
@@ -24,26 +13,14 @@ module DataField {
             BaseDataField.initialize(id);
         }
 
-        function julian_day(year, month, day) {
-            var a = (14 - month) / 12;
-            var y = (year + 4800 - a);
-            var m = (month + 12 * a - 3);
-            return day + ((153 * m + 2) / 5) + (365 * y) + (y / 4) - (y / 100) + (y / 400) - 32045;
+        function cur_label(value) {
+            var date = Date.info(Time.now(), Time.FORMAT_SHORT);
+            var week_num = iso_week_number(date.year, date.month, date.day);
+
+            return Lang.format("WEEK $1$",[week_num]);
         }
 
-        function is_leap_year(year) {
-            if (year % 4 != 0) {
-                return false;
-            } else if (year % 100 != 0) {
-                return true;
-            } else if (year % 400 == 0) {
-                return true;
-            }
-
-            return false;
-        }
-
-        function iso_week_number(year, month, day) {
+        private function iso_week_number(year, month, day) {
             var first_day_of_year = julian_day(year, 1, 1);
             var given_day_of_year = julian_day(year, month, day);
 
@@ -72,11 +49,23 @@ module DataField {
             return week_of_year;
         }
 
-        function cur_label(value) {
-            var date = Date.info(Time.now(), Time.FORMAT_SHORT);
-            var week_num = iso_week_number(date.year, date.month, date.day);
+        private function julian_day(year, month, day) {
+            var a = (14 - month) / 12;
+            var y = (year + 4800 - a);
+            var m = (month + 12 * a - 3);
+            return day + ((153 * m + 2) / 5) + (365 * y) + (y / 4) - (y / 100) + (y / 400) - 32045;
+        }
 
-            return Lang.format("WEEK $1$",[week_num]);
+        private function is_leap_year(year) {
+            if (year % 4 != 0) {
+                return false;
+            } else if (year % 100 != 0) {
+                return true;
+            } else if (year % 400 == 0) {
+                return true;
+            }
+
+            return false;
         }
 
     }

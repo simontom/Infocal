@@ -1,5 +1,6 @@
 using DataFieldFactory as DFF;
 using SettingsEnums as SE;
+using Toybox.Application;
 
 module Complications {
 
@@ -45,6 +46,7 @@ module Complications {
             if (field_type != dt_field.field_id()) {
                 dt_field = DFF.buildFieldObject(field_type);
             }
+
             if (need_draw()) {
                 ArcTextComplication.draw(dc);
             }

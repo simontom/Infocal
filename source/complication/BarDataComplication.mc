@@ -11,6 +11,7 @@ module Complications {
 
         function initialize(params) {
             BarComplication.initialize(params);
+
             field_type = params.get(:field_type);
             dt_field = DFF.buildFieldObject(field_type);
         }
