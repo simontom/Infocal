@@ -17,6 +17,7 @@ class BackgroundService extends Sys.ServiceDelegate {
     (:background_method)
     function onTemporalEvent() {
         Sys.println("onTemporalEvent");
+
         var pendingWebRequests = App.getApp().getProperty("PendingWebRequests");
         if (pendingWebRequests != null) {
             if (pendingWebRequests["OpenWeatherMapCurrent"] != null) {
@@ -25,7 +26,7 @@ class BackgroundService extends Sys.ServiceDelegate {
                     api_key = "333d6a4283794b870f5c717cc48890b5"; // default apikey
                 }
 
-                makeWebRequest(
+                getWeather(
                     "https://api.openweathermap.org/data/2.5/weather",
                     {
                         "lat" => App.getApp().getProperty("LastLocationLat"),
@@ -33,12 +34,15 @@ class BackgroundService extends Sys.ServiceDelegate {
                         "appid" => api_key,
                         "units" => "metric" // Celcius.
                     },
-                    method(:onReceiveOpenWeatherMapCurrent)
+                    method(:onReceiveWeather)
                 );
             }
         }
     }
 
+    // Some Urls
+    // https://openweathermap.org/current
+    // https://openweathermap.org/weather-conditions
     // Sample invalid API key:
     /*
     {
@@ -93,7 +97,7 @@ class BackgroundService extends Sys.ServiceDelegate {
     }
     */
     (:background_method)
-    function onReceiveOpenWeatherMapCurrent(responseCode, data) {
+    private function onReceiveWeather(responseCode, data) {
         var result;
 
         // Useful data only available if result was successful.
@@ -128,7 +132,7 @@ class BackgroundService extends Sys.ServiceDelegate {
     }
 
     (:background_method)
-    function makeWebRequest(url, params, callback) {
+    private function getWeather(url, params, callback) {
         var options = {
             :method => Comms.HTTP_REQUEST_METHOD_GET,
             :headers => {

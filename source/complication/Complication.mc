@@ -1,9 +1,3 @@
-using Toybox.WatchUi as Ui;
-using Toybox.Graphics;
-using Toybox.System;
-using Toybox.Activity;
-using Toybox.ActivityMonitor;
-using Toybox.Application;
 using DataFieldFactory as DFF;
 using SettingsEnums as SE;
 

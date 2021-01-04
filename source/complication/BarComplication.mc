@@ -1,8 +1,4 @@
 using Toybox.WatchUi as Ui;
-using Toybox.Math;
-using Toybox.Graphics;
-using Toybox.System;
-using Toybox.Application;
 using RuntimeData as RD;
 using SettingsEnums as SE;
 

@@ -1,14 +1,6 @@
 using Toybox.WatchUi as Ui;
-using Toybox.Math;
-using Toybox.Graphics;
-using Toybox.System;
-using Toybox.Application;
-using Toybox.Lang as Ex;
 using ConversionUtils as CU;
 using RuntimeData as RD;
-using Toybox.Activity as Activity;
-using Toybox.ActivityMonitor as ActivityMonitor;
-using Toybox.SensorHistory as SensorHistory;
 using SettingsEnums as SE;
 using Toybox.Lang as Ex;
 
