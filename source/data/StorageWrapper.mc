@@ -1,6 +1,0 @@
-module ApplicationDataWrapper {
-
-    class StorageWrapper {
-    }
-
-}
