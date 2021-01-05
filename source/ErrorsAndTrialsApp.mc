@@ -7,6 +7,7 @@ using Toybox.Time;
 using Toybox.Math;
 using DataProvider as DP;
 using RuntimeData as RD;
+using ApplicationDataWrapper as ADW;
 
 
 // TODO: Add:
@@ -31,7 +32,8 @@ class ErrorsAndTrialsApp extends Application.AppBase {
 
     // Return the initial view of your application here
     function getInitialView() {
-        RD.formattedDateDataProvider = new DP.FormattedDateDataProvider();
+        // RD.formattedDateDataProvider = new DP.FormattedDateDataProvider();
+        initializeRuntimeData();
 
         mView = new ErrorsAndTrialsView();
         return [mView];
@@ -43,6 +45,7 @@ class ErrorsAndTrialsApp extends Application.AppBase {
 
     // Triggered by settings change in GCM
     function onSettingsChanged() {
+        Sys.println("onSettingsChanged");
         RD.formattedDateDataProvider.reloadSettings();
 
         if (ErrorsAndTrialsApp has :checkPendingWebRequests) { // Cuz checkPendingWebRequests() can be excluded to save memory
@@ -160,5 +163,23 @@ class ErrorsAndTrialsApp extends Application.AppBase {
         setProperty(type, storedData);
 
         Ui.requestUpdate();
+    }
+
+    private function initializeRuntimeData() {
+        if (RD.formattedDateDataProvider == null) {
+            RD.formattedDateDataProvider = new DP.FormattedDateDataProvider();
+        }
+
+        // if (RD.settingsWrapper == null) {
+        //     RD.settingsWrapper = new ADW.SettingsWrapper();
+        // }
+
+        // var settingsWrapper = RD.settingsWrapper;
+        // var themeCode = settingsWrapper.getValue(:themeCode);
+        // var themeCode2 = settingsWrapper.getValue("theme_code");
+
+        var x = 1;
+        x++;
+        var y = x + 42;
     }
 }
