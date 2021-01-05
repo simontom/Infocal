@@ -4,10 +4,6 @@ using Toybox.Lang;
 
 module DataField {
 
-    /////////////////////
-    // Countdown stage //
-    /////////////////////
-
     class CountdownDataField extends BaseDataField {
 
         function initialize(id) {

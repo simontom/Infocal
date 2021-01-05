@@ -5,10 +5,6 @@ using SettingsEnums as SE;
 
 module DataField {
 
-    ////////////////
-    // Baro stage //
-    ////////////////
-
     class BarometerDataField extends BaseDataField {
 
         function initialize(id) {

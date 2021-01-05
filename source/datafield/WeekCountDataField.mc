@@ -3,10 +3,6 @@ using Toybox.Time.Gregorian as Date;
 
 module DataField {
 
-    /////////////////////
-    // Weekcount stage //
-    /////////////////////
-
     class WeekCountDataField extends BaseDataField {
 
         function initialize(id) {

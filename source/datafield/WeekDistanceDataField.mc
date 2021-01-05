@@ -8,10 +8,6 @@ using ConversionUtils as CU;
 
 module DataField {
 
-    /////////////////////////
-    // Distance week stage //
-    /////////////////////////
-
     class WeekDistanceDataField extends BaseDataField {
 
         function initialize(id) {

@@ -6,10 +6,6 @@ using Toybox.Lang;
 
 module DataField {
 
-    ///////////////////////
-    // Temparature stage //
-    ///////////////////////
-
     class TemparatureDataField extends BaseDataField {
 
         function initialize(id) {

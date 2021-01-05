@@ -6,10 +6,6 @@ using Toybox.Lang;
 
 module DataField {
 
-    ////////////////////
-    // Distance stage //
-    ////////////////////
-
     class DistanceDataField extends BaseDataField {
 
         function initialize(id) {

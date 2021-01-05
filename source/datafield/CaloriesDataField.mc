@@ -8,10 +8,6 @@ using Toybox.Lang;
 
 module DataField {
 
-    ////////////////////
-    // Calories stage //
-    ////////////////////
-
     class CaloriesDataField extends BaseDataField {
 
         function initialize(id) {

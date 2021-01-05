@@ -3,10 +3,6 @@ using Toybox.Lang;
 
 module DataField {
 
-    //////////////////////
-    // Group noti stage //
-    //////////////////////
-
     class GroupNotiDataField extends BaseDataField {
 
         function initialize(id) {

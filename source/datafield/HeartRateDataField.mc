@@ -4,10 +4,6 @@ using Toybox.Lang;
 
 module DataField {
 
-    //////////////
-    // HeartRate stage //
-    //////////////
-
     class HeartRateDataField extends BaseDataField {
 
         function initialize(id) {

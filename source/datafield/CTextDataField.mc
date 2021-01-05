@@ -2,10 +2,6 @@ using Toybox.Application as App;
 
 module DataField {
 
-    ///////////////////////
-    // Custom text stage //
-    ///////////////////////
-
     class CTextDataField extends BaseDataField {
 
         function initialize(id) {

@@ -5,10 +5,6 @@ using Toybox.Lang;
 
 module DataField {
 
-    /////////////////
-    // Steps stage //
-    /////////////////
-
     class StepDataField extends BaseDataField {
 
         function initialize(id) {

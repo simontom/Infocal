@@ -4,10 +4,6 @@ using ConversionUtils as CU;
 
 module DataField {
 
-    ///////////////////
-    // Weather stage //
-    ///////////////////
-
     class WeatherDataField extends BaseDataField {
 
         var weather_icon_mapper;

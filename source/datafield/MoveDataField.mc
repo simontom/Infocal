@@ -3,10 +3,6 @@ using Toybox.Lang;
 
 module DataField {
 
-    ////////////////
-    // Move stage //
-    ////////////////
-
     class MoveDataField extends BaseDataField {
 
         function initialize(id) {

@@ -2,10 +2,6 @@ using RuntimeData as RD;
 
 module DataField {
 
-    ////////////////
-    // Date stage //
-    ////////////////
-
     class DateDataField extends BaseDataField {
 
         function initialize(id) {

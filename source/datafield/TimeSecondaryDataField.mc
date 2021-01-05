@@ -7,10 +7,6 @@ using Constants as C;
 
 module DataField {
 
-    //////////////////////////
-    // Time secondary stage //
-    //////////////////////////
-
     class TimeSecondaryDataField extends BaseDataField {
 
         function initialize(id) {

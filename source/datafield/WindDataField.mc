@@ -3,10 +3,6 @@ using Toybox.Application as App;
 
 module DataField {
 
-    ///////////////////
-    // Weather stage //
-    ///////////////////
-
     class WindDataField extends BaseDataField {
 
         private var wind_direction_mapper;

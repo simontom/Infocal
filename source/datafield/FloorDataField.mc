@@ -3,10 +3,6 @@ using Toybox.Lang;
 
 module DataField {
 
-    /////////////////
-    // Floor stage //
-    /////////////////
-
     class FloorDataField extends BaseDataField {
 
         function initialize(id) {

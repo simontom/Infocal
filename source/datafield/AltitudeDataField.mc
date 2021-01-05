@@ -5,10 +5,6 @@ using Toybox.SensorHistory as SensorHistory;
 
 module DataField {
 
-    ////////////////////
-    // Altitude stage //
-    ////////////////////
-
     class AltitudeDataField extends BaseDataField {
 
         function initialize(id) {

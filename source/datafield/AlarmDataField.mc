@@ -3,10 +3,6 @@ using Toybox.Lang;
 
 module DataField {
 
-    /////////////////
-    // Alarm stage //
-    /////////////////
-
     class AlarmDataField extends BaseDataField {
 
         function initialize(id) {

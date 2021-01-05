@@ -2,10 +2,6 @@ using Toybox.System as Sys;
 
 module DataField {
 
-    ////////////////////////
-    // Phone status stage //
-    ////////////////////////
-
     class PhoneDataField extends BaseDataField {
 
         function initialize(id) {

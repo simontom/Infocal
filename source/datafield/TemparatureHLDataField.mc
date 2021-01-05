@@ -5,10 +5,6 @@ using Toybox.Lang;
 
 module DataField {
 
-    ///////////////////////////
-    // Temparature hl stage //
-    ///////////////////////////
-
     class TemparatureHLDataField extends BaseDataField {
 
         function initialize(id) {

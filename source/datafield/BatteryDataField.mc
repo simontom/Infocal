@@ -7,10 +7,6 @@ using Toybox.Math;
 
 module DataField {
 
-    ///////////////////
-    // Battery stage //
-    ///////////////////
-
     class BatteryDataField extends BaseDataField {
 
         function initialize(id) {

@@ -8,10 +8,6 @@ using Toybox.Math;
 
 module DataField {
 
-    ///////////////
-    // Sun stage //
-    ///////////////
-
     class SunDataField extends BaseDataField {
 
         function initialize(id) {

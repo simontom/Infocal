@@ -3,10 +3,6 @@ using Toybox.Lang;
 
 module DataField {
 
-    ////////////////////////
-    // Notification stage //
-    ////////////////////////
-
     class NotificationDataField extends BaseDataField {
 
         function initialize(id) {

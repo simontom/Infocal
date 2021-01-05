@@ -3,10 +3,6 @@ using Toybox.Lang;
 
 module DataField {
 
-    ////////////////
-    // Time stage //
-    ////////////////
-
     class TimeDataField extends BaseDataField {
 
         function initialize(id) {
