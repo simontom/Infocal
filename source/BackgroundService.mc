@@ -16,8 +16,6 @@ class BackgroundService extends Sys.ServiceDelegate {
     // Pending web request flag will be cleared only once the background data has been successfully received.
     (:background_method)
     function onTemporalEvent() {
-        Sys.println("onTemporalEvent");
-
         var pendingWebRequests = App.getApp().getProperty("PendingWebRequests");
         if (pendingWebRequests != null) {
             if (pendingWebRequests["OpenWeatherMapCurrent"] != null) {
@@ -32,7 +30,7 @@ class BackgroundService extends Sys.ServiceDelegate {
                         "lat" => App.getApp().getProperty("LastLocationLat"),
                         "lon" => App.getApp().getProperty("LastLocationLng"),
                         "appid" => api_key,
-                        "units" => "metric" // Celcius.
+                        "units" => "metric" // Celcius
                     },
                     method(:onReceiveWeather)
                 );

@@ -66,7 +66,7 @@ class ErrorsAndTrialsApp extends Application.AppBase {
         // Attempt to update current location, to be used by Sunrise/Sunset, and Weather.
         // If current location available from current activity, save it in case it goes "stale" and can not longer be retrieved.
         var location = Activity.getActivityInfo().currentLocation;
-        if (location) {
+        if (location != null) {
             location = location.toDegrees(); // Array of Doubles
             RD.gLocationLat = location[0].toFloat();
             RD.gLocationLng = location[1].toFloat();
@@ -101,15 +101,16 @@ class ErrorsAndTrialsApp extends Application.AppBase {
                 pendingWebRequests["OpenWeatherMapCurrent"] = true;
             // Successfully received weather data.
             } else if (owmCurrent["cod"] == 200) {
+                if (
+                    // Existing data is older than 30 mins.
+                    // TODO: Consider requesting weather at sunrise/sunset to update weather icon.
+                    (Time.now().value() > (owmCurrent["dt"] + /*900*/90)) ||
+                    // Existing data not for this location.
+                    // Not a great test, as a degree of longitude varies betwee 69 (equator) and 0 (pole) miles, but simpler than
+                    // true distance calculation. 0.02 degree of latitude is just over a mile.
+                    (((RD.gLocationLat - owmCurrent["lat"]).abs() > 0.02) ||
+                    ((RD.gLocationLng - owmCurrent["lon"]).abs() > 0.02))) {
 
-                // Existing data is older than 30 mins.
-                // TODO: Consider requesting weather at sunrise/sunset to update weather icon.
-                if ((Time.now().value() > (owmCurrent["dt"] + 900)) ||
-
-                // Existing data not for this location.
-                // Not a great test, as a degree of longitude varies betwee 69 (equator) and 0 (pole) miles, but simpler than
-                // true distance calculation. 0.02 degree of latitude is just over a mile.
-                (((RD.gLocationLat - owmCurrent["lat"]).abs() > 0.02) || ((RD.gLocationLng - owmCurrent["lon"]).abs() > 0.02))) {
                     pendingWebRequests["OpenWeatherMapCurrent"] = true;
                 }
             }
