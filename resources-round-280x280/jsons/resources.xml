@@ -1,6 +1,6 @@
 <resources>
-	<jsonData id="bar_font_bottom" filename="bar_font_bottom.json"/>
-	<jsonData id="bar_pos_bottom" filename="bar_pos_bottom.json"/>
-	<jsonData id="bar_font_top" filename="bar_font_top.json"/>
-	<jsonData id="bar_pos_top" filename="bar_pos_top.json"/>
+	<jsonData scope="foreground" id="bar_font_bottom" filename="bar_font_bottom.json"/>
+	<jsonData scope="foreground" id="bar_pos_bottom" filename="bar_pos_bottom.json"/>
+	<jsonData scope="foreground" id="bar_font_top" filename="bar_font_top.json"/>
+	<jsonData scope="foreground" id="bar_pos_top" filename="bar_pos_top.json"/>
 </resources>

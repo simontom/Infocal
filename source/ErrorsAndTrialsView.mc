@@ -138,6 +138,7 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
 		if (restore_from_resume) {
 			var current_mili = current_tick;
 			RD.forceRenderComponent = true;
+
 			// will allow watch face to refresh in 5s when resumed (`onShow()` called)
 			if ((current_mili - last_resume_mili) > 5000) {
 				restore_from_resume = false;

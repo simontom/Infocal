@@ -1,4 +1,4 @@
-<layout id="WatchFace">
+<layout scope="foreground" id="WatchFace">
 	<drawable id="background" class="BackgroundView"></drawable>
 
 	<drawable id="aBarDisplay" class="Complications.Complication">
