@@ -4,31 +4,31 @@ module DataField {
 
     class WeatherDataField extends BaseDataField {
 
-        var weather_icon_mapper;
+        private var weather_icon_mapper;
 
         function initialize(id) {
             BaseDataField.initialize(id);
 
             weather_icon_mapper = {
-                "01d" => "",
-                "02d" => "",
-                "03d" => "",
-                "04d" => "",
-                "09d" => "",
-                "10d" => "",
-                "11d" => "",
-                "13d" => "",
-                "50d" => "",
+                "01d" => 61453.toChar(),
+                "02d" => 61442.toChar(),
+                "03d" => 61505.toChar(),
+                "04d" => 61459.toChar(),
+                "09d" => 61466.toChar(),
+                "10d" => 61448.toChar(),
+                "11d" => 61470.toChar(),
+                "13d" => 61467.toChar(),
+                "50d" => 61539.toChar(),
 
-                "01n" => "",
-                "02n" => "",
-                "03n" => "",
-                "04n" => "",
-                "09n" => "",
-                "10n" => "",
-                "11n" => "",
-                "13n" => "",
-                "50n" => "",
+                "01n" => 61486.toChar(),
+                "02n" => 61574.toChar(),
+                "03n" => 61505.toChar(),
+                "04n" => 61459.toChar(),
+                "09n" => 61466.toChar(),
+                "10n" => 61480.toChar(),
+                "11n" => 61470.toChar(),
+                "13n" => 61467.toChar(),
+                "50n" => 61539.toChar(),
             };
         }
 
