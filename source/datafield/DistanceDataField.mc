@@ -1,4 +1,3 @@
-using Toybox.System as Sys;
 using Toybox.Application as App;
 using Toybox.ActivityMonitor as ActivityMonitor;
 using ConversionUtils as CU;
@@ -31,22 +30,14 @@ module DataField {
 
         function cur_label(cm) {
             var need_minimal = App.getApp().getProperty("minimal_data");
-            var settings = Sys.getDeviceSettings();
-
-            var unit = "Km";
             var distance = cm / 100000;
 
-            if (settings.distanceUnits != Sys.UNIT_METRIC) {
-                unit = "Mi";
-                distance *= 0.621371;
-            }
-
             if (need_minimal) {
-                return Lang.format("$1$ $2$", [distance.format("%0.1f"), unit]);
+                return Lang.format("$1$ $2$", [distance.format("%0.1f"), "Km"]);
             }
 
             var valKp = CU.toKValue(distance * 1000);
-            return Lang.format("DIS $1$$2$", [valKp, unit]);
+            return Lang.format("DIS $1$$2$", [valKp, "Km"]);
         }
 
         function bar_data() {

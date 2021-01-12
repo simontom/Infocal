@@ -1,4 +1,3 @@
-using Toybox.System as Sys;
 using Toybox.Application as App;
 
 module DataField {
@@ -22,7 +21,6 @@ module DataField {
                 return "--";
             }
 
-            var settings = Sys.getDeviceSettings();
             var speed = weather_data["wind_speed"];
             var direct = weather_data["wind_direct"];
 

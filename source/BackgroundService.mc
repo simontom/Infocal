@@ -133,8 +133,7 @@ class BackgroundService extends Sys.ServiceDelegate {
     private function getWeather(url, params, callback) {
         var options = {
             :method => Comms.HTTP_REQUEST_METHOD_GET,
-            :headers => {
-                    "Content-Type" => Communications.REQUEST_CONTENT_TYPE_URL_ENCODED},
+            :headers => { "Content-Type" => Communications.REQUEST_CONTENT_TYPE_URL_ENCODED },
             :responseType => Comms.HTTP_RESPONSE_CONTENT_TYPE_JSON
         };
 

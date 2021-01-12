@@ -1,6 +1,4 @@
-using Toybox.System as Sys;
 using Toybox.Application as App;
-using ConversionUtils as CU;
 
 module DataField {
 
@@ -49,14 +47,8 @@ module DataField {
             var weather_data = App.getApp().getProperty("OpenWeatherMapCurrent");
 
             if (weather_data != null) {
-                var settings = Sys.getDeviceSettings();
                 var temp = weather_data["temp"];
-                var unit = "°C";
-                if (settings.temperatureUnits == System.UNIT_STATUTE) {
-                    temp = CU.toFahrenheit(temp);
-                    unit = "°F";
-                }
-                value = temp.format("%d") + unit;
+                value = temp.format("%d") + "°C";
 
                 var description = weather_data.get("des");
                 if (description != null) {

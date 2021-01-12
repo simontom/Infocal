@@ -1,6 +1,5 @@
 using Toybox.System as Sys;
 using Toybox.Application as App;
-using ConversionUtils as CU;
 using Toybox.Lang;
 
 module DataField {
@@ -24,14 +23,7 @@ module DataField {
                 return "TEMP --";
             }
 
-            var settings = Sys.getDeviceSettings();
-            var temp = weather_data["temp"];
-            var unit = "°C";
-            if (settings.temperatureUnits == System.UNIT_STATUTE) {
-                temp = CU.toFahrenheit(temp);
-                unit = "°F";
-            }
-            value = temp.format("%d") + unit;
+            value = weather_data["temp"].format("%d") + "°C";
 
             if (need_minimal) {
                 return value;

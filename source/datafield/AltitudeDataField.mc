@@ -1,4 +1,3 @@
-using Toybox.System as Sys;
 using Toybox.Application as App;
 using Toybox.Activity as Activity;
 using Toybox.SensorHistory as SensorHistory;
@@ -16,7 +15,6 @@ module DataField {
             var value = 0;
 
             // #67 Try to retrieve altitude from current activity, before falling back on elevation history
-            var settings = Sys.getDeviceSettings();
             var activityInfo = Activity.getActivityInfo();
             var altitude = activityInfo.altitude;
 
@@ -36,13 +34,7 @@ module DataField {
                 return "ALT --";
             }
 
-            var unit = "m";
-            if (settings.elevationUnits != Sys.UNIT_METRIC) {
-                altitude *= /* FT_PER_M */ 3.28084;
-                unit = "ft";
-            }
-
-            value = altitude.format("%d") + unit;
+            value = altitude.format("%d") + "m";
 
             if (need_minimal) {
                 return value;

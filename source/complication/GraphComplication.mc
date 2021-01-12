@@ -1,5 +1,4 @@
 using Toybox.WatchUi as Ui;
-using ConversionUtils as CU;
 using RuntimeData as RD;
 using SettingsEnums as SE;
 using Toybox.Lang as Ex;
@@ -16,7 +15,6 @@ module Complications {
         hidden var position_y;
         hidden var graph_width;
         hidden var graph_height;
-        var settings;
 
         function initialize(params) {
             Drawable.initialize(params);
@@ -44,23 +42,13 @@ module Complications {
                     return value;
 
                 case SE.GRAPH_FIELD_TYPE_ALTITUDE:
-                    if (settings.elevationUnits == System.UNIT_METRIC) {
-                        // Metres
-                        return value;
-                    } else {
-                        // Feet
-                        return  value * 3.28084;
-                    }
+                    return value;
 
                 case SE.GRAPH_FIELD_TYPE_BAROMETER:
                     return value / 100.0;
 
                 case SE.GRAPH_FIELD_TYPE_TEMPERATURE:
-                    if (settings.temperatureUnits == System.UNIT_STATUTE) {
-                    return CU.toFahrenheit(value);
-                } else {
                     return value;
-                }
             }
 
             throw new Ex.InvalidValueException("Invalid value of 'type' in ':parse_data_value'");
@@ -72,8 +60,6 @@ module Complications {
             }
 
             try {
-                settings = System.getDeviceSettings();
-
                 var primaryColor = position == SE.COMPLICATION_GRAPH_POSITION_BOTTOM ? gbar_color_1 : gbar_color_0;
 
                 //Calculation
@@ -176,8 +162,6 @@ module Complications {
                         smallDigitalFont,
                         labelll,
                         Graphics.TEXT_JUSTIFY_CENTER|Graphics.TEXT_JUSTIFY_VCENTER);
-
-                settings = null;
             } catch(ex) {
                 // currently unkown, weird bug
                 System.println(ex);

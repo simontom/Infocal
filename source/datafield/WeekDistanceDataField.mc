@@ -33,22 +33,14 @@ module DataField {
             var cm = datas[0];
 
             var need_minimal = App.getApp().getProperty("minimal_data");
-            var settings = Sys.getDeviceSettings();
-
             var distance = cm / 100000;
-            var unit = "Km";
-
-            if (settings.distanceUnits != System.UNIT_METRIC) {
-                distance *= 0.621371;
-                unit = "Mi";
-            }
 
             if (need_minimal) {
-                return Lang.format("$1$ $2$", [distance.format("%0.1f"), unit]);
+                return Lang.format("$1$ $2$", [distance.format("%0.1f"), "Km"]);
             }
 
             var valKp = CU.toKValue(distance * 1000);
-            return Lang.format("DIS $1$$2$", [valKp, unit]);
+            return Lang.format("DIS $1$$2$", [valKp, "Km"]);
         }
 
         function day_of_week(activity) {

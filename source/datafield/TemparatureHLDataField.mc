@@ -1,6 +1,4 @@
-using Toybox.System as Sys;
 using Toybox.Application as App;
-using ConversionUtils as CU;
 using Toybox.Lang;
 
 module DataField {
@@ -24,15 +22,8 @@ module DataField {
                 return "H - L -";
             }
 
-            var settings = Sys.getDeviceSettings();
             var temp_min = weather_data["temp_min"];
             var temp_max = weather_data["temp_max"];
-            var unit = "°C";
-            if (settings.temperatureUnits == System.UNIT_STATUTE) {
-                temp_min = CU.toFahrenheit(temp_min);
-                temp_max = CU.toFahrenheit(temp_max);
-                unit = "°F";
-            }
 
             if (need_minimal) {
                 return Lang.format("$1$ $2$",[temp_max.format("%d"), temp_min.format("%d")]);

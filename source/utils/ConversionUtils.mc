@@ -24,8 +24,4 @@ module ConversionUtils {
         return valK.format("%0.1f");
     }
 
-    function toFahrenheit(celsius) {
-        return (celsius * (9.0 / 5)) + 32;
-    }
-
 }

@@ -1,7 +1,5 @@
-using Toybox.System as Sys;
 using Toybox.Application as App;
 using Toybox.SensorHistory as SensorHistory;
-using ConversionUtils as CU;
 using Toybox.Lang;
 
 module DataField {
@@ -14,8 +12,6 @@ module DataField {
 
         function cur_label(value) {
             var need_minimal = App.getApp().getProperty("minimal_data");
-            var value = 0;
-            var settings = Sys.getDeviceSettings();
             var sample = SensorHistory.getTemperatureHistory(null).next();
 
             if ((sample == null) || (sample.data == null)) {
@@ -26,14 +22,7 @@ module DataField {
                 return "TEMP --";
             }
 
-            var unit = "°C";
-            var temperature = sample.data;
-            if (settings.temperatureUnits == Sys.UNIT_STATUTE) {
-                unit = "°F";
-                temperature = CU.toFahrenheit(temperature);
-            }
-
-            value = temperature.format("%d") + unit;
+            var value = sample.data.format("%d") + "°C";
 
             if (need_minimal) {
                 return value;
