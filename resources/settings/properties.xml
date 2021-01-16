@@ -33,7 +33,7 @@
     <property id="utc_shift" type="boolean">false</property>
 
     <property id="date_format" type="number">0</property>
-    <property id="battery_format" type="number">0</property>
+    <property id="battery_format" type="number">1</property>
 
     <property id="countdown_date" type="number">1546300800</property>
 
