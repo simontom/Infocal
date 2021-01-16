@@ -14,7 +14,5 @@ module RuntimeData {
 
     var formattedDateDataProvider = null;
 
-    var last_battery_hour = null;
-    var last_battery_percent = -1;
-    var last_hour_consumtion = -1;
+    var batteryDataProvider = null;
 }

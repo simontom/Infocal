@@ -80,35 +80,7 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
     	var current_tick = System.getTimer();
     	var time_now = Time.now();
 
-    	// Calculate battery consumtion in days
-    	if (RD.last_battery_hour == null) {
-    		RD.last_battery_hour = time_now;
-    		RD.last_battery_percent = System.getSystemStats().battery;
-    		RD.last_hour_consumtion = -1;
-    	} else if (time_now.compare(RD.last_battery_hour) >= 60 * 60) { // 60 min
-    		RD.last_battery_hour = time_now;
-    		var current_battery = System.getSystemStats().battery;
-    		RD.last_hour_consumtion = RD.last_battery_percent - current_battery;
-    		if (RD.last_hour_consumtion < 0) {
-    			RD.last_hour_consumtion = -1;
-    		}
-			if (RD.last_hour_consumtion > 0) {
-    			App.getApp().setProperty("last_hour_consumtion", RD.last_hour_consumtion);
-
-				var consumtion_history = App.getApp().getProperty("consumtion_history");
-				if (consumtion_history == null) {
-					App.getApp().setProperty("consumtion_history", [RD.last_hour_consumtion]);
-				} else {
-					consumtion_history.add(RD.last_hour_consumtion);
-					if (consumtion_history.size() > 24) {
-						var object0 = consumtion_history[0];
-						consumtion_history.remove(object0);
-					}
-					App.getApp().setProperty("consumtion_history", consumtion_history);
-				}
-    		}
-    		RD.last_battery_percent = current_battery;
-    	}
+    	RD.batteryDataProvider.calculateBatteryConsumption();
 
         var always_on_style = Application.getApp().getProperty("always_on_style");
         if (RD.centerX == 195) {

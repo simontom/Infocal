@@ -35,35 +35,35 @@ module DataField {
 
         function cur_label(value) {
             var battery_format = App.getApp().getProperty("battery_format");
-            var hour_consumtion = RD.last_hour_consumtion;
+            var hourConsumption = RD.batteryDataProvider.getLastHourConsumption();
 
-            if (hour_consumtion <= 0) {
-                var consumtion_history = App.getApp().getProperty("consumtion_history");
-                if (consumtion_history != null) {
+            if (hourConsumption <= 0) {
+                var consumptionHistory = RD.batteryDataProvider.getSavedConsumptionHistory();
+                if (consumptionHistory != null) {
                     var total = 0.0;
-                    for(var i = 0; i < consumtion_history.size(); i++) {
-                        total += consumtion_history[i];
+                    for(var i = 0; i < consumptionHistory.size(); i++) {
+                        total += consumptionHistory[i];
                     }
-                    hour_consumtion = total / consumtion_history.size();
+                    hourConsumption = total / consumptionHistory.size();
                 } else {
-                    var hour_consumtion_saved = App.getApp().getProperty("last_hour_consumtion");
-                    if (hour_consumtion_saved != null) {
-                        hour_consumtion = hour_consumtion_saved;
+                    var hourConsumptionSaved = RD.batteryDataProvider.getSavedLastHourConsumption();
+                    if (hourConsumptionSaved != null) {
+                        hourConsumption = hourConsumptionSaved;
                     }
                 }
             }
 
-            hour_consumtion = hour_consumtion.toFloat();
+            hourConsumption = hourConsumption.toFloat();
 
-            if (battery_format == SE.BATTERY_FORMAT_PERCENTAGE || hour_consumtion == -1) {
+            if (battery_format == SE.BATTERY_FORMAT_PERCENTAGE || hourConsumption == -1) {
                 return Lang.format("BAT $1$%", [Math.round(value).format("%d")]);
             }
 
-            if (hour_consumtion == 0) {
+            if (hourConsumption == 0) {
                 return "99 DAYS";
             }
 
-            var hoursLeft = value / (hour_consumtion * 1.0);
+            var hoursLeft = value / (hourConsumption * 1.0);
             var daysLeft = hoursLeft / 24.0;
             return Lang.format("$1$ DAYS", [daysLeft.format("%0.1f")]);
         }

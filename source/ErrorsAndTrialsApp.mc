@@ -29,6 +29,7 @@ class ErrorsAndTrialsApp extends Application.AppBase {
     // Return the initial view of your application here
     function getInitialView() {
         RD.formattedDateDataProvider = new DP.FormattedDateDataProvider();
+        RD.batteryDataProvider = new DP.BatteryDataProvider();
 
         mView = new ErrorsAndTrialsView();
         return [mView];
