@@ -1,10 +1,8 @@
 using Toybox.Application;
 using Toybox.Activity as Activity;
-using Toybox.System as Sys;
-using Toybox.Background as Bg;
+using Toybox.Background as BG;
 using Toybox.WatchUi as Ui;
 using Toybox.Time;
-using Toybox.Math;
 using DataProvider as DP;
 using RuntimeData as RD;
 
@@ -42,7 +40,6 @@ class ErrorsAndTrialsApp extends Application.AppBase {
 
     // Triggered by settings change in GCM
     function onSettingsChanged() {
-        Sys.println("onSettingsChanged");
         RD.formattedDateDataProvider.reloadSettings();
 
         if (ErrorsAndTrialsApp has :checkPendingWebRequests) { // Cuz checkPendingWebRequests() can be excluded to save memory
@@ -119,14 +116,14 @@ class ErrorsAndTrialsApp extends Application.AppBase {
         // If there are any pending requests:
         if (pendingWebRequests.keys().size() > 0) {
             // Register for background temporal event as soon as possible.
-            var lastTime = Bg.getLastTemporalEventTime();
+            var lastTime = BG.getLastTemporalEventTime();
 
             // Events scheduled for a time in the past trigger immediately.
             if (lastTime) {
                 var nextTime = lastTime.add(new Time.Duration(20 * 60));
-                Bg.registerForTemporalEvent(nextTime);
+                BG.registerForTemporalEvent(nextTime);
             } else {
-                Bg.registerForTemporalEvent(Time.now());
+                BG.registerForTemporalEvent(Time.now());
             }
         }
 
