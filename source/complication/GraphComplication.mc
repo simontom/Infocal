@@ -33,7 +33,7 @@ module Complications {
         }
 
         function need_draw() {
-            return get_data_type() > 0;
+            return get_data_type() != SE.GRAPH_FIELD_TYPE_EMPTY;
         }
 
         function parse_data_value(type, value) {
