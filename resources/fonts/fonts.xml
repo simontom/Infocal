@@ -14,10 +14,10 @@
 	<font scope="foreground" id="xmidbold" filename="xmidbold.fntc" antialias="true" filter="0123456789"/>
 	<font scope="foreground" id="xmidsemi" filename="xmidsemi.fntc" antialias="true" filter="0123456789"/>
 
-	<font scope="foreground" id="cur_bo" filename="cur_bo.fnt" antialias="true"/>
-	<font scope="foreground" id="cur_up" filename="cur_up.fnt" antialias="true"/>
-	<font scope="foreground" id="arr_bo" filename="arr_bo.fnt" antialias="true"/>
-	<font scope="foreground" id="arr_up" filename="arr_up.fnt" antialias="true"/>
+	<font scope="foreground" id="cur_bo" filename="cur_bo_big.fnt" antialias="true"/>
+	<font scope="foreground" id="cur_up" filename="cur_up_big.fnt" antialias="true"/>
+	<font scope="foreground" id="arr_bo" filename="arr_bo_big.fnt" antialias="true"/>
+	<font scope="foreground" id="arr_up" filename="arr_up_big.fnt" antialias="true"/>
 
 	<font scope="foreground" id="e0" filename="e0.fnt" antialias="true" filter=" %+-.0123456789:ABCDEFGHIJKLMNOPRSTUVWY°"/>
 	<font scope="foreground" id="e1" filename="e1.fnt" antialias="true" filter=" %+-.0123456789:ABCDEFGHIJKLMNOPRSTUVWY°"/>
