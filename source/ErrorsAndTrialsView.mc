@@ -83,27 +83,15 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
     	RD.batteryDataProvider.calculateBatteryConsumption();
 
         var always_on_style = Application.getApp().getProperty("always_on_style");
-        if (RD.centerX == 195) {
-        	if (always_on_style == SE.ALWAYS_ON_STYLE_SMALL) {
-	    		second_digi_font = WatchUi.loadResource(Rez.Fonts.secodigi);
-	    		second_font_height_half = 16;
-	    		second_clip_size = [40, 30];
-	    	} else {
-	    		second_digi_font = WatchUi.loadResource(Rez.Fonts.xsecodigi);
-	    		second_font_height_half = 16;
-	    		second_clip_size = [52, 44];
-	    	}
+        if (always_on_style == SE.ALWAYS_ON_STYLE_SMALL) {
+            second_digi_font = WatchUi.loadResource(Rez.Fonts.secodigi);
+            second_font_height_half = 7;
+            second_clip_size = [20, 15];
         } else {
-	    	if (always_on_style == SE.ALWAYS_ON_STYLE_SMALL) {
-	    		second_digi_font = WatchUi.loadResource(Rez.Fonts.secodigi);
-	    		second_font_height_half = 7;
-	    		second_clip_size = [20, 15];
-	    	} else {
-	    		second_digi_font = WatchUi.loadResource(Rez.Fonts.xsecodigi);
-	    		second_font_height_half = 14;
-	    		second_clip_size = [26, 22];
-	    	}
-    	}
+            second_digi_font = WatchUi.loadResource(Rez.Fonts.xsecodigi);
+            second_font_height_half = 14;
+            second_clip_size = [26, 22];
+        }
 
     	RD.forceRenderComponent = true;
 		// normal power mode

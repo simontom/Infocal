@@ -33,9 +33,6 @@ class MainDialHand extends Ui.Drawable {
         alignment = Graphics.TEXT_JUSTIFY_VCENTER|Graphics.TEXT_JUSTIFY_CENTER;
 
         bonusy_smallsize = 0;
-        if (RD.centerX == 195) {
-        	bonusy_smallsize = -35;
-        }
     }
 
     function draw(dc) {
@@ -75,9 +72,6 @@ class MainDialHand extends Ui.Drawable {
 	    	}
 
 	    	var f_align = digital_style == SE.DIGITAL_STYLE_BIG ? 62 : 71;
-	    	if (RD.centerX == 195) {
-	    		f_align = f_align + 40;
-	    	}
 
 	    	second_x = RD.centerX + w / 2 + 3;
 	    	heart_x = RD.centerX - w / 2 - 3;

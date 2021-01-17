@@ -33,10 +33,6 @@ module Complications {
                 } else if (RD.centerX == 140) {
                     position_y_draw = 64; // centerY - 36 - 18 - 14 - 8; // font height 14
                     position_y_draw_bonus = -18;
-                } else if (RD.centerX == 195) {
-                    position_y_draw = 89; // centerY - 36 - 18 - 14 - 8; // font height 14
-                    position_y_draw_bonus = -36;
-                    factor = 2;
                 } else {
                     position_y_draw = 44; // centerY - 36 - 18 - 14 + 5; // font height 14
                     position_y_draw_bonus = -13;
@@ -52,11 +48,7 @@ module Complications {
                 } else if (RD.centerX == 140) {
                     position_y_draw = 184; // centerY + 36 + 8;
                     position_y_draw_bonus = 33;
-                } else if (RD.centerX == 195) {
-                    position_y_draw = 256; // centerY - 36 - 18 - 14 - 8; // font height 14
-                    position_y_draw_bonus = 48;
-                    factor = 2;
-                }  else {
+                } else {
                     position_y_draw = 140; // centerY + 36 - 5;
                     position_y_draw_bonus = 29;
                 }

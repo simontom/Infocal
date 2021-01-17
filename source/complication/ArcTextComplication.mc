@@ -73,9 +73,6 @@ module Complications {
                 barRadius = RD.centerX - 11;
             } else if (RD.centerX == 130) {
                 kerning = 0.95;
-            } else if (RD.centerX == 195) {
-                kerning = 0.95;
-                barRadius = barRadius + 4;
             }
 
             baseDegree = params.get(:base);

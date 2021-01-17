@@ -7,17 +7,12 @@ using SettingsEnums as SE;
 
 class BackgroundView extends Ui.Drawable {
 
-    hidden var bgcir_font, bgcir_info;
-
+    private var bgcir_font, bgcir_info;
     var radius;
-    var mark_length = 10;
 
     function initialize(params) {
         Drawable.initialize(params);
         radius = RD.centerX - (10 * RD.centerX / 120).toNumber();
-        if (RD.centerX == 195) {
-            mark_length = 20;
-        }
     }
 
     function draw(dc) {
@@ -32,10 +27,10 @@ class BackgroundView extends Ui.Drawable {
         for(var i = 0; i < 6; i += 1) {
             var rad = (i.toFloat() / 6.0) * 2 * Math.PI;
             dc.drawLine(
-                CU.convertCoorX(rad, radius - mark_length / 2),
-                CU.convertCoorY(rad, radius - mark_length / 2),
-                CU.convertCoorX(rad, radius + mark_length / 2),
-                CU.convertCoorY(rad, radius + mark_length / 2)
+                CU.convertCoorX(rad, radius - 5),
+                CU.convertCoorY(rad, radius - 5),
+                CU.convertCoorX(rad, radius + 5),
+                CU.convertCoorY(rad, radius + 5)
             );
         }
     }
@@ -82,8 +77,6 @@ class BackgroundView extends Ui.Drawable {
                 bonus = 3;
             } else if (RD.centerX == 109) {
                 bonus = -2;
-            } else if (RD.centerX == 195) {
-                bonus = 8;
             }
 
             for(var i = 0; i < 12 * 5; i += 1) {
