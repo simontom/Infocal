@@ -28,9 +28,7 @@ module DataProvider {
             return App.getApp().getProperty("consumption_history");
         }
 
-        function calculateBatteryConsumption() {
-            var timeNow = T.now();
-
+        function calculateBatteryConsumption(timeNow) {
             if (timeNow.compare(lastBatteryCalculation) >= 60 * 60) { // 60 min
                 lastBatteryCalculation = timeNow;
                 var current_battery = Sys.getSystemStats().battery;

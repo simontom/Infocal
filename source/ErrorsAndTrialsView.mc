@@ -80,7 +80,7 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
     	var current_tick = System.getTimer();
     	var time_now = Time.now();
 
-    	RD.batteryDataProvider.calculateBatteryConsumption();
+    	RD.batteryDataProvider.calculateBatteryConsumption(time_now);
 
         var always_on_style = Application.getApp().getProperty("always_on_style");
         if (always_on_style == SE.ALWAYS_ON_STYLE_SMALL) {
