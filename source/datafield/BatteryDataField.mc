@@ -33,8 +33,8 @@ module DataField {
             return "P";
         }
 
-        function cur_label(value) {
-            var battery_format = App.getApp().getProperty("battery_format");
+        function cur_label(batteryPercentage) {
+            var batteryFormat = App.getApp().getProperty("battery_format");
             var hourConsumption = RD.batteryDataProvider.getLastHourConsumption();
 
             if (hourConsumption <= 0) {
@@ -55,15 +55,15 @@ module DataField {
 
             hourConsumption = hourConsumption.toFloat();
 
-            if (battery_format == SE.BATTERY_FORMAT_PERCENTAGE || hourConsumption == -1) {
-                return Lang.format("BAT $1$%", [Math.round(value).format("%d")]);
+            if (batteryFormat == SE.BATTERY_FORMAT_PERCENTAGE || hourConsumption == -1) {
+                return Lang.format("BAT $1$%", [Math.round(batteryPercentage).format("%d")]);
             }
 
             if (hourConsumption == 0) {
                 return "99 DAYS";
             }
 
-            var hoursLeft = value / (hourConsumption * 1.0);
+            var hoursLeft = batteryPercentage / hourConsumption;
             var daysLeft = hoursLeft / 24.0;
             return Lang.format("$1$ DAYS", [daysLeft.format("%0.1f")]);
         }
