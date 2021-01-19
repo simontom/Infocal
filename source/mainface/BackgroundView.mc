@@ -12,6 +12,7 @@ class BackgroundView extends Ui.Drawable {
 
     function initialize(params) {
         Drawable.initialize(params);
+
         radius = RD.centerX - (10 * RD.centerX / 120).toNumber();
     }
 

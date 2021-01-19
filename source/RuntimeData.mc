@@ -1,4 +1,5 @@
 module RuntimeData {
+
     // In-memory current location.
     // Previously persisted in App.Storage, but now persisted in Object Store due to #86 workaround for App.Storage firmware bug.
     // Current location retrieved/saved in checkPendingWebRequests().

@@ -121,12 +121,12 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
 	function mainDrawComponents(dc) {
 		checkTheme();
 
-		if (RD.forceRenderComponent) {
-			dc.setColor(Graphics.COLOR_TRANSPARENT, gbackground_color);
-			dc.clear();
-			dc.setColor(gbackground_color, Graphics.COLOR_TRANSPARENT);
-    		dc.fillRectangle(0, 0, RD.centerX * 2, RD.centerY * 2);
-		}
+        if (RD.forceRenderComponent) {
+            dc.setColor(Graphics.COLOR_TRANSPARENT, gbackground_color);
+            dc.clear();
+            dc.setColor(gbackground_color, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(0, 0, RD.centerX * 2, RD.centerY * 2);
+        }
 
 		var bar1 = View.findDrawableById("aBarDisplay");
 		var bar2 = View.findDrawableById("bBarDisplay");
@@ -157,9 +157,12 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
 		bgraph1.draw(dc);
 		bgraph2.draw(dc);
 
+        var moonPhase = View.findDrawableById("moonPhase");
+        moonPhase.draw(dc);
+
         // Call the parent onUpdate function to redraw the layout
         var digitalDisplay = View.findDrawableById("digital");
-		digitalDisplay.draw(dc);
+        digitalDisplay.draw(dc);
 	}
 
     // Gets called once per second but the mustn't exceed 30ms
