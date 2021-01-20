@@ -21,7 +21,7 @@ module DataProvider {
                 lastCalculationTime = timeNow;
 
                 moonPhase = calculateMoonPhaseHelper(timeNow);
-                Sys.println(moonPhase);
+                // Sys.println(moonPhase);
             }
 
             return moonPhase;
@@ -80,7 +80,8 @@ module DataProvider {
             }
 
             // return AG1.toNumber();
-            return [M1, D1, IP1, AG1];
+            // return [M1, D1, IP1, AG1];
+            return IP1;
         }
 
         private function normalize(value) {

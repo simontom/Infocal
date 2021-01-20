@@ -93,10 +93,11 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
             second_clip_size = [26, 22];
         }
 
-    	RD.forceRenderComponent = true;
+    	// RD.forceRenderComponent = true;
 		// normal power mode
 		if (restore_from_resume) {
 			var current_mili = current_tick;
+
 			RD.forceRenderComponent = true;
 
 			// will allow watch face to refresh in 5s when resumed (`onShow()` called)
@@ -105,8 +106,10 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
 			}
 		}
 
-		RD.forceRenderComponent = true;
+        // INFO: Moved into IF to save some re-rendering
+		// RD.forceRenderComponent = true;
 		if (clockTime.min != last_draw_minute) {
+            RD.forceRenderComponent = true;
 			// Only check background web request every 1 minute
 			checkBackgroundRequest();
 		}
@@ -122,8 +125,9 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
 		checkTheme();
 
         if (RD.forceRenderComponent) {
-            dc.setColor(Graphics.COLOR_TRANSPARENT, gbackground_color);
-            dc.clear();
+            // dc.setColor(Graphics.COLOR_TRANSPARENT, gbackground_color);
+            // dc.clear();
+
             dc.setColor(gbackground_color, Graphics.COLOR_TRANSPARENT);
             dc.fillRectangle(0, 0, RD.centerX * 2, RD.centerY * 2);
         }
@@ -141,8 +145,9 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
 		bar5.draw(dc);
 		bar6.draw(dc);
 
-        dc.setColor(gbackground_color, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(RD.centerX, RD.centerY, face_radius);
+        // dc.setColor(gbackground_color, Graphics.COLOR_TRANSPARENT);
+        // dc.setColor(gmain_color, gsecondary_color); // pokus
+        // dc.fillCircle(RD.centerX, RD.centerY, face_radius);
 
         var backgroundView = View.findDrawableById("background");
 		backgroundView.draw(dc);
