@@ -70,10 +70,6 @@ class MoonPhaseDrawable extends Ui.Drawable {
             }
 
             // Draw the lighted part of the moon
-            // dc.setColor(Graphics.COLOR_YELLOW, Graphics.COLOR_TRANSPARENT);
-            // dc.setColor(Graphics.COLOR_ORANGE, Graphics.COLOR_TRANSPARENT);
-            // dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
-
             dc.setColor(moonIluminationColor, Graphics.COLOR_TRANSPARENT);
             dc.drawLine(xPos1+90, 90-yPos, xPos2+90, 90-yPos);
             dc.drawLine(xPos1+90, yPos+90, xPos2+90, yPos+90);
@@ -83,8 +79,6 @@ class MoonPhaseDrawable extends Ui.Drawable {
     }
 
     private function getMoonIluminationColor(phase) {
-        Toybox.System.println(phase);
-
         if ((phase > 0.85) || (phase < 0.125)) {
             return Graphics.COLOR_YELLOW;
         }
