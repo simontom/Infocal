@@ -50,13 +50,12 @@ class MoonPhaseDrawable extends Ui.Drawable {
 
         var moonIluminationColor = getMoonIluminationColor(phase);
 
+        // Draw darkness part of the moon
+        dc.setColor(Graphics.COLOR_DK_GRAY, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(90, 90, 45);
+
         for (var yPos = 0; yPos <= 45; yPos++) {
             var xPos = M.sqrt(45*45 - yPos*yPos).toNumber();
-
-            // Draw darkness part of the moon
-            dc.setColor(Graphics.COLOR_DK_GRAY, Graphics.COLOR_TRANSPARENT);
-            dc.drawLine(90-xPos, yPos+90, xPos+90, yPos+90);
-            dc.drawLine(90-xPos, 90-yPos, xPos+90, 90-yPos);
 
             // Determine the edges of the lighted part of the moon
             var rPos = 2 * xPos;
@@ -71,8 +70,8 @@ class MoonPhaseDrawable extends Ui.Drawable {
 
             // Draw the lighted part of the moon
             dc.setColor(moonIluminationColor, Graphics.COLOR_TRANSPARENT);
-            dc.drawLine(xPos1+90, 90-yPos, xPos2+90, 90-yPos);
-            dc.drawLine(xPos1+90, yPos+90, xPos2+90, yPos+90);
+            dc.drawLine(xPos1+90, 90-yPos, xPos2+90, 90-yPos); // Draws iluminated TOP half
+            dc.drawLine(xPos1+90, yPos+90, xPos2+90, yPos+90); // Draws iluminated BOTTOM half
         }
 
         // dc.clearClip();
@@ -83,7 +82,11 @@ class MoonPhaseDrawable extends Ui.Drawable {
             return Graphics.COLOR_YELLOW;
         }
 
-        if (((phase >= 0.125) && (phase < 0.31)) || ((phase >= 0.665) && (phase <= 0.85))) {
+        if ((phase >= 0.125) && (phase < 0.31)) {
+            return Graphics.COLOR_ORANGE;
+        }
+
+        if ((phase >= 0.665) && (phase <= 0.85)) {
             return Graphics.COLOR_ORANGE;
         }
 
