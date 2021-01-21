@@ -25,7 +25,7 @@ class MoonPhaseDrawable extends Ui.Drawable {
 
     function draw(dc) {
         var moonIluminatedPhase = moonPhaseProvider.calculateMoonPhase();
-        if ((currentMoonIluminatedPhase != moonIluminatedPhase) || RD.forceRenderComponent) {
+        if (RD.forceRenderComponent || (currentMoonIluminatedPhase != moonIluminatedPhase)) {
             drawMoon(dc, moonIluminatedPhase);
         }
     }
@@ -70,8 +70,6 @@ class MoonPhaseDrawable extends Ui.Drawable {
 
     // TODO: Play a bit with constants to meet the best feel from used colors
     private function getMoonIluminationColor(phase) {
-        Toybox.System.println(phase);
-
         if ((phase > 0.85) || (phase < 0.125)) {
             return Graphics.COLOR_YELLOW;
         }

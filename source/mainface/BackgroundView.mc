@@ -8,7 +8,7 @@ using SettingsEnums as SE;
 class BackgroundView extends Ui.Drawable {
 
     private var bgcir_font, bgcir_info;
-    var radius;
+    private var radius;
 
     function initialize(params) {
         Drawable.initialize(params);

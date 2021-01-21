@@ -14,23 +14,21 @@ module DataProvider {
         }
 
         function calculateMoonPhase() {
-            var timeNow = T.now();
+            var now = T.now();
 
             // Period in seconds -> 3600 = 60 min for hour * 60 sec for min
-            if ((lastCalculationTime == null) || (timeNow.compare(lastCalculationTime) >= 4)) {
-                lastCalculationTime = timeNow;
+            if ((lastCalculationTime == null) || (now.compare(lastCalculationTime) >= 3600)) {
+                lastCalculationTime = now;
 
-                moonPhase = calculateMoonPhaseHelper(timeNow);
+                moonPhase = calculateMoonPhaseHelper(now);
             }
 
             return moonPhase;
         }
 
-        var nowXXX = T.now().subtract(new T.Duration(17 * T.Gregorian.SECONDS_PER_DAY));
-        var oneDay = new T.Duration(T.Gregorian.SECONDS_PER_DAY);
         // INFO: Extracted from LowEnergyFace watchface
         private function calculateMoonPhaseHelper(now) {
-            var date = T.Gregorian.info(nowXXX, Time.FORMAT_SHORT);
+            var date = T.Gregorian.info(now, Time.FORMAT_SHORT);
 
             var n0 = 0;
             var f0 = 0.0d;
@@ -40,8 +38,6 @@ module DataProvider {
             var Y1 = date.year;
             var M1 = date.month;
             var D1 = date.day;
-
-            nowXXX = nowXXX.add(oneDay);
 
             var YY1 = n0;
             var MM1 = n0;
