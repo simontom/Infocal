@@ -44,10 +44,10 @@ class MoonPhaseDrawable extends Ui.Drawable {
     function drawMoon(dc, phase) {
         var moonIluminationColor = getMoonIluminationColor(phase);
 
-        // Draw darkness part of the moon
-        // dc.setClip(clipX, clipY, clipSize, clipSize);
-        // dc.clear();
-        dc.setColor(Graphics.COLOR_DK_GRAY, Graphics.COLOR_TRANSPARENT);
+        // Clear and draw dark backfround of the Moon
+        dc.setClip(clipX, clipY, clipSize, clipSize);
+        dc.setColor(Graphics.COLOR_DK_GRAY, gbackground_color);
+        dc.clear();
         dc.fillCircle(centerX, centerY, radius);
 
         // Set proper color to draw the iluminated part of the moon
@@ -67,13 +67,6 @@ class MoonPhaseDrawable extends Ui.Drawable {
                 xPos2 = (xPos - 2*phase*rPos + rPos).toNumber();
             }
 
-            // Toybox.System.println(
-            //     Toybox.Lang.format(
-            //         "yPos:$1$ xPos:$2$ rPos:$3$ xPos1:$4$ xPos2:$5$",
-            //         [yPos, xPos, rPos, xPos1, xPos2]
-            //     )
-            // );
-
             // Draw the iluminated part of the moon
             dc.drawLine(
                 centerX + xPos1, centerY - yPos,
@@ -83,22 +76,22 @@ class MoonPhaseDrawable extends Ui.Drawable {
                 centerX + xPos2, centerY + yPos); // Draws iluminated BOTTOM half
         }
 
-        // Toybox.System.println("");
-        // Toybox.System.println("");
-
-        // dc.clearClip();
+        dc.clearClip();
     }
 
+    // TODO: Play a bit with constants to meet the best feel from used colors
     private function getMoonIluminationColor(phase) {
+        Toybox.System.println(phase);
+
         if ((phase > 0.85) || (phase < 0.125)) {
             return Graphics.COLOR_YELLOW;
         }
 
-        if ((phase >= 0.125) && (phase < 0.31)) {
+        if ((phase >= 0.125) && (phase < 0.36)) {
             return Graphics.COLOR_ORANGE;
         }
 
-        if ((phase >= 0.665) && (phase <= 0.85)) {
+        if ((phase >= 0.645) && (phase <= 0.85)) {
             return Graphics.COLOR_ORANGE;
         }
 
@@ -110,8 +103,9 @@ class MoonPhaseDrawable extends Ui.Drawable {
         centerY = params.get(:centerY);
         radius = params.get(:radius);
 
-        clipSize = 2 * radius + 1;
-        clipX = centerX - radius;
-        clipY = centerY - radius;
+        // Try to resize and reposition to keep the whole Moon inside the dc.clip
+        clipSize = 2 * radius + 2;
+        clipX = centerX - radius - 1;
+        clipY = centerY - radius - 1;
     }
 }
