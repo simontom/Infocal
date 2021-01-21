@@ -26,22 +26,11 @@ class MoonPhaseDrawable extends Ui.Drawable {
     function draw(dc) {
         var moonIluminatedPhase = moonPhaseProvider.calculateMoonPhase();
         if ((currentMoonIluminatedPhase != moonIluminatedPhase) || RD.forceRenderComponent) {
-            // dc.setClip(xTopLeft, yTopLeft, size+1, size+1);
-            // dc.setColor(Graphics.COLOR_DK_GRAY, Graphics.COLOR_TRANSPARENT);
-            // dc.clear();
-
-            // // dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
-            // // if (Time.now().value() % 3 == 0) {
-            //     dc.fillCircle(x, y, radius);
-            // // }
-            // dc.clearClip();
-
             drawMoon(dc, moonIluminatedPhase);
         }
     }
 
-    // TODO: Fix size and position
-    function drawMoon(dc, phase) {
+    private function drawMoon(dc, phase) {
         var moonIluminationColor = getMoonIluminationColor(phase);
 
         // Clear and draw dark backfround of the Moon

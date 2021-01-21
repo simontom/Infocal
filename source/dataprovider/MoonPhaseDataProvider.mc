@@ -21,7 +21,6 @@ module DataProvider {
                 lastCalculationTime = timeNow;
 
                 moonPhase = calculateMoonPhaseHelper(timeNow);
-                // Sys.println(moonPhase);
             }
 
             return moonPhase;
