@@ -5,13 +5,13 @@ using Toybox.Math as M;
 
 class MoonPhaseDrawable extends Ui.Drawable {
 
-    hidden var x;
-    hidden var y;
+    hidden var centerX;
+    hidden var centerY;
     hidden var radius;
 
-    private var size;
-    private var xTopLeft;
-    private var yTopLeft;
+    private var clipSize;
+    private var clipX;
+    private var clipY;
 
     private var moonPhaseProvider;
     private var currentMoonIluminatedPhase;
@@ -34,10 +34,6 @@ class MoonPhaseDrawable extends Ui.Drawable {
             // // if (Time.now().value() % 3 == 0) {
             //     dc.fillCircle(x, y, radius);
             // // }
-
-            // dc.setColor(Graphics.COLOR_YELLOW, Graphics.COLOR_TRANSPARENT);
-            // dc.fillEllipse(x, y, 5, radius);
-
             // dc.clearClip();
 
             drawMoon(dc, moonIluminatedPhase);
@@ -45,19 +41,22 @@ class MoonPhaseDrawable extends Ui.Drawable {
     }
 
     // TODO: Fix size and position
-    private function drawMoon(dc, phase) {
-        // dc.setClip(xTopLeft, yTopLeft, size+1, size+1);
-
+    function drawMoon(dc, phase) {
         var moonIluminationColor = getMoonIluminationColor(phase);
 
         // Draw darkness part of the moon
+        // dc.setClip(clipX, clipY, clipSize, clipSize);
+        // dc.clear();
         dc.setColor(Graphics.COLOR_DK_GRAY, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(90, 90, 45);
+        dc.fillCircle(centerX, centerY, radius);
 
-        for (var yPos = 0; yPos <= 45; yPos++) {
-            var xPos = M.sqrt(45*45 - yPos*yPos).toNumber();
+        // Set proper color to draw the iluminated part of the moon
+        dc.setColor(moonIluminationColor, Graphics.COLOR_TRANSPARENT);
 
-            // Determine the edges of the lighted part of the moon
+        for (var yPos = 0; yPos <= radius; yPos++) {
+            var xPos = M.sqrt(radius*radius - yPos*yPos).toNumber();
+
+            // Determine the edges of the iluminated part of the moon
             var rPos = 2 * xPos;
             var xPos1, xPos2;
             if (phase < 0.5) {
@@ -68,11 +67,24 @@ class MoonPhaseDrawable extends Ui.Drawable {
                 xPos2 = (xPos - 2*phase*rPos + rPos).toNumber();
             }
 
-            // Draw the lighted part of the moon
-            dc.setColor(moonIluminationColor, Graphics.COLOR_TRANSPARENT);
-            dc.drawLine(xPos1+90, 90-yPos, xPos2+90, 90-yPos); // Draws iluminated TOP half
-            dc.drawLine(xPos1+90, yPos+90, xPos2+90, yPos+90); // Draws iluminated BOTTOM half
+            // Toybox.System.println(
+            //     Toybox.Lang.format(
+            //         "yPos:$1$ xPos:$2$ rPos:$3$ xPos1:$4$ xPos2:$5$",
+            //         [yPos, xPos, rPos, xPos1, xPos2]
+            //     )
+            // );
+
+            // Draw the iluminated part of the moon
+            dc.drawLine(
+                centerX + xPos1, centerY - yPos,
+                centerX + xPos2, centerY - yPos); // Draws iluminated TOP half
+            dc.drawLine(
+                centerX + xPos1, centerY + yPos,
+                centerX + xPos2, centerY + yPos); // Draws iluminated BOTTOM half
         }
+
+        // Toybox.System.println("");
+        // Toybox.System.println("");
 
         // dc.clearClip();
     }
@@ -94,14 +106,12 @@ class MoonPhaseDrawable extends Ui.Drawable {
     }
 
     private function calculateDimensions(params) {
-        x = params.get(:x);
-        y = params.get(:y);
+        centerX = params.get(:centerX);
+        centerY = params.get(:centerY);
         radius = params.get(:radius);
 
-        size = 2 * radius;
-        xTopLeft = x - radius;
-        yTopLeft = y - radius;
-
-        System.println("x:"+x + " y:"+y + " r:"+radius + " s:"+size + " xT:"+xTopLeft + " yT:"+yTopLeft);
+        clipSize = 2 * radius + 1;
+        clipX = centerX - radius;
+        clipY = centerY - radius;
     }
 }

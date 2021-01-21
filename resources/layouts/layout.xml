@@ -55,8 +55,8 @@
     </drawable>
 
     <drawable id="moonPhase" class="MoonPhaseDrawable">
-        <param name="x">52</param>
-        <param name="y">110</param>
+        <param name="centerX">52</param>
+        <param name="centerY">110</param>
         <param name="radius">15</param>
     </drawable>
 
