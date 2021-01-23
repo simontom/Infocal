@@ -104,14 +104,14 @@ module Complications {
             var text = get_text();
 
             if (!lastDrawText.equals(text) || RD.forceRenderComponent) {
-                dc.setColor(gbackground_color, Graphics.COLOR_TRANSPARENT);
+                dc.setColor(RD.themeDataProvider.gbackground_color, Graphics.COLOR_TRANSPARENT);
 
                 dc.setPenWidth(20);
                 var target_r = barRadius-((baseDegree < 180 ? 6 : -3) * RD.centerX / 120).toNumber();
                 dc.drawArc(RD.centerX, RD.centerY, target_r, Graphics.ARC_CLOCKWISE, 360.0-(baseDegree-30.0), 360.0-(baseDegree+30.0));
 
                 dc.setPenWidth(1);
-                dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
+                dc.setColor(RD.themeDataProvider.gmain_color, Graphics.COLOR_TRANSPARENT);
 
                 drawArcText(dc, text);
                 lastDrawText = text;

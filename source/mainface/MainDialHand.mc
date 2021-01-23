@@ -59,26 +59,30 @@ class MainDialHand extends Ui.Drawable {
 			// DRAW CENTER
 	    	var bigText = bignumber.format(Constants.ZeroLeadingFormat);
 	    	dc.setPenWidth(1);
-	    	dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
+	    	dc.setColor(RD.themeDataProvider.gmain_color, Graphics.COLOR_TRANSPARENT);
 	    	var h = dc.getFontHeight(target_center_font);
 	    	var w = dc.getTextWidthInPixels(bigText, target_center_font);
 	    	dc.drawText(RD.centerX, RD.centerY - h / 4, target_center_font, bigText, alignment);
 
 	    	// DRAW STRIPES
 	    	if (Application.getApp().getProperty("big_num_stripes")) {
-		    	dc.setColor(gbackground_color, Graphics.COLOR_TRANSPARENT);
+		    	dc.setColor(RD.themeDataProvider.gbackground_color, Graphics.COLOR_TRANSPARENT);
 		    	var w2 = dc.getTextWidthInPixels("\\", target_center_font);
 		    	dc.drawText(RD.centerX + w2 -w / 2, RD.centerY - h / 4, target_center_font, "\\", Graphics.TEXT_JUSTIFY_VCENTER);
 	    	}
 
 	    	var f_align = digital_style == SE.DIGITAL_STYLE_BIG ? 62 : 71;
 
-	    	second_x = RD.centerX + w / 2 + 3;
+	    	RD.themeDataProvider.second_x = RD.centerX + w / 2 + 3;
 
 	    	if (RD.centerX == 109 && digital_style == SE.DIGITAL_STYLE_XBIG) {
-	    		second_y  = RD.centerY - second_font_height_half / 2 - (alwayon_style == SE.ALWAYS_ON_STYLE_SMALL ? 3 : 6);
+	    		RD.themeDataProvider.second_y =
+                    RD.centerY - RD.themeDataProvider.second_font_height_half
+                        / 2 - (alwayon_style == SE.ALWAYS_ON_STYLE_SMALL ? 3 : 6);
 	    	} else {
-	    		second_y  = RD.centerY + (h - f_align) / 2 - second_font_height_half * 2 + (alwayon_style == SE.ALWAYS_ON_STYLE_SMALL ? 0 : 5);
+	    		RD.themeDataProvider.second_y =
+                    RD.centerY + (h - f_align) / 2 - RD.themeDataProvider.second_font_height_half
+                        * 2 + (alwayon_style == SE.ALWAYS_ON_STYLE_SMALL ? 0 : 5);
 	    	}
 	    	// DRAW INFOS
 
@@ -106,7 +110,7 @@ class MainDialHand extends Ui.Drawable {
 	    	// draw background of date
 	    	// this is a need to prevent power save mode not re-render
 
-	    	dc.setColor(gbackground_color, Graphics.COLOR_TRANSPARENT);
+	    	dc.setColor(RD.themeDataProvider.gbackground_color, Graphics.COLOR_TRANSPARENT);
     		dc.setPenWidth(20);
 	    	if (Application.getApp().getProperty("left_digital_info")) {
 				dc.drawArc(RD.centerX, RD.centerY, barRadius, Graphics.ARC_CLOCKWISE, 180 - 10, 120 + 10);
@@ -116,7 +120,7 @@ class MainDialHand extends Ui.Drawable {
 	    	dc.setPenWidth(1);
 
 	    	// draw secondary info
-	    	dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
+	    	dc.setColor(RD.themeDataProvider.gmain_color, Graphics.COLOR_TRANSPARENT);
 	    	var h2 = dc.getFontHeight(midDigitalFont);
 	    	dc.drawText(target_info_x + bonus_alignment, RD.centerY * 0.7 - h2 / 4 + 5 + vertical_alignment,
                     midDigitalFont, smallnumber.format(Constants.ZeroLeadingFormat), alignment);
@@ -127,14 +131,15 @@ class MainDialHand extends Ui.Drawable {
 
 			// draw date str
 			var dateText = RD.formattedDateDataProvider.getFormattedDate();
-			dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
-			var h3 = dc.getFontHeight(smallDigitalFont);
-			dc.drawText(target_info_x-bonus_alignment+extra_info_alignment, RD.centerY * 0.4 - h3 / 4 + 7, smallDigitalFont, dateText, alignment);
+			dc.setColor(RD.themeDataProvider.gmain_color, Graphics.COLOR_TRANSPARENT);
+			var h3 = dc.getFontHeight(RD.themeDataProvider.smallDigitalFont);
+			dc.drawText(target_info_x-bonus_alignment+extra_info_alignment, RD.centerY * 0.4 - h3 / 4 + 7,
+                RD.themeDataProvider.smallDigitalFont, dateText, alignment);
 
 			// horizontal line
-			var w3 = dc.getTextWidthInPixels(dateText, smallDigitalFont);
+			var w3 = dc.getTextWidthInPixels(dateText, RD.themeDataProvider.smallDigitalFont);
 			dc.setPenWidth(2);
-			dc.setColor(gsecondary_color, Graphics.COLOR_TRANSPARENT);
+			dc.setColor(RD.themeDataProvider.gsecondary_color, Graphics.COLOR_TRANSPARENT);
 			dc.drawLine(target_info_x - bonus_alignment - w3 / 2 + extra_info_alignment, RD.centerY * 0.5 + 7,
                     target_info_x-bonus_alignment + w3 / 2 + extra_info_alignment, RD.centerY * 0.5 + 7);
 
@@ -152,14 +157,14 @@ class MainDialHand extends Ui.Drawable {
 			var half = (hourW+minuW + 6.0)/2.0;
 			var left = RD.centerX - half;
 
-			dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
+			dc.setColor(RD.themeDataProvider.gmain_color, Graphics.COLOR_TRANSPARENT);
 			dc.drawText(left.toNumber(), RD.centerY - 70 + bonus + bonusy_smallsize, boldF, hourText, Graphics.TEXT_JUSTIFY_LEFT);
 			dc.drawText((left + hourW + 6.0).toNumber(), RD.centerY - 70 + bonus+bonusy_smallsize, normF, minuText, Graphics.TEXT_JUSTIFY_LEFT);
 
 			var f_align = 40;
-	    	second_x = RD.centerX + half + 1;
+	    	RD.themeDataProvider.second_x = RD.centerX + half + 1;
 
-	    	second_y = RD.centerY - second_font_height_half/2 - (alwayon_style == 0 ? 3 : 6);
+	    	RD.themeDataProvider.second_y = RD.centerY - RD.themeDataProvider.second_font_height_half/2 - (alwayon_style == 0 ? 3 : 6);
 		}
 
 		removeFont();

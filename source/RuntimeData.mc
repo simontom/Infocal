@@ -14,6 +14,6 @@ module RuntimeData {
     var forceRenderComponent = false;
 
     var formattedDateDataProvider = null;
-
     var batteryDataProvider = null;
+    var themeDataProvider = null;
 }

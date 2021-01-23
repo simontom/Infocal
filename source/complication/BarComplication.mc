@@ -95,7 +95,9 @@ module Complications {
                 weatherFont = null;
             }
 
-            var primaryColor = (position == SE.COMPLICATION_BAR_POSITION_BOTTOM) ? gbar_color_1 : gbar_color_0;
+            var primaryColor = (position == SE.COMPLICATION_BAR_POSITION_BOTTOM)
+                    ? RD.themeDataProvider.gbar_color_1
+                    : RD.themeDataProvider.gbar_color_0;
 
             var bonus_padding = 0;
 
@@ -128,19 +130,19 @@ module Complications {
                     if (j == i) {
                         dc.setColor(primaryColor, Graphics.COLOR_TRANSPARENT);
                     } else {
-                        dc.setColor(gbar_color_back, Graphics.COLOR_TRANSPARENT);
+                        dc.setColor(RD.themeDataProvider.gbar_color_back, Graphics.COLOR_TRANSPARENT);
                     }
                     drawTiles(fontInfo[j], font, dc);
                 }
 
                 if (i >= 0) {
-                    dc.setColor(gbar_color_indi, Graphics.COLOR_TRANSPARENT);
+                    dc.setColor(RD.themeDataProvider.gbar_color_indi, Graphics.COLOR_TRANSPARENT);
                     drawTiles(arrInfo[i], arrFont, dc);
                 }
             } else if (field_type == SE.FIELD_TYPE_WEATHER) {
                 var icon = get_weather_icon();
                 if (icon != null) {
-                    dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
+                    dc.setColor(RD.themeDataProvider.gmain_color, Graphics.COLOR_TRANSPARENT);
                     dc.drawText(RD.centerX, position_y_draw + position_y_draw_bonus, weatherFont, icon,
                             Graphics.TEXT_JUSTIFY_CENTER|Graphics.TEXT_JUSTIFY_VCENTER);
                 }
@@ -155,8 +157,8 @@ module Complications {
             }
 
             title = title.toUpper();
-            dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(RD.centerX, position_y_draw+bonus_padding, smallDigitalFont, title, Graphics.TEXT_JUSTIFY_CENTER);
+            dc.setColor(RD.themeDataProvider.gmain_color, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(RD.centerX, position_y_draw+bonus_padding, RD.themeDataProvider.smallDigitalFont, title, Graphics.TEXT_JUSTIFY_CENTER);
 
             font = null;
             fontInfo = null;

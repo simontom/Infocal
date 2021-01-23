@@ -10,29 +10,6 @@ using Toybox.UserProfile;
 using DataField as DF;
 using SettingsEnums as SE;
 
-// TODO: Move to proper modules / classes
-var smallDigitalFont = null;
-var second_digi_font = null;
-var second_x = 160;
-var second_y = 140;
-var heart_x = 80;
-
-var second_font_height_half = 7;
-var second_background_color = 0x000000;
-var second_font_color = 0xFFFFFF;
-var second_clip_size = null;
-
-// Theming
-var last_theme_code = -1;
-var gbackground_color = 0x000000;
-var gmain_color = 0xFFFFFF;
-var gsecondary_color = 0xFF0000;
-var garc_color = 0x555555;
-var gbar_color_indi = 0xAAAAAA;
-var gbar_color_back = 0x550000;
-var gbar_color_0 = 0xFFFF00;
-var gbar_color_1 = 0x0000FF;
-
 class ErrorsAndTrialsView extends WatchUi.WatchFace {
 
 	var last_draw_minute = -1;
@@ -52,10 +29,8 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
 
     // Load your resources here
     function onLayout(dc) {
-    	smallDigitalFont = WatchUi.loadResource(Rez.Fonts.smadigi);
     	RD.centerX = dc.getWidth() / 2;
     	RD.centerY = dc.getHeight() / 2;
-
     	face_radius = RD.centerX - (18 * RD.centerX / 120).toNumber();
 
         setLayout(Rez.Layouts.WatchFace(dc));
@@ -65,13 +40,11 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
     // the state of this View and prepare it to be shown. This includes
     // loading resources into memory.
     function onShow() {
-    	 var clockTime = System.getClockTime();
+        last_draw_minute = -1;
+        restore_from_resume = true;
+        last_resume_mili = System.getTimer();
 
-    	last_draw_minute = -1;
-    	restore_from_resume = true;
-    	last_resume_mili = System.getTimer();
-
-		checkBackgroundRequest();
+        App.getApp().checkPendingWebRequests();
     }
 
     // Update the view
@@ -82,18 +55,7 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
 
     	RD.batteryDataProvider.calculateBatteryConsumption(time_now);
 
-        var always_on_style = Application.getApp().getProperty("always_on_style");
-        if (always_on_style == SE.ALWAYS_ON_STYLE_SMALL) {
-            second_digi_font = WatchUi.loadResource(Rez.Fonts.secodigi);
-            second_font_height_half = 7;
-            second_clip_size = [20, 15];
-        } else {
-            second_digi_font = WatchUi.loadResource(Rez.Fonts.xsecodigi);
-            second_font_height_half = 14;
-            second_clip_size = [26, 22];
-        }
-
-    	// RD.forceRenderComponent = true;
+        // RD.forceRenderComponent = true;
 		// normal power mode
 		if (restore_from_resume) {
 			var current_mili = current_tick;
@@ -111,7 +73,7 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
 		if (clockTime.min != last_draw_minute) {
             RD.forceRenderComponent = true;
 			// Only check background web request every 1 minute
-			checkBackgroundRequest();
+			App.getApp().checkPendingWebRequests();
 		}
 
 		mainDrawComponents(dc);
@@ -122,13 +84,11 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
     }
 
 	function mainDrawComponents(dc) {
-		checkTheme();
-
         if (RD.forceRenderComponent) {
-            // dc.setColor(Graphics.COLOR_TRANSPARENT, gbackground_color);
+            // dc.setColor(Graphics.COLOR_TRANSPARENT, RD.themeDataProvider.gbackground_color);
             // dc.clear();
 
-            dc.setColor(gbackground_color, Graphics.COLOR_TRANSPARENT);
+            dc.setColor(RD.themeDataProvider.gbackground_color, Graphics.COLOR_TRANSPARENT);
             dc.fillRectangle(0, 0, RD.centerX * 2, RD.centerY * 2);
         }
 
@@ -145,8 +105,8 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
 		bar5.draw(dc);
 		bar6.draw(dc);
 
-        // dc.setColor(gbackground_color, Graphics.COLOR_TRANSPARENT);
-        // dc.setColor(gmain_color, gsecondary_color); // pokus
+        // dc.setColor(RD.themeDataProvider.gbackground_color, Graphics.COLOR_TRANSPARENT);
+        // dc.setColor(RD.themeDataProvider.gmain_color, RD.themeDataProvider.gsecondary_color); // pokus
         // dc.fillCircle(RD.centerX, RD.centerY, face_radius);
 
         var backgroundView = View.findDrawableById("background");
@@ -175,18 +135,19 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
 		if (Application.getApp().getProperty("always_on_second")) {
 			var clockTime = System.getClockTime();
 			var second_text = clockTime.sec.format(Constants.ZeroLeadingFormat);
-			var ss = dc.getTextDimensions(second_text, second_digi_font);
+			var ss = dc.getTextDimensions(second_text, RD.themeDataProvider.second_digi_font);
 
-			dc.setClip(second_x, second_y, second_clip_size[0], second_clip_size[1]);
-			dc.setColor(Graphics.COLOR_TRANSPARENT, gbackground_color);
+			dc.setClip(RD.themeDataProvider.second_x, RD.themeDataProvider.second_y,
+                       RD.themeDataProvider.second_clip_size[0], RD.themeDataProvider.second_clip_size[1]);
+			dc.setColor(Graphics.COLOR_TRANSPARENT, RD.themeDataProvider.gbackground_color);
 			dc.clear();
-			dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
-			dc.drawText(second_x, second_y-font_padding,
-						second_digi_font,
+
+			dc.setColor(RD.themeDataProvider.gmain_color, Graphics.COLOR_TRANSPARENT);
+			dc.drawText(RD.themeDataProvider.second_x,
+                        RD.themeDataProvider.second_y - font_padding,
+						RD.themeDataProvider.second_digi_font,
 						second_text,
 						Graphics.TEXT_JUSTIFY_LEFT);
-			dc.clearClip();
-		}
 
 			dc.clearClip();
 		}
@@ -195,30 +156,6 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
     // The user has just looked at their watch. Timers and animations may be started here
     // If in low energy mode, onUpdate gets called once per second I think
     function onExitSleep() {
-    	checkBackgroundRequest();
+    	App.getApp().checkPendingWebRequests();
     }
-
-	function checkTheme() {
-		var theme_code = Application.getApp().getProperty("theme_code");
-
-		if (last_theme_code == -1 || last_theme_code != theme_code) {
-			var theme_pallete = WatchUi.loadResource(Rez.JsonData.theme_pallete);
-			var theme = theme_pallete["" + theme_code];
-			gbackground_color = theme[0];
-			gmain_color = theme[1];
-			gsecondary_color = theme[2];
-			garc_color = theme[3];
-			gbar_color_indi = theme[4];
-			gbar_color_back = theme[5];
-			gbar_color_0 = theme[6];
-			gbar_color_1 = theme[7];
-		}
-	}
-
-	function checkBackgroundRequest() {
-		if (ErrorsAndTrialsApp has :checkPendingWebRequests) { // checkPendingWebRequests() can be excluded to save memory.
-			App.getApp().checkPendingWebRequests(); // Depends on mDataFields.hasField().
-		}
-	}
-
 }

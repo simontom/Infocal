@@ -35,7 +35,7 @@ class MoonPhaseDrawable extends Ui.Drawable {
 
         // Clear and draw dark backfround of the Moon
         dc.setClip(clipX, clipY, clipSize, clipSize);
-        dc.setColor(Graphics.COLOR_DK_GRAY, gbackground_color);
+        dc.setColor(Graphics.COLOR_DK_GRAY, RD.themeDataProvider.gbackground_color);
         dc.clear();
         dc.fillCircle(centerX, centerY, radius);
 

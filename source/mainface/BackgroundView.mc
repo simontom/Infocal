@@ -23,7 +23,7 @@ class BackgroundView extends Ui.Drawable {
 
     private function drawMarks(dc) {
         dc.setPenWidth(4);
-        dc.setColor(gsecondary_color, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(RD.themeDataProvider.gsecondary_color, Graphics.COLOR_TRANSPARENT);
 
         for(var i = 0; i < 6; i += 1) {
             var rad = (i.toFloat() / 6.0) * 2 * Math.PI;
@@ -53,7 +53,7 @@ class BackgroundView extends Ui.Drawable {
             }
 
             dc.setPenWidth(2);
-            dc.setColor(garc_color, Graphics.COLOR_TRANSPARENT);
+            dc.setColor(RD.themeDataProvider.garc_color, Graphics.COLOR_TRANSPARENT);
             for(var i = 0; i < 6; i += 1) {
                 if (i == excluded) {
                     continue;
@@ -70,7 +70,7 @@ class BackgroundView extends Ui.Drawable {
                 );
             }
         } else if (ticks_style == SE.TICKS_STYLE_MARKS) {
-            dc.setColor(garc_color, Graphics.COLOR_TRANSPARENT);
+            dc.setColor(RD.themeDataProvider.garc_color, Graphics.COLOR_TRANSPARENT);
             var bonus = 0;
             if (RD.centerX == 130) {
                 bonus = 2;

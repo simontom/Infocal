@@ -30,6 +30,7 @@ class ErrorsAndTrialsApp extends Application.AppBase {
     function getInitialView() {
         RD.formattedDateDataProvider = new DP.FormattedDateDataProvider();
         RD.batteryDataProvider = new DP.BatteryDataProvider();
+        RD.themeDataProvider = new DP.ThemeDataProvider();
 
         mView = new ErrorsAndTrialsView();
         return [mView];
@@ -41,6 +42,7 @@ class ErrorsAndTrialsApp extends Application.AppBase {
 
     function onSettingsChanged() {
         RD.formattedDateDataProvider.reloadSettings();
+        RD.themeDataProvider.reloadSettings();
 
         checkPendingWebRequests();
 

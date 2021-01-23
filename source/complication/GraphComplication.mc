@@ -60,15 +60,18 @@ module Complications {
             }
 
             try {
-                var primaryColor = (position == SE.COMPLICATION_GRAPH_POSITION_BOTTOM) ? gbar_color_1 : gbar_color_0;
+                var primaryColor = (position == SE.COMPLICATION_GRAPH_POSITION_BOTTOM)
+                    ? RD.themeDataProvider.gbar_color_1
+                    : RD.themeDataProvider.gbar_color_0;
 
                 //Calculation
                 var targetdatatype = get_data_type();
                 var HistoryIter = get_data_interator(targetdatatype);
 
                 if (HistoryIter == null) {
-                    dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
-                    dc.drawText(position_x, position_y, smallDigitalFont, "--", Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+                    dc.setColor(RD.themeDataProvider.gmain_color, Graphics.COLOR_TRANSPARENT);
+                    dc.drawText(position_x, position_y, RD.themeDataProvider.smallDigitalFont,
+                        "--", Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
                     return;
                 }
 
@@ -76,8 +79,9 @@ module Complications {
                 var HistoryMax = HistoryIter.getMax();
 
                 if (HistoryMin == null || HistoryMax == null) {
-                    dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
-                    dc.drawText(position_x, position_y, smallDigitalFont, "--", Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+                    dc.setColor(RD.themeDataProvider.gmain_color, Graphics.COLOR_TRANSPARENT);
+                    dc.drawText(position_x, position_y, RD.themeDataProvider.smallDigitalFont,
+                        "--", Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
                     return;
                 }
 
@@ -142,13 +146,13 @@ module Complications {
                     xStep--;
                 }
 
-                dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
+                dc.setColor(RD.themeDataProvider.gmain_color, Graphics.COLOR_TRANSPARENT);
 
                 if (HistoryPresent == null) {
                     dc.drawText(
                             position_x,
                             position_y + (position == SE.COMPLICATION_GRAPH_POSITION_BOTTOM ? (graph_height / 2 + 10) : (-graph_height / 2 - 16)),
-                            smallDigitalFont,
+                            RD.themeDataProvider.smallDigitalFont,
                             "--",
                             Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
                     return;
@@ -159,14 +163,15 @@ module Complications {
                 dc.drawText(
                         position_x,
                         position_y + (position == SE.COMPLICATION_GRAPH_POSITION_BOTTOM ? (graph_height / 2 + 10) : (-graph_height / 2 - 16)),
-                        smallDigitalFont,
+                        RD.themeDataProvider.smallDigitalFont,
                         labelll,
                         Graphics.TEXT_JUSTIFY_CENTER|Graphics.TEXT_JUSTIFY_VCENTER);
             } catch(ex) {
                 // currently unkown, weird bug
                 System.println(ex);
-                dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(position_x, position_y, smallDigitalFont, "--", Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+                dc.setColor(RD.themeDataProvider.gmain_color, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(position_x, position_y, RD.themeDataProvider.smallDigitalFont,
+                    "--", Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
             }
         }
 
