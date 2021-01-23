@@ -39,16 +39,13 @@ class ErrorsAndTrialsApp extends Application.AppBase {
         return mView;
     }
 
-    // Triggered by settings change in GCM
     function onSettingsChanged() {
         RD.formattedDateDataProvider.reloadSettings();
 
-        if (ErrorsAndTrialsApp has :checkPendingWebRequests) { // Cuz checkPendingWebRequests() can be excluded to save memory
-            checkPendingWebRequests();
-        }
+        checkPendingWebRequests();
 
         mView.last_draw_minute = -1;
-        WatchUi.requestUpdate();   // update the view to reflect changes
+        WatchUi.requestUpdate();   // Update the view to reflect changes
     }
 
     (:background_method)
@@ -102,7 +99,8 @@ class ErrorsAndTrialsApp extends Application.AppBase {
                 if (
                     // Existing data is older than 30 mins.
                     // TODO: Consider requesting weather at sunrise/sunset to update weather icon.
-                    (Time.now().value() > (owmCurrent["dt"] + /*900*/90)) ||
+                    (Time.now().value() > (owmCurrent["dt"] + 1800)) ||
+
                     // Existing data not for this location.
                     // Not a great test, as a degree of longitude varies betwee 69 (equator) and 0 (pole) miles, but simpler than
                     // true distance calculation. 0.02 degree of latitude is just over a mile.
