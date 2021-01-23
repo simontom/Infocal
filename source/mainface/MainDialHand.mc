@@ -74,7 +74,6 @@ class MainDialHand extends Ui.Drawable {
 	    	var f_align = digital_style == SE.DIGITAL_STYLE_BIG ? 62 : 71;
 
 	    	second_x = RD.centerX + w / 2 + 3;
-	    	heart_x = RD.centerX - w / 2 - 3;
 
 	    	if (RD.centerX == 109 && digital_style == SE.DIGITAL_STYLE_XBIG) {
 	    		second_y  = RD.centerY - second_font_height_half / 2 - (alwayon_style == SE.ALWAYS_ON_STYLE_SMALL ? 3 : 6);
@@ -159,7 +158,6 @@ class MainDialHand extends Ui.Drawable {
 
 			var f_align = 40;
 	    	second_x = RD.centerX + half + 1;
-	    	heart_x = RD.centerX - half - 1;
 
 	    	second_y = RD.centerY - second_font_height_half/2 - (alwayon_style == 0 ? 3 : 6);
 		}

@@ -17,9 +17,6 @@
     <setting propertyKey="@Properties.always_on_second" title="@Strings.always_on_second">
         <settingConfig type="boolean" />
     </setting>
-    <setting propertyKey="@Properties.always_on_heart" title="@Strings.always_on_heart">
-        <settingConfig type="boolean" />
-    </setting>
 
     <setting propertyKey="@Properties.digital_style" title="@Strings.digital_style">
         <settingConfig type="list">

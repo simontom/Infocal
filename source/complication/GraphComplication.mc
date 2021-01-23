@@ -60,7 +60,7 @@ module Complications {
             }
 
             try {
-                var primaryColor = position == SE.COMPLICATION_GRAPH_POSITION_BOTTOM ? gbar_color_1 : gbar_color_0;
+                var primaryColor = (position == SE.COMPLICATION_GRAPH_POSITION_BOTTOM) ? gbar_color_1 : gbar_color_0;
 
                 //Calculation
                 var targetdatatype = get_data_type();

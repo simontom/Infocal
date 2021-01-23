@@ -17,7 +17,6 @@
     <string scope="foreground" id="compgraphb">Bottom graph complication</string>
 
     <string scope="foreground" id="always_on_second">Always-on second (for digital)</string>
-    <string scope="foreground" id="always_on_heart">Always-on heart rate (for digital)</string>
 
     <string scope="foreground" id="minimal_data">Full number instead of reduced (K)</string>
     <string scope="foreground" id="big_num_stripes">Render stripes on big number</string>

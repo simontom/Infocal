@@ -42,24 +42,24 @@ module DataField {
         function bar_data() {
             return true;
         }
-    }
 
-    function retrieveHeartRate() {
-        var currentHeartrate = 0.0;
-        var activityInfo = Activity.getActivityInfo();
-        var sample = activityInfo.currentHeartRate;
+        private function retrieveHeartRate() {
+            var currentHeartrate = 0.0;
+            var activityInfo = Activity.getActivityInfo();
+            var sample = activityInfo.currentHeartRate;
 
-        if (sample != null) {
-            currentHeartrate = sample;
-        } else {
-            sample = ActivityMonitor.getHeartRateHistory(1, /* newestFirst */ true)
-                .next();
-            if ((sample != null) && (sample.heartRate != ActivityMonitor.INVALID_HR_SAMPLE)) {
-                currentHeartrate = sample.heartRate;
+            if (sample != null) {
+                currentHeartrate = sample;
+            } else {
+                sample = ActivityMonitor.getHeartRateHistory(1, /* newestFirst */ true)
+                    .next();
+                if ((sample != null) && (sample.heartRate != ActivityMonitor.INVALID_HR_SAMPLE)) {
+                    currentHeartrate = sample.heartRate;
+                }
             }
-        }
 
-        return currentHeartrate.toFloat();
+            return currentHeartrate.toFloat();
+        }
     }
 
     //////////////////

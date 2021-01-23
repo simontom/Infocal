@@ -95,7 +95,7 @@ module Complications {
                 weatherFont = null;
             }
 
-            var primaryColor = position == SE.COMPLICATION_BAR_POSITION_BOTTOM ? gbar_color_1 : gbar_color_0;
+            var primaryColor = (position == SE.COMPLICATION_BAR_POSITION_BOTTOM) ? gbar_color_1 : gbar_color_0;
 
             var bonus_padding = 0;
 

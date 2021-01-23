@@ -188,24 +188,6 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
 			dc.clearClip();
 		}
 
-		if (Application.getApp().getProperty("always_on_heart")) {
-			var h = DF.retrieveHeartRate();
-			var heart_text = "--";
-			if (h != null) {
-				heart_text = h.format("%d");
-			}
-			var ss = dc.getTextDimensions(heart_text, second_digi_font);
-			var s = (ss[0] * 1.2).toNumber();
-			var s2 = (second_clip_size[0] * 1.25).toNumber();
-			dc.setClip(heart_x-s2-1, second_y, s2+2, second_clip_size[1]);
-			dc.setColor(Graphics.COLOR_TRANSPARENT, gbackground_color);
-			dc.clear();
-
-			dc.setColor(gmain_color, Graphics.COLOR_TRANSPARENT);
-			dc.drawText(heart_x-1, second_y-font_padding,
-						second_digi_font,
-						heart_text,
-						Graphics.TEXT_JUSTIFY_RIGHT);
 			dc.clearClip();
 		}
 	}
