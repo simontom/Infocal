@@ -13,7 +13,14 @@ module DataProvider {
         }
 
         function getWeather() {
-            return App.getApp().getProperty("OpenWeatherMapCurrent");
+            var weather = App.getApp().getProperty("OpenWeatherMapCurrent");
+
+            // Existing data is older than 120 mins = 120 * 60sec = 7'200sec
+            if ((weather != null) && (T.now().value() < (weather["dt"] + 7200))) {
+                return weather;
+            }
+
+            return null;
         }
 
         function setWeather(weather) {
@@ -81,22 +88,22 @@ module DataProvider {
         }
 
         private function shouldUpdateOwm() {
-            var owmCurrent = getWeather();
+            var weather = getWeather();
 
-            if (owmCurrent == null) {
+            if (weather == null) {
                 return true;
             }
 
             // Existing data is older than 30 mins = 30 * 60sec
-            if (T.now().value() > (owmCurrent["dt"] + 1800)) {
+            if (T.now().value() > (weather["dt"] + 1800)) {
                 return true;
             }
 
             // Existing data not for current location
             // Not a great test, as a degree of longitude varies between 69 (equator) and 0 (pole) miles, but simpler than
             // true distance calculation; 0.02 degree of latitude is just over a mile
-            if (((RD.gLocationLat - owmCurrent["lat"]).abs() > 0.02) ||
-                ((RD.gLocationLng - owmCurrent["lon"]).abs() > 0.02)) {
+            if (((RD.gLocationLat - weather["lat"]).abs() > 0.02) ||
+                ((RD.gLocationLng - weather["lon"]).abs() > 0.02)) {
 
                 return true;
             }
