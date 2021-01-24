@@ -29,7 +29,7 @@ module DataProvider {
         }
 
         function calculateBatteryConsumption(timeNow) {
-            if (timeNow.compare(lastBatteryCalculation) >= 60 * 60) { // 60 min
+            if (timeNow.compare(lastBatteryCalculation) >= 3600) { // 60 min
                 lastBatteryCalculation = timeNow;
                 var current_battery = Sys.getSystemStats().battery;
                 lastHourConsumption = lastBatteryPercent - current_battery;
