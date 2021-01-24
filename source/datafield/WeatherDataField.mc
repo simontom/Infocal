@@ -36,28 +36,28 @@ module DataField {
         function cur_icon() {
             var weather_data = RD.weatherDataProvider.getWeather();
 
-            if (weather_data != null) {
-                return weather_icon_mapper[weather_data["icon"]];
+            if (weather_data == null) {
+                return null;
             }
 
-            return null;
+            return weather_icon_mapper[weather_data["icon"]];
         }
 
         function cur_label(value) {
             // WEATHER
             var weather_data = RD.weatherDataProvider.getWeather();
 
-            if (weather_data != null) {
-                var temp = weather_data["temp"];
-                value = temp.format("%d") + "°C";
-
-                var description = weather_data.get("des");
-                if (description != null) {
-                    return description + " " +  value;
-                }
+            if (weather_data == null) {
+                return "--";
             }
 
-            return "--";
+            var temp = weather_data["temp"];
+            value = temp.format("%d") + "°C";
+
+            var description = weather_data.get("des");
+            if (description != null) {
+                return description + " " +  value;
+            }
         }
     }
 
