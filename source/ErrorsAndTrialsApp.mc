@@ -2,7 +2,7 @@ using Toybox.Application;
 using Toybox.Activity as Activity;
 using Toybox.Background as BG;
 using Toybox.WatchUi as Ui;
-using Toybox.Time;
+using Toybox.Time as T;
 using DataProvider as DP;
 using RuntimeData as RD;
 
@@ -44,35 +44,65 @@ class ErrorsAndTrialsApp extends Application.AppBase {
         RD.formattedDateDataProvider.reloadSettings();
         RD.themeDataProvider.reloadSettings();
 
-        checkPendingWebRequests();
+        requestWeatherUpdate();
 
         mView.last_draw_minute = -1;
-        WatchUi.requestUpdate();   // Update the view to reflect changes
+        Ui.requestUpdate();   // Update the view to reflect changes
     }
 
-    (:background_method)
     function getServiceDelegate() {
         return [new BackgroundService()];
     }
 
-    // Determine if any web requests are needed.
-    // If so, set approrpiate pendingWebRequests flag for use by BackgroundService, then register for temporal event.
-    // Currently called on layout initialisation / when settings change / and on exiting sleep.
-    (:background_method)
-    function checkPendingWebRequests() {
-        // Attempt to update current location, to be used by Sunrise/Sunset, and Weather.
-        // If current location available from current activity, save it in case it goes "stale" and can not longer be retrieved.
+    // Handle data received from BackgroundService
+    function onBackgroundData(data) {
+        if (data.hasKey("httpError")) {
+            return;
+        }
+
+        setProperty("OpenWeatherMapCurrent", data);
+
+        Ui.requestUpdate();
+    }
+
+    // Determine if any web requests are needed
+    // Currently called on layout initialisation / when settings change / and on exiting sleep
+    function requestWeatherUpdate() {
+        tryUpdateLocation();
+
+        if (!canUpdateOwm()) {
+            return;
+        }
+
+        if (shouldUpdateOwm()) {
+            // Register for background temporal event as soon as possible
+            var lastTime = Bg.getLastTemporalEventTime();
+
+            // Events scheduled for a time in the past trigger immediately
+            if (lastTime != null) {
+                var nextTime = lastTime.add(new T.Duration(5 * 60));
+                Bg.registerForTemporalEvent(nextTime);
+            } else {
+                Bg.registerForTemporalEvent(T.now());
+            }
+        }
+    }
+
+    private function tryUpdateLocation() {
+        // Attempt to update current location
+        // If current location available from current activity, save it in case it goes "stale" and can not longer be retrieved
         var location = Activity.getActivityInfo().currentLocation;
         if (location != null) {
             location = location.toDegrees(); // Array of Doubles
+
             RD.gLocationLat = location[0].toFloat();
             RD.gLocationLng = location[1].toFloat();
 
-            Application.getApp().setProperty("LastLocationLat", RD.gLocationLat);
-            Application.getApp().setProperty("LastLocationLng", RD.gLocationLng);
+            setProperty("LastLocationLat", RD.gLocationLat);
+            setProperty("LastLocationLng", RD.gLocationLng);
         // If current location is not available, read stored value from Object Store, being careful not to overwrite a valid
         // in-memory value with an invalid stored one.
-        } else {
+        } else if (RD.gLocationLat == null) {
             var lat = Application.getApp().getProperty("LastLocationLat");
 
             if (lat != null) {
@@ -82,82 +112,37 @@ class ErrorsAndTrialsApp extends Application.AppBase {
                 RD.gLocationLng = lng;
             }
         }
-
-        var pendingWebRequests = getProperty("PendingWebRequests");
-        if (pendingWebRequests == null) {
-            pendingWebRequests = {};
-        }
-
-        // 2. Weather:
-        // Location must be available, weather or humidity (#113) data field must be shown
-        if (RD.gLocationLat != null) {
-            var owmCurrent = getProperty("OpenWeatherMapCurrent");
-
-            // No existing data.
-            if (owmCurrent == null) {
-                pendingWebRequests["OpenWeatherMapCurrent"] = true;
-            // Successfully received weather data.
-            } else if (owmCurrent["cod"] == 200) {
-                if (
-                    // Existing data is older than 30 mins.
-                    // TODO: Consider requesting weather at sunrise/sunset to update weather icon.
-                    (Time.now().value() > (owmCurrent["dt"] + 1800)) ||
-
-                    // Existing data not for this location.
-                    // Not a great test, as a degree of longitude varies betwee 69 (equator) and 0 (pole) miles, but simpler than
-                    // true distance calculation. 0.02 degree of latitude is just over a mile.
-                    (((RD.gLocationLat - owmCurrent["lat"]).abs() > 0.02) ||
-                    ((RD.gLocationLng - owmCurrent["lon"]).abs() > 0.02))) {
-
-                    pendingWebRequests["OpenWeatherMapCurrent"] = true;
-                }
-            }
-        }
-
-        // If there are any pending requests:
-        if (pendingWebRequests.keys().size() > 0) {
-            // Register for background temporal event as soon as possible.
-            var lastTime = BG.getLastTemporalEventTime();
-
-            // Events scheduled for a time in the past trigger immediately.
-            if (lastTime) {
-                var nextTime = lastTime.add(new Time.Duration(20 * 60));
-                BG.registerForTemporalEvent(nextTime);
-            } else {
-                BG.registerForTemporalEvent(Time.now());
-            }
-        }
-
-        setProperty("PendingWebRequests", pendingWebRequests);
     }
 
-    // Handle data received from BackgroundService.
-    // On success, clear appropriate pendingWebRequests flag.
-    // data is Dictionary with single key that indicates the data type received. This corresponds with Object Store and
-    // pendingWebRequests keys.
-    (:background_method)
-    function onBackgroundData(data) {
-        var pendingWebRequests = getProperty("PendingWebRequests");
-        if (pendingWebRequests == null) {
-            pendingWebRequests = {};
+    private function canUpdateOwm() {
+        if ((RD.gLocationLat == null) || (getProperty("openweathermap_api").length() == 0) || (Bg.getTemporalEventRegisteredTime() != null)) {
+            return false;
         }
 
-        var type = data.keys()[0]; // Type of received data.
-        var storedData = getProperty(type);
-        var receivedData = data[type]; // The actual data received: strip away type key.
+        return true;
+    }
 
-        // No value in showing any HTTP error to the user, so no need to modify stored data.
-        // Leave pendingWebRequests flag set, and simply return early.
-        if (receivedData["httpError"]) {
-            return;
+    private function shouldUpdateOwm() {
+        var owmCurrent = getProperty("OpenWeatherMapCurrent");
+
+        if (owmCurrent == null) {
+            return true;
         }
 
-        // New data received: clear pendingWebRequests flag and overwrite stored data.
-        storedData = receivedData;
-        pendingWebRequests.remove(type);
-        setProperty("PendingWebRequests", pendingWebRequests);
-        setProperty(type, storedData);
+        // Existing data is older than 30 mins = 30 * 60sec
+        if (T.now().value() > (owmCurrent["dt"] + 1800)) {
+            return true;
+        }
 
-        Ui.requestUpdate();
+        // Existing data not for current location
+        // Not a great test, as a degree of longitude varies between 69 (equator) and 0 (pole) miles, but simpler than
+        // true distance calculation; 0.02 degree of latitude is just over a mile
+        if (((RD.gLocationLat - owmCurrent["lat"]).abs() > 0.02) ||
+            ((RD.gLocationLng - owmCurrent["lon"]).abs() > 0.02)) {
+
+            return true;
+        }
+
+        return false;
     }
 }
