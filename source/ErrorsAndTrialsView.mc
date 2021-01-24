@@ -44,7 +44,7 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
         restore_from_resume = true;
         last_resume_mili = System.getTimer();
 
-        App.getApp().requestWeatherUpdate();
+        RD.weatherDataProvider.requestWeatherUpdate();
     }
 
     // Update the view
@@ -73,7 +73,7 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
 		if (clockTime.min != last_draw_minute) {
             RD.forceRenderComponent = true;
 			// Only check background web request every 1 minute
-			App.getApp().requestWeatherUpdate();
+			RD.weatherDataProvider.requestWeatherUpdate();
 		}
 
 		mainDrawComponents(dc);
@@ -154,8 +154,8 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
 	}
 
     // The user has just looked at their watch. Timers and animations may be started here
-    // If in low energy mode, onUpdate gets called once per second I think
+    // If in low energy mode, onUpdate gets called once per second..I think
     function onExitSleep() {
-    	App.getApp().requestWeatherUpdate();
+    	RD.weatherDataProvider.requestWeatherUpdate();
     }
 }

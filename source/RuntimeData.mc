@@ -16,4 +16,5 @@ module RuntimeData {
     var formattedDateDataProvider = null;
     var batteryDataProvider = null;
     var themeDataProvider = null;
+    var weatherDataProvider = null;
 }

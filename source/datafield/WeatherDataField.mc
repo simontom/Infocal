@@ -1,4 +1,5 @@
 using Toybox.Application as App;
+using RuntimeData as RD;
 
 module DataField {
 
@@ -33,7 +34,7 @@ module DataField {
         }
 
         function cur_icon() {
-            var weather_data = App.getApp().getProperty("OpenWeatherMapCurrent");
+            var weather_data = RD.weatherDataProvider.getWeather();
 
             if (weather_data != null) {
                 return weather_icon_mapper[weather_data["icon"]];
@@ -44,7 +45,7 @@ module DataField {
 
         function cur_label(value) {
             // WEATHER
-            var weather_data = App.getApp().getProperty("OpenWeatherMapCurrent");
+            var weather_data = RD.weatherDataProvider.getWeather();
 
             if (weather_data != null) {
                 var temp = weather_data["temp"];

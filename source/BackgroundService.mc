@@ -13,6 +13,7 @@ class BackgroundService extends Sys.ServiceDelegate {
     function onTemporalEvent() {
         var owmApiKey = App.getApp().getProperty("openweathermap_api");
 
+        // In case of ApiKey gets deleted if TemporalEvent already been registered
         if (owmApiKey.length() == 0) {
             onReceiveWeather(401, null);
             return;

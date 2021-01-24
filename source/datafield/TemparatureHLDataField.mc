@@ -1,5 +1,6 @@
 using Toybox.Application as App;
 using Toybox.Lang;
+using RuntimeData as RD;
 
 module DataField {
 
@@ -12,7 +13,7 @@ module DataField {
         function cur_label(value) {
             // WEATHER
             var need_minimal = App.getApp().getProperty("minimal_data");
-            var weather_data = App.getApp().getProperty("OpenWeatherMapCurrent");
+            var weather_data = RD.weatherDataProvider.getWeather();
 
             if (weather_data == null) {
                 if (need_minimal) {

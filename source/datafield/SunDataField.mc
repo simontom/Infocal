@@ -201,7 +201,6 @@ module DataField {
             var amPm = "";
 
             if (!Sys.getDeviceSettings().is24Hour) {
-
                 // #6 Ensure noon is shown as PM.
                 var isPm = (hour >= 12);
                 if (isPm) {
