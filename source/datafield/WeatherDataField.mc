@@ -47,17 +47,17 @@ module DataField {
             // WEATHER
             var weather_data = RD.weatherDataProvider.getWeather();
 
-            if (weather_data == null) {
-                return "--";
+            if (weather_data != null) {
+                var temp = weather_data["temp"];
+                value = temp.format("%d") + "°C";
+
+                var description = weather_data.get("des");
+                if (description != null) {
+                    return description + " " +  value;
+                }
             }
 
-            var temp = weather_data["temp"];
-            value = temp.format("%d") + "°C";
-
-            var description = weather_data.get("des");
-            if (description != null) {
-                return description + " " +  value;
-            }
+            return "--";
         }
     }
 
