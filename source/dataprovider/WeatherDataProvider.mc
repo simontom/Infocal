@@ -38,6 +38,8 @@ module DataProvider {
 
             // if (!canRegisterForUpdates(now)) {
             if (!canRegister()) {
+                Bg.deleteTemporalEvent();
+                log("requestWeatherUpdate - cannot register");
                 return;
             }
 
@@ -102,8 +104,8 @@ module DataProvider {
                 return true;
             }
 
-            // Stored data is older than 75 mins = 75 * 60sec
-            if (now.value() > (weather["dt"] + 4500)) {
+            // Stored data is older than 120 mins = 120 * 60sec
+            if (now.value() > (weather["dt"] + 7200)) {
                 return true;
             }
 
@@ -120,24 +122,34 @@ module DataProvider {
         }
 
         private function requestUpdate(isImmediateUpdateNeeded, now) {
+            log("requestUpdate - isImmediateUpdateNeeded: " + isImmediateUpdateNeeded);
             if (isImmediateUpdateNeeded) {
-                Bg.deleteTemporalEvent();
-
                 // Register for background temporal event as soon as possible
                 var lastTimeEventFired = Bg.getLastTemporalEventTime();
+                log("requestUpdate - is set lastTimeEventFired: " + (lastTimeEventFired != null));
+
+                var registeredTime = Bg.getTemporalEventRegisteredTime();
+                log("requestUpdate - is set registeredTime: " + (registeredTime != null));
+
+                var isRegisteredTimeOfTypeDuration = (registeredTime != null) && (registeredTime has :divide);
+                log("requestUpdate - isRegisteredTimeOfTypeDuration: " + isRegisteredTimeOfTypeDuration);
 
                 // Events scheduled for a time in the past trigger immediately
-                if (lastTimeEventFired == null) {
-                    Bg.registerForTemporalEvent(now);
-                } else {
+                if ((lastTimeEventFired != null) && isRegisteredTimeOfTypeDuration) {
+                    log("requestUpdate - register nextTime");
+                    // Bg.deleteTemporalEvent();
                     var nextTime = lastTimeEventFired.add(new T.Duration(5 * 60));
                     Bg.registerForTemporalEvent(nextTime);
+                } else if (Bg.getTemporalEventRegisteredTime() == null) {
+                    log("requestUpdate - register now");
+                    Bg.registerForTemporalEvent(now);
                 }
 
                 return;
             }
 
             var isEventRegistered = Bg.getTemporalEventRegisteredTime() != null;
+            log("requestUpdate - isEventRegistered: " + isEventRegistered);
             if (!isEventRegistered) {
                 var period = new T.Duration(60 * 60);
                 Bg.registerForTemporalEvent(period);

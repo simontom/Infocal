@@ -12,7 +12,7 @@ using SettingsEnums as SE;
 
 // TODO: Do not forger to remoove
 function getWeatherUpdateDiffMinutes() {
-    var weather = RD.weatherDataProvider.getWeather();
+    var weather = App.getApp().getProperty("OpenWeatherMapCurrent");
 
     if (weather == null) {
         return "--min";
