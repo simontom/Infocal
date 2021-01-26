@@ -30,24 +30,22 @@ module DataProvider {
         // Determine if any web requests are needed
         // Currently called on layout initialisation / when settings change / and on exiting sleep
         function requestWeatherUpdate() {
+            $.showTemporalEventTime("WeatherDataProvider_1");
+
             tryUpdateLocation();
 
-            if (!canUpdateOwm()) {
+            var now = T.now();
+
+            // if (!canRegisterForUpdates(now)) {
+            if (!canRegister()) {
                 return;
             }
 
-            if (shouldUpdateOwm()) {
-                // Register for background temporal event as soon as possible
-                var lastTime = Bg.getLastTemporalEventTime();
+            var isImmediateUpdateNeeded = needImmediateUpdate(now);
 
-                // Events scheduled for a time in the past trigger immediately
-                if (lastTime != null) {
-                    var nextTime = lastTime.add(new T.Duration(5 * 60));
-                    Bg.registerForTemporalEvent(nextTime);
-                } else {
-                    Bg.registerForTemporalEvent(T.now());
-                }
-            }
+            requestUpdate(isImmediateUpdateNeeded, now);
+
+            $.showTemporalEventTime("WeatherDataProvider_2");
         }
 
         private function tryUpdateLocation() {
@@ -76,30 +74,40 @@ module DataProvider {
             }
         }
 
-        private function canUpdateOwm() {
-            if ((RD.gLocationLat == null) ||
-                (App.getApp().getProperty("openweathermap_api").length() == 0) ||
-                (Bg.getTemporalEventRegisteredTime() != null)) {
+        private function canRegister() {
+        // private function canRegister(now) {
+            return (RD.gLocationLat != null) &&
+                    (App.getApp().getProperty("openweathermap_api").length() > 0);
 
-                return false;
-            }
+            // if ((RD.gLocationLat == null) ||
+            //     (App.getApp().getProperty("openweathermap_api").length() == 0) // ||
+            //     // (Bg.getTemporalEventRegisteredTime() != null)
+            //     ) {
+
+            //     return false;
+            // }
+
+            // (Bg.getTemporalEventRegisteredTime() == Bg.getLastTemporalEventTime())
+            // var temporalEventRegisteredTime = Bg.getTemporalEventRegisteredTime();
+            // if ((temporalEventRegisteredTime != null) && now.compare(temporalEventRegisteredTime) >= 3600) {
+            // }
 
             return true;
         }
 
-        private function shouldUpdateOwm() {
+        private function needImmediateUpdate(now) {
             var weather = getWeather();
 
             if (weather == null) {
                 return true;
             }
 
-            // Existing data is older than 30 mins = 30 * 60sec
-            if (T.now().value() > (weather["dt"] + 1800)) {
+            // Stored data is older than 75 mins = 75 * 60sec
+            if (now.value() > (weather["dt"] + 4500)) {
                 return true;
             }
 
-            // Existing data not for current location
+            // Stored data not for current location
             // Not a great test, as a degree of longitude varies between 69 (equator) and 0 (pole) miles, but simpler than
             // true distance calculation; 0.02 degree of latitude is just over a mile
             if (((RD.gLocationLat - weather["lat"]).abs() > 0.02) ||
@@ -109,6 +117,31 @@ module DataProvider {
             }
 
             return false;
+        }
+
+        private function requestUpdate(isImmediateUpdateNeeded, now) {
+            if (isImmediateUpdateNeeded) {
+                Bg.deleteTemporalEvent();
+
+                // Register for background temporal event as soon as possible
+                var lastTimeEventFired = Bg.getLastTemporalEventTime();
+
+                // Events scheduled for a time in the past trigger immediately
+                if (lastTimeEventFired == null) {
+                    Bg.registerForTemporalEvent(now);
+                } else {
+                    var nextTime = lastTimeEventFired.add(new T.Duration(5 * 60));
+                    Bg.registerForTemporalEvent(nextTime);
+                }
+
+                return;
+            }
+
+            var isEventRegistered = Bg.getTemporalEventRegisteredTime() != null;
+            if (!isEventRegistered) {
+                var period = new T.Duration(60 * 60);
+                Bg.registerForTemporalEvent(period);
+            }
         }
 
     }

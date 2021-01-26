@@ -3,16 +3,38 @@ using Toybox.WatchUi as Ui;
 using DataProvider as DP;
 using RuntimeData as RD;
 
-// TODO: Add:
-//              - Moon Phase
+// TODO: Do not forger to remoove
+function formatMoment(moment) {
+    if (moment == null) {
+        return "null";
+    }
 
-// TODO: Remove:
-//              - Calories
-//              - BackgroundService
-//              - Distance?
+    // INFO: Check if moment is of type Duration
+    if (moment has :divide) {
+        var lastTime = Toybox.Background.getLastTemporalEventTime();
+        moment = lastTime.add(moment);
+    }
 
-// TODO: Rewrite:
-//              - Weather
+    var momentAsInfo = Toybox.Time.Gregorian.utcInfo(moment, Toybox.Time.FORMAT_SHORT);
+    return Toybox.Lang.format("h=$1$ m=$2$ s=$3$", [momentAsInfo.hour.format("%d"), momentAsInfo.min.format("%d"), momentAsInfo.sec.format("%d")]);
+}
+
+// TODO: Do not forger to remoove
+function showTemporalEventTime(id) {
+    var now = Toybox.Time.now();
+    var temporalEventRegisteredTime = Toybox.Background.getTemporalEventRegisteredTime();
+    var lastTemporalEventTime = Toybox.Background.getLastTemporalEventTime();
+
+    var nowFormatted = formatMoment(now);
+    var temporalEventRegisteredTimeFormatted = formatMoment(temporalEventRegisteredTime);
+    var lastTemporalEventTimeFromatted = formatMoment(lastTemporalEventTime);
+
+    // Toybox.System.println(id + " - TemporalEventRegisteredTime: " + temporalEventRegisteredTimeFormatted);
+    // Toybox.System.println(id + " - LastTemporalEventTime:       " + lastTemporalEventTimeFromatted);
+    // Toybox.System.println(id + " - Now:                         " + nowFormatted);
+
+    // Toybox.System.println("");
+}
 
 (:background)
 class ErrorsAndTrialsApp extends Application.AppBase {
@@ -54,6 +76,8 @@ class ErrorsAndTrialsApp extends Application.AppBase {
 
     // Handle data received from BackgroundService
     function onBackgroundData(data) {
+        // $.showTemporalEventTime("ErrorsAndTrialsApp  ");
+
         if (data.hasKey("httpError")) {
             return;
         }

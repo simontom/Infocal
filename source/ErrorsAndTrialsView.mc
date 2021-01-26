@@ -10,6 +10,22 @@ using Toybox.UserProfile;
 using DataField as DF;
 using SettingsEnums as SE;
 
+// TODO: Do not forger to remoove
+function getWeatherUpdateDiffMinutes() {
+    var weather = RD.weatherDataProvider.getWeather();
+
+    if (weather == null) {
+        return "--min";
+    }
+
+    var now = Toybox.Time.now();
+    var weatherTime = weather["dt"];
+    var diffSeconds = now.value() - weatherTime;
+    var diffMinutes = diffSeconds / 60;
+
+    return (diffMinutes.format("%d") + "min");
+}
+
 class ErrorsAndTrialsView extends WatchUi.WatchFace {
 
 	var last_draw_minute = -1;
@@ -73,6 +89,8 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
 		if (clockTime.min != last_draw_minute) {
             RD.forceRenderComponent = true;
 			// Only check background web request every 1 minute
+
+            // TODO: Do I really need to check it every minute ????
 			RD.weatherDataProvider.requestWeatherUpdate();
 		}
 
@@ -128,6 +146,10 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
         // Call the parent onUpdate function to redraw the layout
         var digitalDisplay = View.findDrawableById("digital");
         digitalDisplay.draw(dc);
+
+        // TODO: Do not forger to remoove
+        var weatherUpdateDiffMinutes = getWeatherUpdateDiffMinutes();
+        dc.drawText(52, 135, Graphics.FONT_SYSTEM_XTINY, weatherUpdateDiffMinutes, Graphics.TEXT_JUSTIFY_CENTER);
 	}
 
     // Gets called once per second but the mustn't exceed 30ms
