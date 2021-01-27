@@ -10,7 +10,7 @@ using Toybox.UserProfile;
 using DataField as DF;
 using SettingsEnums as SE;
 
-// TODO: Do not forger to remoove
+// TODO: Do not forgforgeter to remove
 function getWeatherUpdateDiffMinutes() {
     var weather = App.getApp().getProperty("OpenWeatherMapCurrent");
 
@@ -124,7 +124,7 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
 		bar6.draw(dc);
 
         // dc.setColor(RD.themeDataProvider.gbackground_color, Graphics.COLOR_TRANSPARENT);
-        // dc.setColor(RD.themeDataProvider.gmain_color, RD.themeDataProvider.gsecondary_color); // pokus
+        // dc.setColor(RD.themeDataProvider.gmain_color, RD.themeDataProvider.gsecondary_color); // hocus-pocus
         // dc.fillCircle(RD.centerX, RD.centerY, face_radius);
 
         var backgroundView = View.findDrawableById("background");
@@ -147,8 +147,9 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
         var digitalDisplay = View.findDrawableById("digital");
         digitalDisplay.draw(dc);
 
-        // TODO: Do not forger to remoove
+        // TODO: Do not forget to remove
         var weatherUpdateDiffMinutes = getWeatherUpdateDiffMinutes();
+        dc.setColor(RD.themeDataProvider.gmain_color, Graphics.COLOR_TRANSPARENT);
         dc.drawText(52, 135, Graphics.FONT_SYSTEM_XTINY, weatherUpdateDiffMinutes, Graphics.TEXT_JUSTIFY_CENTER);
 	}
 

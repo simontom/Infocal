@@ -8,6 +8,13 @@ module DataProvider {
 
     class WeatherDataProvider {
 
+        // Not a great test, as a degree of longitude varies between 69 (equator) and 0 (pole) miles, but simpler than
+        // true distance calculation; 0.02 degree of latitude is just over a mile
+        private const IMMEDIATE_UPDATE_THRESHOLD_LOCATION_DIFF = 0.2;
+        private const IMMEDIATE_UPDATE_THRESHOLD_PERIOD_SEC = 7200; // 2 hours
+        private const DATA_TOO_OLD_THRESHOLD_SEC = 9000; // 2.5 hours
+        private const UPDATE_PERIOD_SEC = 3600; // 1 hour
+
         function initialize() {
             tryUpdateLocation();
         }
@@ -15,8 +22,7 @@ module DataProvider {
         function getWeather() {
             var weather = App.getApp().getProperty("OpenWeatherMapCurrent");
 
-            // Existing data is older than 120 mins = 120 * 60sec = 7'200sec
-            if ((weather != null) && (T.now().value() < (weather["dt"] + 7200))) {
+            if ((weather != null) && (T.now().value() < (weather["dt"] + DATA_TOO_OLD_THRESHOLD_SEC))) {
                 return weather;
             }
 
@@ -27,25 +33,22 @@ module DataProvider {
             App.getApp().setProperty("OpenWeatherMapCurrent", weather);
         }
 
-        // Determine if any web requests are needed
         // Currently called on layout initialisation / when settings change / and on exiting sleep
         function requestWeatherUpdate() {
             $.showTemporalEventTime("WeatherDataProvider_1");
 
             tryUpdateLocation();
 
-            var now = T.now();
-
-            // if (!canRegisterForUpdates(now)) {
             if (!canRegister()) {
                 Bg.deleteTemporalEvent();
                 log("requestWeatherUpdate - cannot register");
                 return;
             }
 
+            var now = T.now();
             var isImmediateUpdateNeeded = needImmediateUpdate(now);
 
-            requestUpdate(isImmediateUpdateNeeded, now);
+            registerForEvent(now, isImmediateUpdateNeeded);
 
             $.showTemporalEventTime("WeatherDataProvider_2");
         }
@@ -77,24 +80,8 @@ module DataProvider {
         }
 
         private function canRegister() {
-        // private function canRegister(now) {
             return (RD.gLocationLat != null) &&
                     (App.getApp().getProperty("openweathermap_api").length() > 0);
-
-            // if ((RD.gLocationLat == null) ||
-            //     (App.getApp().getProperty("openweathermap_api").length() == 0) // ||
-            //     // (Bg.getTemporalEventRegisteredTime() != null)
-            //     ) {
-
-            //     return false;
-            // }
-
-            // (Bg.getTemporalEventRegisteredTime() == Bg.getLastTemporalEventTime())
-            // var temporalEventRegisteredTime = Bg.getTemporalEventRegisteredTime();
-            // if ((temporalEventRegisteredTime != null) && now.compare(temporalEventRegisteredTime) >= 3600) {
-            // }
-
-            return true;
         }
 
         private function needImmediateUpdate(now) {
@@ -104,16 +91,13 @@ module DataProvider {
                 return true;
             }
 
-            // Stored data is older than 120 mins = 120 * 60sec
-            if (now.value() > (weather["dt"] + 7200)) {
+            if (now.value() > (weather["dt"] + IMMEDIATE_UPDATE_THRESHOLD_PERIOD_SEC)) {
                 return true;
             }
 
-            // Stored data not for current location
-            // Not a great test, as a degree of longitude varies between 69 (equator) and 0 (pole) miles, but simpler than
-            // true distance calculation; 0.02 degree of latitude is just over a mile
-            if (((RD.gLocationLat - weather["lat"]).abs() > 0.02) ||
-                ((RD.gLocationLng - weather["lon"]).abs() > 0.02)) {
+
+            if (((RD.gLocationLat - weather["lat"]).abs() > IMMEDIATE_UPDATE_THRESHOLD_LOCATION_DIFF) ||
+                ((RD.gLocationLng - weather["lon"]).abs() > IMMEDIATE_UPDATE_THRESHOLD_LOCATION_DIFF)) {
 
                 return true;
             }
@@ -121,38 +105,42 @@ module DataProvider {
             return false;
         }
 
-        private function requestUpdate(isImmediateUpdateNeeded, now) {
-            log("requestUpdate - isImmediateUpdateNeeded: " + isImmediateUpdateNeeded);
+        // TODO: Add backfoff delay (otherwise it might eat up :-( the whole battery when data too old and cannot obtain new
+        private function registerForEvent(now, isImmediateUpdateNeeded) {
+            log("registerForEvent - isImmediateUpdateNeeded: " + isImmediateUpdateNeeded);
+
+            var registeredTime = Bg.getTemporalEventRegisteredTime();
+            var isSetRegisteredTime = registeredTime != null;
+            log("registerForEvent - isSetRegisteredTime: " + isSetRegisteredTime);
+
             if (isImmediateUpdateNeeded) {
                 // Register for background temporal event as soon as possible
                 var lastTimeEventFired = Bg.getLastTemporalEventTime();
-                log("requestUpdate - is set lastTimeEventFired: " + (lastTimeEventFired != null));
+                var isSetLastTimeEventFired = lastTimeEventFired != null;
+                log("registerForEvent - isSetLastTimeEventFired: " + isSetLastTimeEventFired);
 
-                var registeredTime = Bg.getTemporalEventRegisteredTime();
-                log("requestUpdate - is set registeredTime: " + (registeredTime != null));
 
-                var isRegisteredTimeOfTypeDuration = (registeredTime != null) && (registeredTime has :divide);
-                log("requestUpdate - isRegisteredTimeOfTypeDuration: " + isRegisteredTimeOfTypeDuration);
+                var isRegisteredTimeOfTypeDuration = isSetRegisteredTime && (registeredTime has :divide);
+                log("registerForEvent - isRegisteredTimeOfTypeDuration: " + isRegisteredTimeOfTypeDuration);
 
                 // Events scheduled for a time in the past trigger immediately
-                if ((lastTimeEventFired != null) && isRegisteredTimeOfTypeDuration) {
-                    log("requestUpdate - register nextTime");
-                    // Bg.deleteTemporalEvent();
+                // if (isSetLastTimeEventFired && isRegisteredTimeOfTypeDuration) {
+                if (isSetLastTimeEventFired && (!isSetRegisteredTime || isRegisteredTimeOfTypeDuration)) {
+                    log("registerForEvent - register nextTime");
+                    // Add at least 5 minutes to avoid InvalidBackgroundTimeException (registration in past should fire event ASAP)
                     var nextTime = lastTimeEventFired.add(new T.Duration(5 * 60));
                     Bg.registerForTemporalEvent(nextTime);
-                } else if (Bg.getTemporalEventRegisteredTime() == null) {
-                    log("requestUpdate - register now");
+                } else if (!isSetLastTimeEventFired) {
+                    log("registerForEvent - register now");
                     Bg.registerForTemporalEvent(now);
+                } else {
+                    log("registerForEvent - already registered and waiting");
                 }
-
-                return;
-            }
-
-            var isEventRegistered = Bg.getTemporalEventRegisteredTime() != null;
-            log("requestUpdate - isEventRegistered: " + isEventRegistered);
-            if (!isEventRegistered) {
-                var period = new T.Duration(60 * 60);
+            } else if (!isSetRegisteredTime) {
+                var period = new T.Duration(UPDATE_PERIOD_SEC);
                 Bg.registerForTemporalEvent(period);
+            } else {
+                log("registerForEvent - registered as expected");
             }
         }
 
