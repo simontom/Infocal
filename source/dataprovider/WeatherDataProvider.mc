@@ -11,6 +11,7 @@ module DataProvider {
         // Not a great test, as a degree of longitude varies between 69 (equator) and 0 (pole) miles, but simpler than
         // true distance calculation; 0.02 degree of latitude is just over a mile
         private const IMMEDIATE_UPDATE_THRESHOLD_LOCATION_DIFF = 0.2;
+        private const IMMEDIATE_UPDATE_THRESHOLD_LOCATION_DELAY = 1200; // 20 min
         private const IMMEDIATE_UPDATE_THRESHOLD_PERIOD_SEC = 7200; // 2 hours
         private const DATA_TOO_OLD_THRESHOLD_SEC = 9000; // 2.5 hours
         private const UPDATE_PERIOD_SEC = 3600; // 1 hour
@@ -91,13 +92,17 @@ module DataProvider {
                 return true;
             }
 
-            if (now.value() > (weather["dt"] + IMMEDIATE_UPDATE_THRESHOLD_PERIOD_SEC)) {
+            var weatherTime = weather["dt"];
+            var diffSeconds = now.value() - weatherTime;
+
+            if (diffSeconds > IMMEDIATE_UPDATE_THRESHOLD_PERIOD_SEC) {
                 return true;
             }
 
 
-            if (((RD.gLocationLat - weather["lat"]).abs() > IMMEDIATE_UPDATE_THRESHOLD_LOCATION_DIFF) ||
-                ((RD.gLocationLng - weather["lon"]).abs() > IMMEDIATE_UPDATE_THRESHOLD_LOCATION_DIFF)) {
+            if ((((RD.gLocationLat - weather["lat"]).abs() > IMMEDIATE_UPDATE_THRESHOLD_LOCATION_DIFF) ||
+                ((RD.gLocationLng - weather["lon"]).abs() > IMMEDIATE_UPDATE_THRESHOLD_LOCATION_DIFF)) &&
+                (diffSeconds > IMMEDIATE_UPDATE_THRESHOLD_LOCATION_DELAY)) {
 
                 return true;
             }
