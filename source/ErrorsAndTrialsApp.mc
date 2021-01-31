@@ -93,16 +93,45 @@ class ErrorsAndTrialsApp extends Application.AppBase {
 
     // Handle data received from BackgroundService
     function onBackgroundData(data) {
+        try {
+            handleReceivedData(data);
+        } catch(exception) {
+            if (data has :toString) {
+                var dataAsString = data.toString();
+                log("onBackgroundData - CATCH - data has toString: " + dataAsString);
+            } else {
+                log("onBackgroundData - CATCH - data missing toString");
+            }
+
+            var message = exception.getErrorMessage();
+            log("onBackgroundData - CATCH - message: " + message);
+            exception.printStackTrace();
+
+            // throw exception;
+        }
+    }
+
+    private function handleReceivedData(data) {
         // $.showTemporalEventTime("ErrorsAndTrialsApp  ");
+
+        if (data == null) {
+            log("onBackgroundData - ERROR - data is NULL");
+            return;
+        }
 
         if (data.hasKey("httpError")) {
             log("onBackgroundData - ERROR - " + data["httpError"]);
             return;
         }
 
-        log("onBackgroundData - DONE - " + data["dt"]);
+        if (RD.weatherDataProvider == null) {
+            log("onBackgroundData - DONE - before setWeather - RD.weatherDataProvider is NULL");
+        }
+
+        log("onBackgroundData - DONE - before setWeather - " + data["dt"]);
         RD.weatherDataProvider.setWeather(data);
 
+        log("onBackgroundData - DONE - before requestUpdate");
         Ui.requestUpdate();
     }
 }
