@@ -62,18 +62,20 @@ class ErrorsAndTrialsApp extends Application.AppBase {
         AppBase.initialize();
     }
 
-    // Return the initial view of your application here
     function getInitialView() {
+        $.log("getInitialView - Init DataProviders");
         RD.formattedDateDataProvider = new DP.FormattedDateDataProvider();
         RD.batteryDataProvider = new DP.BatteryDataProvider();
         RD.themeDataProvider = new DP.ThemeDataProvider();
         RD.weatherDataProvider = new DP.WeatherDataProvider();
+        $.log("getInitialView - Inited DataProviders");
 
         mView = new ErrorsAndTrialsView();
         return [mView];
     }
 
     function getView() {
+        $.log("getView");
         return mView;
     }
 
