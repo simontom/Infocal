@@ -29,9 +29,9 @@ function showTemporalEventTime(id) {
     var temporalEventRegisteredTime = Toybox.Background.getTemporalEventRegisteredTime();
     var lastTemporalEventTime = Toybox.Background.getLastTemporalEventTime();
 
-    var nowFormatted = formatMoment(now);
-    var temporalEventRegisteredTimeFormatted = formatMoment(temporalEventRegisteredTime);
-    var lastTemporalEventTimeFromatted = formatMoment(lastTemporalEventTime);
+    var nowFormatted = $.formatMoment(now);
+    var temporalEventRegisteredTimeFormatted = $.formatMoment(temporalEventRegisteredTime);
+    var lastTemporalEventTimeFromatted = $.formatMoment(lastTemporalEventTime);
 
     Toybox.System.println(id + " - Now:                         " + nowFormatted);
     Toybox.System.println(id + " - TemporalEventRegisteredTime: " + temporalEventRegisteredTimeFormatted);
@@ -98,13 +98,13 @@ class ErrorsAndTrialsApp extends Application.AppBase {
         } catch(exception) {
             if (data has :toString) {
                 var dataAsString = data.toString();
-                log("onBackgroundData - CATCH - data has toString: " + dataAsString);
+                $.log("onBackgroundData - CATCH - data has toString: " + dataAsString);
             } else {
-                log("onBackgroundData - CATCH - data missing toString");
+                $.log("onBackgroundData - CATCH - data missing toString");
             }
 
             var message = exception.getErrorMessage();
-            log("onBackgroundData - CATCH - message: " + message);
+            $.log("onBackgroundData - CATCH - message: " + message);
             exception.printStackTrace();
 
             // throw exception;
@@ -115,23 +115,23 @@ class ErrorsAndTrialsApp extends Application.AppBase {
         // $.showTemporalEventTime("ErrorsAndTrialsApp  ");
 
         if (data == null) {
-            log("onBackgroundData - ERROR - data is NULL");
+            $.log("onBackgroundData - ERROR - data is NULL");
             return;
         }
 
         if (data.hasKey("httpError")) {
-            log("onBackgroundData - ERROR - " + data["httpError"]);
+            $.log("onBackgroundData - ERROR - " + data["httpError"]);
             return;
         }
 
         if (RD.weatherDataProvider == null) {
-            log("onBackgroundData - DONE - before setWeather - RD.weatherDataProvider is NULL");
+            $.log("onBackgroundData - DONE - before setWeather - RD.weatherDataProvider is NULL");
         }
 
-        log("onBackgroundData - DONE - before setWeather - " + data["dt"]);
+        $.log("onBackgroundData - DONE - before setWeather - " + data["dt"]);
         RD.weatherDataProvider.setWeather(data);
 
-        log("onBackgroundData - DONE - before requestUpdate");
+        $.log("onBackgroundData - DONE - before requestUpdate");
         Ui.requestUpdate();
     }
 }
