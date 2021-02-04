@@ -37,7 +37,7 @@ function showTemporalEventTime(id) {
     Toybox.System.println(id + " - TemporalEventRegisteredTime: " + temporalEventRegisteredTimeFormatted);
     Toybox.System.println(id + " - LastTemporalEventTime:       " + lastTemporalEventTimeFromatted);
 
-    Toybox.System.println("");
+    // Toybox.System.println("");
 }
 
 // TODO: Do not forforgetger to remove
@@ -50,7 +50,7 @@ function log(message) {
          message, momentAsInfo.day.format("%02d"), momentAsInfo.month.format("%02d")]);
 
     Toybox.System.println(formatted);
-    Toybox.System.println("");
+    // Toybox.System.println("");
 }
 
 (:background)
