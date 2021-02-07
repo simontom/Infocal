@@ -11,6 +11,7 @@ using DataField as DF;
 using SettingsEnums as SE;
 
 // TODO: Do not forgforgeter to remove
+var receivedDataHandlerFailed = false;
 function getWeatherUpdateDiffMinutes() {
     var weather = App.getApp().getProperty("OpenWeatherMapCurrent");
 
@@ -23,7 +24,12 @@ function getWeatherUpdateDiffMinutes() {
     var diffSeconds = now.value() - weatherTime;
     var diffMinutes = diffSeconds / 60;
 
-    return (diffMinutes.format("%d") + "min");
+    var receivingFailedSign = "";
+    if ($.receivedDataHandlerFailed) {
+        receivingFailedSign = "E-";
+    }
+
+    return (receivingFailedSign + diffMinutes.format("%d") + "min" + receivingFailedSign);
 }
 
 class ErrorsAndTrialsView extends WatchUi.WatchFace {

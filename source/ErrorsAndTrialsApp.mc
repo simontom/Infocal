@@ -63,12 +63,10 @@ class ErrorsAndTrialsApp extends Application.AppBase {
     }
 
     function getInitialView() {
-        $.log("getInitialView - Init DataProviders");
-        RD.formattedDateDataProvider = new DP.FormattedDateDataProvider();
-        RD.batteryDataProvider = new DP.BatteryDataProvider();
-        RD.themeDataProvider = new DP.ThemeDataProvider();
-        RD.weatherDataProvider = new DP.WeatherDataProvider();
-        $.log("getInitialView - Inited DataProviders");
+        $.log("getInitialView");
+
+        // TODO: Maybe, I should keep the ref to DataProviders / RuntimeData right here in AppBase :-/
+        tryReInitDataProviders();
 
         mView = new ErrorsAndTrialsView();
         return [mView];
@@ -93,7 +91,6 @@ class ErrorsAndTrialsApp extends Application.AppBase {
         return [new BackgroundService()];
     }
 
-    // Handle data received from BackgroundService
     function onBackgroundData(data) {
         try {
             handleReceivedData(data);
@@ -108,14 +105,10 @@ class ErrorsAndTrialsApp extends Application.AppBase {
             var message = exception.getErrorMessage();
             $.log("onBackgroundData - CATCH - message: " + message);
             exception.printStackTrace();
-
-            // throw exception;
         }
     }
 
     private function handleReceivedData(data) {
-        // $.showTemporalEventTime("ErrorsAndTrialsApp  ");
-
         if (data == null) {
             $.log("onBackgroundData - ERROR - data is NULL");
             return;
@@ -128,6 +121,8 @@ class ErrorsAndTrialsApp extends Application.AppBase {
 
         if (RD.weatherDataProvider == null) {
             $.log("onBackgroundData - DONE - before setWeather - RD.weatherDataProvider is NULL");
+            $.receivedDataHandlerFailed = true;
+            tryReInitDataProviders();
         }
 
         $.log("onBackgroundData - DONE - before setWeather - " + data["dt"]);
@@ -135,5 +130,29 @@ class ErrorsAndTrialsApp extends Application.AppBase {
 
         $.log("onBackgroundData - DONE - before requestUpdate");
         Ui.requestUpdate();
+    }
+
+    private function tryReInitDataProviders() {
+        $.log("tryReInitDataProviders");
+
+        if (RD.formattedDateDataProvider == null) {
+            $.log("tryReInitDataProviders - creating FormattedDateDataProvider");
+            RD.formattedDateDataProvider = new DP.FormattedDateDataProvider();
+        }
+
+        if (RD.batteryDataProvider == null) {
+            $.log("tryReInitDataProviders - creating BatteryDataProvider");
+            RD.batteryDataProvider = new DP.BatteryDataProvider();
+        }
+
+        if (RD.themeDataProvider == null) {
+            $.log("tryReInitDataProviders - creating ThemeDataProvider");
+            RD.themeDataProvider = new DP.ThemeDataProvider();
+        }
+
+        if (RD.weatherDataProvider == null) {
+            $.log("tryReInitDataProviders - creating WeatherDataProvider");
+            RD.weatherDataProvider = new DP.WeatherDataProvider();
+        }
     }
 }
