@@ -29,7 +29,7 @@ function getWeatherUpdateDiffMinutes() {
         receivingFailedSign = "E-";
     }
 
-    return (receivingFailedSign + diffMinutes.format("%d") + "min" + receivingFailedSign);
+    return (receivingFailedSign + diffMinutes.format("%d") + "min");
 }
 
 class ErrorsAndTrialsView extends WatchUi.WatchFace {
@@ -154,7 +154,7 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
         digitalDisplay.draw(dc);
 
         // TODO: Do not forget to remove
-        var weatherUpdateDiffMinutes = getWeatherUpdateDiffMinutes();
+        var weatherUpdateDiffMinutes = $.getWeatherUpdateDiffMinutes();
         dc.setColor(RD.themeDataProvider.gmain_color, Graphics.COLOR_TRANSPARENT);
         dc.drawText(52, 135, Graphics.FONT_SYSTEM_XTINY, weatherUpdateDiffMinutes, Graphics.TEXT_JUSTIFY_CENTER);
 	}

@@ -36,13 +36,10 @@ module DataProvider {
 
         // Currently called on layout initialisation / when settings change / and on exiting sleep
         function requestWeatherUpdate() {
-            $.showTemporalEventTime("WeatherDataProvider_1");
-
             tryUpdateLocation();
 
             if (!canRegister()) {
                 Bg.deleteTemporalEvent();
-                $.log("requestWeatherUpdate - cannot register");
                 return;
             }
 
@@ -50,8 +47,6 @@ module DataProvider {
             var isImmediateUpdateNeeded = needImmediateUpdate(now);
 
             registerForEvent(now, isImmediateUpdateNeeded);
-
-            $.showTemporalEventTime("WeatherDataProvider_2");
         }
 
         private function tryUpdateLocation() {
@@ -112,40 +107,27 @@ module DataProvider {
 
         // TODO: Add backfoff delay (otherwise it might eat up :-( the whole battery when data too old and cannot obtain new
         private function registerForEvent(now, isImmediateUpdateNeeded) {
-            $.log("registerForEvent - isImmediateUpdateNeeded: " + isImmediateUpdateNeeded);
-
             var registeredTime = Bg.getTemporalEventRegisteredTime();
             var isSetRegisteredTime = registeredTime != null;
-            $.log("registerForEvent - isSetRegisteredTime: " + isSetRegisteredTime);
 
             if (isImmediateUpdateNeeded) {
                 // Register for background temporal event as soon as possible
                 var lastTimeEventFired = Bg.getLastTemporalEventTime();
                 var isSetLastTimeEventFired = lastTimeEventFired != null;
-                $.log("registerForEvent - isSetLastTimeEventFired: " + isSetLastTimeEventFired);
-
 
                 var isRegisteredTimeOfTypeDuration = isSetRegisteredTime && (registeredTime has :divide);
-                $.log("registerForEvent - isRegisteredTimeOfTypeDuration: " + isRegisteredTimeOfTypeDuration);
 
                 // Events scheduled for a time in the past trigger immediately
-                // if (isSetLastTimeEventFired && isRegisteredTimeOfTypeDuration) {
                 if (isSetLastTimeEventFired && (!isSetRegisteredTime || isRegisteredTimeOfTypeDuration)) {
-                    $.log("registerForEvent - register nextTime");
                     // Add at least 5 minutes to avoid InvalidBackgroundTimeException (registration in past should fire event ASAP)
                     var nextTime = lastTimeEventFired.add(new T.Duration(5 * 60));
                     Bg.registerForTemporalEvent(nextTime);
                 } else if (!isSetLastTimeEventFired) {
-                    $.log("registerForEvent - register now");
                     Bg.registerForTemporalEvent(now);
-                } else {
-                    $.log("registerForEvent - already registered and waiting");
                 }
             } else if (!isSetRegisteredTime) {
                 var period = new T.Duration(UPDATE_PERIOD_SEC);
                 Bg.registerForTemporalEvent(period);
-            } else {
-                $.log("registerForEvent - registered as expected");
             }
         }
 
