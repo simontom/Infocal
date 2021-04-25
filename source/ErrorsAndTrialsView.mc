@@ -51,6 +51,10 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
 
     // Load your resources here
     function onLayout(dc) {
+        if ($.isWatchfacePaused()) {
+            return;
+        }
+
     	RD.centerX = dc.getWidth() / 2;
     	RD.centerY = dc.getHeight() / 2;
     	face_radius = RD.centerX - (18 * RD.centerX / 120).toNumber();
@@ -62,6 +66,10 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
     // the state of this View and prepare it to be shown. This includes
     // loading resources into memory.
     function onShow() {
+        if ($.isWatchfacePaused()) {
+            return;
+        }
+
         last_draw_minute = -1;
         restore_from_resume = true;
         last_resume_mili = System.getTimer();
@@ -71,6 +79,10 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
 
     // Update the view
     function onUpdate(dc) {
+        if ($.isWatchfacePaused()) {
+            return;
+        }
+
     	var clockTime = System.getClockTime();
     	var current_tick = System.getTimer();
     	var time_now = Time.now();
@@ -161,6 +173,10 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
 
     // Gets called once per second but the mustn't exceed 30ms
 	function onPartialUpdate(dc) {
+        if ($.isWatchfacePaused()) {
+            return;
+        }
+
 		if (Application.getApp().getProperty("always_on_second")) {
 			var clockTime = System.getClockTime();
 			var second_text = clockTime.sec.format(Constants.ZeroLeadingFormat);
@@ -185,6 +201,10 @@ class ErrorsAndTrialsView extends WatchUi.WatchFace {
     // The user has just looked at their watch. Timers and animations may be started here
     // If in low energy mode, onUpdate gets called once per second..I think
     function onExitSleep() {
+        if ($.isWatchfacePaused()) {
+            return;
+        }
+
     	RD.weatherDataProvider.requestWeatherUpdate();
     }
 }

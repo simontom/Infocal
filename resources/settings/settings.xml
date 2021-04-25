@@ -1,5 +1,9 @@
 <settings>
 
+    <setting propertyKey="@Properties.pause_watchface" title="@Strings.pause_watchface">
+        <settingConfig type="boolean" />
+    </setting>
+
     <setting propertyKey="@Properties.theme_code" title="@Strings.theme_code">
         <settingConfig type="list">
         	<listEntry value="0">@Strings.theme_dark</listEntry>

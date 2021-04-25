@@ -2,6 +2,8 @@
 
     <string scope="foreground" id="AppName">ErrorsAndTrials</string>
 
+    <string scope="foreground" id="pause_watchface">Pause watchface</string>
+
     <string scope="foreground" id="white_background">Use white background</string>
     <string scope="foreground" id="comp12h">12h angle complication</string>
     <string scope="foreground" id="comp2h">2h angle complication</string>

@@ -3,6 +3,10 @@ using Toybox.WatchUi as Ui;
 using DataProvider as DP;
 using RuntimeData as RD;
 
+function isWatchfacePaused() {
+    return Toybox.Application.getApp().getProperty("pause_watchface");
+}
+
 (:background)
 class ErrorsAndTrialsApp extends Application.AppBase {
 
@@ -13,6 +17,10 @@ class ErrorsAndTrialsApp extends Application.AppBase {
     }
 
     function getInitialView() {
+        if ($.isWatchfacePaused()) {
+            Toybox.Background.deleteTemporalEvent();
+        }
+
         // TODO: Maybe, I should keep the ref to DataProviders / RuntimeData right here in AppBase :-/
         tryReInitDataProviders();
 
@@ -21,10 +29,18 @@ class ErrorsAndTrialsApp extends Application.AppBase {
     }
 
     function getView() {
+        if ($.isWatchfacePaused()) {
+            return null;
+        }
+
         return mView;
     }
 
     function onSettingsChanged() {
+        if ($.isWatchfacePaused()) {
+            return;
+        }
+
         RD.formattedDateDataProvider.reloadSettings();
         RD.themeDataProvider.reloadSettings();
 
