@@ -789,7 +789,7 @@ class GroupNotiField extends BaseDataField {
 	
 	function cur_label(value) {
 		var settings = Sys.getDeviceSettings();
-		var value = settings.alarmCount;
+		value = settings.alarmCount;
 		var alarm_str = Lang.format("A$1$",[value.format("%d")]);
 		value = settings.notificationCount;
 		var noti_str = Lang.format("N$1$",[value.format("%d")]);
@@ -866,7 +866,7 @@ class SunField extends BaseDataField {
 	
 	function cur_label(value) {
 		if (gLocationLat != null) {
-			var value = "";
+			value = "";
 			var nextSunEvent = 0;
 			var isSunriseNext = false;
 			var now = Date.info(Time.now(), Time.FORMAT_SHORT);
@@ -1097,7 +1097,7 @@ class TemparatureField extends BaseDataField {
 	
 	function cur_label(value) {
 		var need_minimal = App.getApp().getProperty("minimal_data");
-		var value = 0;
+		value = 0;
 		var settings = Sys.getDeviceSettings();
 		if ((Toybox has :SensorHistory) && (Toybox.SensorHistory has :getTemperatureHistory)) {
 			var sample = SensorHistory.getTemperatureHistory(null).next();
@@ -1145,7 +1145,7 @@ class AltitudeField extends BaseDataField {
 	
 	function cur_label(value) {
 		var need_minimal = App.getApp().getProperty("minimal_data");
-		var value = 0;
+		value = 0;
 		// #67 Try to retrieve altitude from current activity, before falling back on elevation history.
 		// Note that Activity::Info.altitude is supported by CIQ 1.x, but elevation history only on select CIQ 2.x
 		// devices.
@@ -1207,7 +1207,7 @@ class AlarmField extends BaseDataField {
 	
 	function cur_label(value) {
 		var settings = Sys.getDeviceSettings();
-		var value = settings.alarmCount;
+		value = settings.alarmCount;
 		return Lang.format("ALAR $1$",[value.format("%d")]);
 	}
 }
@@ -1228,7 +1228,7 @@ class NotifyField extends BaseDataField {
 	
 	function cur_label(value) {
 		var settings = Sys.getDeviceSettings();
-		var value = settings.notificationCount;
+		value = settings.notificationCount;
 		return Lang.format("NOTIF $1$",[value.format("%d")]);
 	}
 }
@@ -1351,7 +1351,7 @@ class DistanceField extends BaseDataField {
 	}
 	
 	function max_label(value) {
-		var value = value/1000.0;
+		value = value/1000.0;
 		value = value/100.0; // convert cm to km
     	var valKp = App.getApp().toKValue(value);
     	return Lang.format("$1$K",[valKp]);
@@ -1690,3 +1690,87 @@ function _retrieveHeartrate() {
 // end HR stage //
 //////////////////
 
+function getCompactSlotText(slotType, batteryDaysStr) {
+    if (slotType == null || slotType == 0) {
+        return "";
+    } else if (slotType == 1) {
+        // Heart Rate
+        var hr = _retrieveHeartrate().toNumber();
+        if (hr <= 1) {
+            return "--";
+        }
+        return hr.format("%d");
+    } else if (slotType == 2) {
+        // Steps
+        var info = ActivityMonitor.getInfo();
+        var steps = (info != null && info.steps != null) ? info.steps : 0;
+        if (steps >= 10000) {
+            return (steps / 1000.0).format("%0.1f") + "K";
+        }
+        return steps.format("%d");
+    } else if (slotType == 3) {
+        // Battery %
+        var bat = Math.round(Sys.getSystemStats().battery).toNumber();
+        return bat.format("%d") + "%";
+    } else if (slotType == 4) {
+        // Battery Days
+        if (batteryDaysStr != null && batteryDaysStr.length() > 0) {
+            return batteryDaysStr;
+        }
+        var batFallback = Math.round(Sys.getSystemStats().battery).toNumber();
+        return batFallback.format("%d") + "%";
+    } else if (slotType == 5) {
+        // Altitude
+        var settings = Sys.getDeviceSettings();
+        var actInfo = Activity.getActivityInfo();
+        var alt = (actInfo != null) ? actInfo.altitude : null;
+        if ((alt == null) && (Toybox has :SensorHistory) && (Toybox.SensorHistory has :getElevationHistory)) {
+            var sample = SensorHistory.getElevationHistory({ :period => 1, :order => SensorHistory.ORDER_NEWEST_FIRST }).next();
+            if ((sample != null) && (sample.data != null)) {
+                alt = sample.data;
+            }
+        }
+        if (alt == null) {
+            return "--";
+        }
+        if (settings.elevationUnits == Sys.UNIT_METRIC) {
+            return alt.format("%d") + "M";
+        } else {
+            return (alt * 3.28084).format("%d") + "F";
+        }
+    } else if (slotType == 6) {
+        // Barometer
+        var baroField = new BarometerField(FIELD_TYPE_BAROMETER);
+        var pData = baroField.cur_val();
+        if (pData == null || pData[0] == null) {
+            return "--";
+        }
+        var hpa = pData[0] / 100.0;
+        var sig = (pData[1] == 1) ? "+" : ((pData[1] == -1) ? "-" : "");
+        if (App.getApp().getProperty("barometer_unit") == 1) {
+            return (hpa * 0.0295301).format("%0.1f") + sig;
+        }
+        return hpa.format("%d") + sig;
+    } else if (slotType == 7) {
+        // Calories
+        var calInfo = ActivityMonitor.getInfo();
+        var cals = (calInfo != null && calInfo.calories != null) ? calInfo.calories : 0;
+        if (cals >= 1000) {
+            return (cals / 1000.0).format("%0.1f") + "K";
+        }
+        return cals.format("%d");
+    } else if (slotType == 8) {
+        // Active Minutes (Week)
+        var actMinInfo = ActivityMonitor.getInfo();
+        var mins = (actMinInfo != null && actMinInfo.activeMinutesWeek != null) ? actMinInfo.activeMinutesWeek.total : 0;
+        return mins.format("%d") + "M";
+    } else if (slotType == 9) {
+        // Floors Climbed
+        var flrInfo = ActivityMonitor.getInfo();
+        if (flrInfo != null && (flrInfo has :floorsClimbed) && flrInfo.floorsClimbed != null) {
+            return flrInfo.floorsClimbed.format("%d") + "FL";
+        }
+        return "--";
+    }
+    return "";
+}
