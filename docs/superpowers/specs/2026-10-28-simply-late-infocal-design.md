@@ -201,7 +201,7 @@ All `resources*/settings/properties.xml` files will be unified (removing stale d
    - WMO weather code to Simply late! condition code (`-1..6`) mapping for both day and night hours.
    - ISO-8601 `dateTime` parsing into Unix epoch seconds with positive, negative, and `Z` timezone offsets.
    - Compact side-slot metric formatting (`getCompactSlotText`).
-2. **Build Verification:** Compile the Connect IQ project for `fenix6` (`260x260`), `fenix6s` (`240x240`), and `fenix6xpro` (`280x280`) using the Connect IQ SDK compiler (`monkeyc`) with zero errors.
+2. **Build Verification:** Compile the Connect IQ project for `fenix6pro` (`260x260`, using the installed Connect IQ SDK 9.2.0 compiler `monkeyc.bat -d fenix6pro -l 0`) with zero errors, including resolving legacy Monkey C syntax incompatibilities (top-level `hidden` functions in `HuwaiiApp.mc` and parameter-shadowing `var value` declarations in `DataFactory.mc`).
 3. **Memory & Layout Verification:**
    - Verify no references remain to `e0`–`e60` or `hour_1`–`minu_6` in compiled resources.
    - Verify rendering of all 6 zones across `240x240`, `260x260`, and `280x280` resolutions.
