@@ -201,6 +201,9 @@ function parseIso8601ToEpoch(isoStr) {
         :minute => min,
         :second => sec
     });
+    if (moment == null) {
+        return null;
+    }
     var utcSeconds = moment.value();
 
     var tzPart = isoStr.substring(19, isoStr.length());
