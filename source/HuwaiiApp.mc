@@ -18,18 +18,6 @@ function degreesToRadians(degrees) {
     return degrees * Math.PI / 180.0;
 }
 
-function radiansToDegrees(radians) {
-    return radians * 180.0 / Math.PI;
-}
-
-function convertCoorX(radians, radius) {
-    return centerX + radius * Math.cos(radians);
-}
-
-function convertCoorY(radians, radius) {
-    return centerY + radius * Math.sin(radians);
-}
-
 (:background)
 class HuwaiiApp extends Application.AppBase {
 
@@ -135,7 +123,7 @@ class HuwaiiApp extends Application.AppBase {
             if (refreshToken == null || refreshToken.length() == 0) {
                 // Poll every 5 minutes while waiting for device flow login
                 pending["Calendar"] = true;
-            } else if (calData == null || (calData["ts"] != null && (nowVal - calData["ts"]) > 1800)) {
+            } else if (calData == null || calData["ts"] == null || (nowVal - calData["ts"]) > 1800) {
                 pending["Calendar"] = true;
             }
         }
@@ -178,6 +166,11 @@ class HuwaiiApp extends Application.AppBase {
 
         if (data["CalendarAuth"] != null) {
             var auth = data["CalendarAuth"];
+            if (auth["clear_tokens"] == true) {
+                setProperty("google_refresh_token", "");
+                setProperty("google_device_code", "");
+                setProperty("google_user_code", "");
+            }
             if (auth["device_code"] != null) {
                 setProperty("google_device_code", auth["device_code"]);
             }

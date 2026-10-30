@@ -26,8 +26,10 @@ class BackgroundService extends Sys.ServiceDelegate {
             return;
         }
 
-        // Prioritize Weather if pending, otherwise Calendar
-        if (pending["Weather"] != null) {
+        // Prioritize Weather if pending and coordinates are valid, otherwise Calendar
+        var lat = app.getProperty("LastLocationLat");
+        var lng = app.getProperty("LastLocationLng");
+        if (pending["Weather"] != null && lat != null && lng != null) {
             requestWeather();
         } else if (pending["Calendar"] != null) {
             requestCalendarStep();
@@ -208,6 +210,10 @@ class BackgroundService extends Sys.ServiceDelegate {
     function onReceiveTokenRefresh(responseCode, data) {
         if (responseCode == 200 && data != null && data["access_token"] != null) {
             fetchCalendarEvents(data["access_token"]);
+            return;
+        }
+        if (data != null && data["error"] != null && data["error"].equals("invalid_grant")) {
+            Bg.exit({ "CalendarAuth" => { "clear_tokens" => true } });
             return;
         }
         Bg.exit({});

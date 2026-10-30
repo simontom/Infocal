@@ -346,8 +346,9 @@ class HuwaiiView extends WatchUi.WatchFace {
         var mx = centerX + Math.round(minuteArcR * Math.cos(minAngleRad)).toNumber();
         var my = centerY + Math.round(minuteArcR * Math.sin(minAngleRad)).toNumber();
 
+        var haloR = (centerX >= 195) ? 14 : 10;
         dc.setColor(bgColor, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(mx, my, 10);
+        dc.fillCircle(mx, my, haloR);
         dc.setColor(mainColor, Graphics.COLOR_TRANSPARENT);
         dc.drawText(mx, my, fontSmall, minute.format("%02d"), Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
     }
@@ -422,7 +423,16 @@ class HuwaiiView extends WatchUi.WatchFace {
                             timeLabel = (diffMin / 60).format("%d") + "h" + (diffMin % 60).format("%02d");
                         } else {
                             var stInfo = Date.info(new Time.Moment(nextEv[0]), Time.FORMAT_SHORT);
-                            timeLabel = stInfo.hour.format("%02d") + ":" + stInfo.min.format("%02d");
+                            var evHour = stInfo.hour;
+                            var amPm = "";
+                            if (!System.getDeviceSettings().is24Hour) {
+                                if (evHour >= 12) { amPm = "p"; } else { amPm = "a"; }
+                                evHour = evHour % 12;
+                                if (evHour == 0) { evHour = 12; }
+                                timeLabel = evHour.format("%d") + ":" + stInfo.min.format("%02d") + amPm;
+                            } else {
+                                timeLabel = evHour.format("%02d") + ":" + stInfo.min.format("%02d");
+                            }
                         }
                         var line2 = (loc != null && loc.length() > 0) ? (timeLabel + ": " + loc) : timeLabel;
                         dc.setColor(primaryTextColor, Graphics.COLOR_TRANSPARENT);
@@ -475,8 +485,7 @@ class HuwaiiView extends WatchUi.WatchFace {
                 } else {
                     consumtion_history.add(last_hour_consumtion);
                     if (consumtion_history.size() > 24) {
-                        var object0 = consumtion_history[0];
-                        consumtion_history.remove(object0);
+                        consumtion_history = consumtion_history.slice(1, null);
                     }
                     App.getApp().setProperty("consumtion_history", consumtion_history);
                 }
