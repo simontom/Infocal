@@ -9,6 +9,7 @@ using Toybox.SensorHistory as SensorHistory;
 using Toybox.UserProfile;
 using Toybox.Time;
 using Toybox.Time.Gregorian as Date;
+using Toybox.Math;
 
 enum /* FIELD_TYPES */ {
 	FIELD_TYPE_HEART_RATE = 0,

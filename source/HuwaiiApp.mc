@@ -203,6 +203,9 @@ class HuwaiiApp extends Application.AppBase {
         }
 
         setProperty("PendingWebRequests", pending);
+        if (pending.keys().size() > 0) {
+            checkPendingWebRequests();
+        }
         Ui.requestUpdate();
     }
 
