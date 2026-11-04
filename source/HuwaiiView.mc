@@ -78,14 +78,14 @@ class HuwaiiView extends WatchUi.WatchFace {
         // 3. Upper-Left Precipitation (mm) & Upper-Right Temperature + Min-Max Range Bar
         drawUpperWeatherReadouts(dc, width, height);
 
-        // 4. Center Hour + Radial Minute Progress Arc + Orbiting Minute Number
-        drawCenterTimeAndMinuteArc(dc, width, height, clockTime);
-
-        // 5. Left & Right Stacked Infocal Metric Slots (2 Left, 2 Right)
+        // 4. Left & Right Stacked Infocal Metric Slots (2 Left, 2 Right)
         drawSideMetricSlots(dc, width, height);
 
-        // 6. Bottom 2-Line Next Calendar Event / OAuth Prompt + Low Battery Icon
+        // 5. Bottom 2-Line Next Calendar Event / OAuth Prompt + Low Battery Icon
         drawBottomCalendarAndBattery(dc, width, height);
+
+        // 6. Center Hour + Radial Minute Progress Arc + Orbiting Minute Number
+        drawCenterTimeAndMinuteArc(dc, width, height, clockTime);
     }
 
     function applyThemeSettings() {
@@ -284,7 +284,7 @@ class HuwaiiView extends WatchUi.WatchFace {
 
         // Upper-Left: Precipitation (mm) when > 0
         if (totalPrecip > 0) {
-            var precipX = (0.23 * width).toNumber();
+            var precipX = (0.25 * width).toNumber();
             dc.setColor(secondaryTextColor, Graphics.COLOR_TRANSPARENT);
             dc.drawText(precipX, upperY - 5, fontSmall, totalPrecip.format("%d"), Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
             dc.setColor(dimmedColor, Graphics.COLOR_TRANSPARENT);
@@ -292,7 +292,7 @@ class HuwaiiView extends WatchUi.WatchFace {
         }
 
         // Upper-Right: Temperature + Min/Max Range Bar
-        var tempX = (0.77 * width).toNumber();
+        var tempX = (0.75 * width).toNumber();
         var extremeTemp = ((maxTemp - currentTemp) >= (currentTemp - minTemp)) ? maxTemp : minTemp;
         var sep = (extremeTemp < 0) ? "" : "-";
         var tempLabel = currentTemp.format("%d") + "°" + sep + extremeTemp.format("%d");
@@ -323,15 +323,18 @@ class HuwaiiView extends WatchUi.WatchFace {
             hour = hour % 12;
             if (hour == 0) { hour = 12; }
         }
-        var hourStr = hour.format("%02d");
+        var leadingZero = App.getApp().getProperty("zero_leading_digital");
+        var hourStr = (leadingZero == true) ? hour.format("%02d") : hour.format("%d");
         var minute = clockTime.min;
-        var minuteArcR = (0.21 * height).toNumber();
+        var minuteArcR = (0.23 * height).toNumber();
         var boldness = App.getApp().getProperty("boldness");
         if (boldness == null || boldness < 1) { boldness = 2; }
 
-        // Center Hour
+        // Center Hour (vertically centered using dc.getFontHeight(fontHours) / 4 offset to compensate for BMFont line-height)
+        var fontH = dc.getFontHeight(fontHours);
+        var hourY = centerY - (fontH / 4);
         dc.setColor(primaryTextColor, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(centerX, centerY, fontHours, hourStr, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+        dc.drawText(centerX, hourY, fontHours, hourStr, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
 
         // Radial Minute Progress Arc
         if (minute > 0) {
@@ -355,10 +358,10 @@ class HuwaiiView extends WatchUi.WatchFace {
 
     function drawSideMetricSlots(dc, width, height) {
         var app = App.getApp();
-        var slotLeftX = (0.17 * width).toNumber();
-        var slotRightX = (0.83 * width).toNumber();
-        var slotTopY = centerY - (0.05 * height).toNumber();
-        var slotBottomY = centerY + (0.05 * height).toNumber();
+        var slotLeftX = (0.16 * width).toNumber();
+        var slotRightX = (0.84 * width).toNumber();
+        var slotTopY = centerY - (0.07 * height).toNumber();
+        var slotBottomY = centerY + (0.07 * height).toNumber();
         var batDaysStr = computeBatteryDaysCompact();
 
         dc.setColor(secondaryTextColor, Graphics.COLOR_TRANSPARENT);
@@ -386,7 +389,7 @@ class HuwaiiView extends WatchUi.WatchFace {
 
     function drawBottomCalendarAndBattery(dc, width, height) {
         var app = App.getApp();
-        var messageY = (0.71 * height).toNumber();
+        var messageY = (0.78 * height).toNumber();
 
         if (app.getProperty("enable_calendar") == true) {
             var refreshToken = app.getProperty("google_refresh_token");
@@ -397,7 +400,7 @@ class HuwaiiView extends WatchUi.WatchFace {
                 dc.setColor(primaryTextColor, Graphics.COLOR_TRANSPARENT);
                 dc.drawText(centerX, messageY, Graphics.FONT_XTINY, "google.com/device", Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
                 dc.setColor(mainColor, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(centerX, messageY + 14, Graphics.FONT_XTINY, userCode, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+                dc.drawText(centerX, messageY + 13, Graphics.FONT_XTINY, userCode, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
             } else if (refreshToken != null && refreshToken.length() > 0) {
                 var calData = app.getProperty("CalendarData");
                 if (calData != null && calData["events"] != null) {
@@ -438,16 +441,16 @@ class HuwaiiView extends WatchUi.WatchFace {
                         dc.setColor(primaryTextColor, Graphics.COLOR_TRANSPARENT);
                         dc.drawText(centerX, messageY, Graphics.FONT_XTINY, summary, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
                         dc.setColor(secondaryTextColor, Graphics.COLOR_TRANSPARENT);
-                        dc.drawText(centerX, messageY + 14, Graphics.FONT_XTINY, line2, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+                        dc.drawText(centerX, messageY + 13, Graphics.FONT_XTINY, line2, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
                     }
                 }
             } else if ((clientId == null || clientId.length() == 0) && gLocationLat == null && app.getProperty("weather") == true) {
                 dc.setColor(dimmedColor, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(centerX, messageY, fontSmall, "NO GPS", Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+                dc.drawText(centerX, messageY, Graphics.FONT_XTINY, "NO GPS", Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
             }
         } else if (gLocationLat == null && app.getProperty("weather") == true) {
             dc.setColor(dimmedColor, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(centerX, messageY, fontSmall, "NO GPS", Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+            dc.drawText(centerX, messageY, Graphics.FONT_XTINY, "NO GPS", Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
         }
 
         // Low Battery Icon at bottom
@@ -455,7 +458,7 @@ class HuwaiiView extends WatchUi.WatchFace {
         if (batThreshold == null) { batThreshold = 33; }
         var currentBat = System.getSystemStats().battery;
         if (currentBat <= batThreshold) {
-            var batY = (0.88 * height).toNumber();
+            var batY = (0.90 * height).toNumber();
             dc.setPenWidth(1);
             dc.setColor(0xFF5555, Graphics.COLOR_TRANSPARENT);
             dc.drawRectangle(centerX - 8, batY - 4, 15, 8);

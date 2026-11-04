@@ -68,3 +68,30 @@ function testIso8601Parsing(logger) {
     Test.assertEqual(null, parseIso8601ToEpoch("2026-10-28"));
     return true;
 }
+
+(:test)
+function testLayoutZonesClearance(logger) {
+    var resolutions = [218, 240, 260, 280, 390];
+    for (var i = 0; i < resolutions.size(); i += 1) {
+        var h = resolutions[i];
+        var cy = h / 2;
+        var dateY = (0.14 * h).toNumber();
+        var upperY = (0.26 * h).toNumber();
+        var minuteArcR = (0.23 * h).toNumber();
+        var minuteArcTop = cy - minuteArcR;
+        var minuteArcBottom = cy + minuteArcR;
+        var messageY = (0.78 * h).toNumber();
+        var batY = (0.90 * h).toNumber();
+        var calArcR = cy - 10;
+
+        // Verify strictly non-overlapping vertical zones
+        Test.assert(dateY < upperY);
+        Test.assert(upperY <= minuteArcTop);
+        Test.assert(minuteArcTop < cy);
+        Test.assert(cy < minuteArcBottom);
+        Test.assert(minuteArcBottom < messageY);
+        Test.assert(messageY < batY);
+        Test.assert(batY < (cy + calArcR));
+    }
+    return true;
+}
