@@ -1,149 +1,67 @@
 <strings>
-    <string id="AppName">Huwaii</string>
-    <string id="power_save_mode">Reduce refresh rate to 1 per minute to save power</string>
-    <string id="white_background">Use white background</string>
-    <string id="comp12h">12h angle complication</string>
-    <string id="comp2h">2h angle complication</string>
-    <string id="comp4h">4h angle complication</string>
-    <string id="comp6h">6h angle complication</string>
-    <string id="comp8h">8h angle complication</string>
-    <string id="comp10h">10h angle complication</string>
-    
-    <string id="compbart">Top bar complication</string>
-    <string id="compbarb">Bottom bar complication</string>
-    
-    <string id="compgrapht">Top graph complication</string>
-    <string id="compgraphb">Bottom graph complication</string>
-    
-    <string id="always_on_second">Always-on second (for digital)</string>
-    <string id="always_on_heart">Always-on heart rate (for digital)</string>
-    
-    <string id="sleep_time_behaviour">Sleep time behaviour (Currently disabled)</string>
-    <string id="default_render">Default (still render screen)</string>
-    <string id="no_render">Off screen to save power</string>
-    
-    
-    <string id="minimal_data">Full number instead of reduced (K)</string>
-    <string id="big_num_stripes">Render stripes on big number</string>
-    <string id="left_digital_info">Move right digital info to left</string>
-    <string id="render_arc_line">Render arc line with curved complication</string>
-    
-    <string id="force_date_english">Force date to English (prevent rectangle on unsupported chars)</string>
-    
-    <string id="zero_leading_digital">Zero leading digital style</string>
-    <string id="big_number_type">Center number</string>
-    <string id="minute_major">Minute</string>
-    <string id="hour_major">Hour</string>
-    
-    <string id="countdown_date">Date for countdown</string>
-    <string id="countdown">Countdown to event</string>
-    
-    <string id="use_analog">Analog watch face</string>
-    <string id="digital_style">Digital number style</string>
-    <string id="always_on_style">Always-on number style</string>
-    <string id="digital_style_big">Big center style</string>
-    <string id="digital_style_xbig">Extra Big center style</string>
-    <string id="digital_style_small">Small style</string>
-    <string id="digital_style_medium">Medium style</string>
-    
-    <string id="ticks_style">Ticks style</string>
-    <string id="ticks_style_arc">Arc style</string>
-    <string id="ticks_style_marks">Mark style</string>
+    <string id="AppName">Simply Infocal</string>
+
+    <string id="mainColor">Main Accent Color</string>
+    <string id="color_red">Red</string>
+    <string id="color_orange">Orange / Yellow</string>
+    <string id="color_green">Green</string>
+    <string id="color_blue">Blue</string>
+    <string id="color_violet">Violet</string>
+    <string id="color_white">White</string>
+    <string id="color_gray">Subtle Gray</string>
+    <string id="color_accent">Match Accent Color</string>
+
+    <string id="tone">Color Theme</string>
+    <string id="tone_dark">Dark (Black BG)</string>
+    <string id="tone_contrast">High-Contrast Dark</string>
+    <string id="tone_light">Light (White BG)</string>
+
+    <string id="notifColor">Notification Counter Color</string>
+    <string id="showMoon">Show Moon Phase</string>
+
+    <string id="d24">Outer Ring Mode</string>
+    <string id="d24_24">24-Hour Ring</string>
+    <string id="d24_12">12-Hour Ring</string>
+
+    <string id="boldness">Minute Arc Thickness (1-5)</string>
+    <string id="weather">Show Weather Forecast (yr.no)</string>
+    <string id="temp_unit">Temperature Units</string>
+    <string id="temp_auto">Auto (Device)</string>
+    <string id="temp_c">Celsius</string>
+    <string id="temp_f">Fahrenheit</string>
+    <string id="sunriset">Show Sunrise / Sunset</string>
+
+    <string id="slot_tl">Left Upper Metric</string>
+    <string id="slot_bl">Left Lower Metric</string>
+    <string id="slot_tr">Right Upper Metric</string>
+    <string id="slot_br">Right Lower Metric</string>
 
     <string id="empty">Empty</string>
-    <string id="battery">Battery</string>
-    <string id="calories">Calories total-active (Experimental)</string>
-    <string id="distance">Distance (day)</string>
-    <string id="distanceweek">Distance (week)</string>
-    <string id="movebar">Move bar</string>
+    <string id="heartrate">Heart Rate</string>
     <string id="steps">Steps</string>
-    <string id="active">Active minutes</string>
-    <string id="heartrate">Heart rate</string>
-    <string id="date">Date</string>
-    <string id="time">Digital time</string>
-    <string id="time_secondary">Digital time (Secondary timezone)</string>
-    
-    <string id="notification">Notification count</string>
-    <string id="alarm">Alarm count</string>
-    <string id="phonestatus">Phone connection status</string>
+    <string id="battery">Battery %</string>
+    <string id="battery_days">Battery Days</string>
     <string id="altitude">Altitude</string>
-    <string id="temperature">Temperature (on device sensor)</string>
-    <string id="temperature_out">Temperature (outsite)</string>
-    <string id="temperature_hl">Temperature (high/low)</string>
-    <string id="sunriseset">Sun time</string>
-    <string id="floorclimbed">Floor climbed</string>
-    <string id="groupnoti">Group notification</string>
     <string id="barometer">Barometer</string>
-    <string id="weeknum">Week of year</string>
-    <string id="weather">Weather</string>
-    <string id="ampm">AM/PM indicator</string>
-    <string id="ctext">Custom text</string>
-    <string id="wind">Wind (Kmph or Mph)</string>
-    
-    <string id="date_format">Date format</string>
-    <string id="datef1">ddd d (TUE 2)</string>
-    <string id="datef2">dd.mm (2.9)</string>
-    <string id="datef21">mm.dd (9.2)</string>
-    <string id="datef3">dd.mm.yy (2.9.19)</string>
-    <string id="datef31">mm.dd.yy (9.2.19)</string>
-    <string id="datef4">dd mmm (2 OCT)</string>
-    <string id="datef41">mmm dd (OCT 2)</string>
-    
-    <string id="utc_timezone">Secondary timezone</string>
-    <string id="utc_shift">Shift timezone for +30min</string>
-    <string id="utc0">UTC 0</string>
-    <string id="utc1">UTC +1</string>
-    <string id="utc2">UTC +2</string>
-    <string id="utc3">UTC +3</string>
-    <string id="utc4">UTC +4</string>
-    <string id="utc5">UTC +5</string>
-    <string id="utc6">UTC +6</string>
-    <string id="utc7">UTC +7</string>
-    <string id="utc8">UTC +8</string>
-    <string id="utc9">UTC +9</string>
-    <string id="utc10">UTC +10</string>
-    <string id="utc11">UTC +11</string>
-    <string id="utc12">UTC +12</string>
-    <string id="utc1m">UTC -1</string>
-    <string id="utc2m">UTC -2</string>
-    <string id="utc3m">UTC -3</string>
-    <string id="utc4m">UTC -4</string>
-    <string id="utc5m">UTC -5</string>
-    <string id="utc6m">UTC -6</string>
-    <string id="utc7m">UTC -7</string>
-    <string id="utc8m">UTC -8</string>
-    <string id="utc9m">UTC -9</string>
-    <string id="utc10m">UTC -10</string>
-    <string id="utc11m">UTC -11</string>
-    <string id="utc12m">UTC -12</string>
-    
-    <string id="battery_format">Battery format</string>
-    <string id="battery_format_1">Percent</string>
-    <string id="battery_format_2">Days left (need at least 1 hour to work)</string>
-    
-    <string id="theme_code">Theme color</string>
-    <string id="theme_dark">Dark</string>
-    <string id="theme_light">Light</string>
-    <string id="theme_ocean">Ocean</string>
-    <string id="theme_orange">Orange</string>
-    <string id="theme_radioactive">Radioactive</string>
-    <string id="theme_flashlight">Flash light</string>
-    <string id="theme_dusk">Dusk</string>
-    <string id="theme_dark_blue">Dark blue</string>
-    <string id="theme_light_blue">Light blue</string>
-    <string id="theme_gray">Gray</string>
-    <string id="theme_lgray">Light gray</string>
-    <string id="theme_pink">Pink</string>
-    <string id="theme_deep_ocean">Deep ocean</string>
-    <string id="theme_dcontrast">High contrast (Dark)</string>
-    <string id="theme_lcontrast">High contrast (Light)</string>
-    <string id="theme_camo">Camo</string>
-    <string id="theme_solar">Solar</string>
-    <string id="theme_lime">Lime</string>
-    
+    <string id="calories">Calories</string>
+    <string id="active">Active Minutes (Week)</string>
+    <string id="floorclimbed">Floors Climbed</string>
+
+    <string id="date_format">Date Format</string>
+    <string id="datef1">DAY D (WED 28)</string>
+    <string id="datef2">DD.MM (28.10)</string>
+    <string id="datef21">MM.DD (10.28)</string>
+    <string id="datef4">DD MON (28 OCT)</string>
+    <string id="datef41">MON DD (OCT 28)</string>
+    <string id="force_date_english">Force English Date</string>
+
     <string id="barometer_unit">Barometer Unit</string>
-    <string id="barometer_unit_0">Hector Pascal (Pa)</string>
+    <string id="barometer_unit_0">Hectopascal (hPa)</string>
     <string id="barometer_unit_1">Inches of Mercury (inHg)</string>
-    
-    <string id="openweathermap_api">OpenWeatherMap API key, read FAQs section for more info</string>
+    <string id="batThreshold">Low Battery Icon Threshold (%)</string>
+
+    <string id="enable_calendar">Show Google Calendar Events</string>
+    <string id="google_client_id">Google OAuth Client ID (TV/Device)</string>
+    <string id="google_client_secret">Google OAuth Client Secret</string>
+    <string id="calendar_ids">Calendar ID (default: primary)</string>
 </strings>
